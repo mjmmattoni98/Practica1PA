@@ -22,4 +22,8 @@ public class Factura {
         return fechaEmision;
     }
 
+    private void calcularImporte(){
+
+    }
+
 }
