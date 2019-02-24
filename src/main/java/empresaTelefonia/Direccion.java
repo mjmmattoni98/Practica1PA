@@ -5,9 +5,7 @@ public class Direccion {
     private String provincia;
     private String poblacion;
 
-    public Direccion(){
-        super();
-    }
+    public Direccion(){ super(); }
 
     public Direccion(int cp, String provincia, String poblacion){
         this.cp = cp;
