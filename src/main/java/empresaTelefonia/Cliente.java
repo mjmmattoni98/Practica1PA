@@ -1,7 +1,8 @@
 package empresaTelefonia;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.*;
 
 public abstract class Cliente {
     private String nombre;
@@ -10,7 +11,8 @@ public abstract class Cliente {
     private String correoElectronico;
     private Fecha fechaDeAlta;
     private Tarifa tarifa;
-    private List<Llamada> llamadas;
+    private Map<Period, List<Llamada>> llamadas;
+    private Period actualPeriodoFacturacion;
     private List<Factura> facturas;
 
     public Cliente () {
@@ -24,8 +26,14 @@ public abstract class Cliente {
         this.correoElectronico = correoElectronico;
         this.fechaDeAlta = fechaDeAlta;
         this.tarifa = tarifa;
-        this.llamadas = new LinkedList<>();
+        this.llamadas = new HashMap<>();
+        this.actualPeriodoFacturacion = Period.between(LocalDate.now(), LocalDate.now().plusDays(30));
+        this.llamadas.put(actualPeriodoFacturacion, new LinkedList<>());
         this.facturas = new LinkedList<>();
+    }
+
+    public void setTarifa(Tarifa nuevaTarifa){
+        this.tarifa = nuevaTarifa;
     }
 
     public Fecha getFecha (){
@@ -37,10 +45,16 @@ public abstract class Cliente {
     }
 
     public void añadirLlamada(Llamada llamada){
-        llamadas.add(llamada);
+        List<Llamada> listaLlamadas = llamadas.get(actualPeriodoFacturacion);
+        listaLlamadas.add(llamada);
+        llamadas.put(actualPeriodoFacturacion, listaLlamadas);
     }
 
     public void añadirFactura(Factura factura){
         facturas.add(factura);
+    }
+
+    public void emitirFactura(){
+
     }
 }

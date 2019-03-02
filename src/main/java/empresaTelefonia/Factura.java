@@ -1,11 +1,15 @@
 package empresaTelefonia;
 
 
+import javafx.util.Pair;
+
+import java.time.Period;
+
 public class Factura {
     private Tarifa tarifa; //El cambio de tarifa se verá reflejado en la siguiente factura
     private int codigo;
     private Fecha fechaEmision;
-    private Fecha periodoFacturacion;
+    private Period periodoFacturacion;
     private double importe;
 
 
