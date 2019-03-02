@@ -12,7 +12,6 @@ public abstract class Cliente {
     private Tarifa tarifa;
     private List<Llamada> llamadas;
     private List<Factura> facturas;
-    private List<Cliente> clientes = new LinkedList<>();
 
     public Cliente () {
         super();
@@ -33,11 +32,15 @@ public abstract class Cliente {
         return fechaDeAlta;
     }
 
-    public void agregarCliente(){
-
+    public String getNif(){
+        return nif;
     }
 
-    public void borrarCliente(){
-        
+    public void añadirLlamada(Llamada llamada){
+        llamadas.add(llamada);
+    }
+
+    public void añadirFactura(Factura factura){
+        facturas.add(factura);
     }
 }

@@ -10,9 +10,9 @@ public class Fecha {
         this.fecha = LocalDateTime.now();
     }
 
-    public Fecha (LocalDateTime fecha){
+    /*public Fecha (LocalDateTime fecha){
         this.fecha = fecha;
-    }
+    }*/
 
     public LocalDateTime getFecha(){
         return fecha;
@@ -20,6 +20,11 @@ public class Fecha {
 
     public Period getPeriodo (Fecha otraFecha){
         return  Period.between(fecha.toLocalDate(), otraFecha.getFecha().toLocalDate());
+    }
+
+    @Override
+    public String toString(){
+        return fecha.toString();
     }
 
 }
