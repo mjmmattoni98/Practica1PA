@@ -11,7 +11,4 @@ public class Tarifa {
         return tarifa;
     }
 
-    public void setTarifa(double nuevaTarifa){
-        this.tarifa = nuevaTarifa;
-    }
 }

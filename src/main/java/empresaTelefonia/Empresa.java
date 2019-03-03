@@ -10,12 +10,21 @@ public class Empresa {
         clientes = new HashMap<>();
     }
 
-    public void añadirCliente(Cliente cliente){
-        clientes.put(cliente.getNif(), cliente);
+    public void añadirCliente(String nif, Cliente cliente){
+        clientes.put(nif, cliente);
     }
 
     public Cliente getCliente(String nif){
         return clientes.get(nif);
+    }
+
+    public Map<String, Cliente> getClientes(){
+        return clientes;
+    }
+
+    public Map<String, Cliente> borrarCliente(String nif){
+        clientes.remove(nif);
+        return clientes;
     }
 
     public void añadirLlamada(String nif, Llamada llamada){
@@ -24,11 +33,6 @@ public class Empresa {
         //clientes.put(nif, cliente);
     }
 
-    public void añadirFactura(String nif, Factura factura){
-        Cliente cliente = clientes.get(nif);
-        cliente.añadirFactura(factura);
-        //clientes.put(nif, cliente);
-    }
 
 
 }

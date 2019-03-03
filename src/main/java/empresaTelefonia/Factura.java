@@ -35,12 +35,8 @@ public class Factura {
         return periodoFacturacion;
     }
 
-    public  double getImporte(){
+    public double getImporte(){
         return importe;
-    }
-
-    public void setTarifa(Tarifa nuevaTarifa){
-        this.tarifa = nuevaTarifa;
     }
 
     public double calcularImporte(List<Llamada> llamadas){
@@ -49,6 +45,17 @@ public class Factura {
             tiempoLlamada += llamada.getDuración();
         this.importe = tiempoLlamada * tarifa.getTarifa();
         return this.importe;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Tarifa aplicada: " + tarifa + "\n");
+        sb.append("El código de la factura es: " + codigo + "\n");
+        sb.append("Fecha de emisión: " + fechaEmision + "\n");
+        sb.append("Periodo de facturación: " + periodoFacturacion + "\n");
+        sb.append("El importe final de la factura sería: " + importe + " euros.\n");
+        return sb.toString();
     }
 
 }

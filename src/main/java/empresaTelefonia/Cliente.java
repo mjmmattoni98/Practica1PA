@@ -1,8 +1,6 @@
 package empresaTelefonia;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.*;
 
 public abstract class Cliente {
@@ -14,19 +12,19 @@ public abstract class Cliente {
     private Tarifa tarifa;
     private Map<Periodo, List<Llamada>> llamadas;
     private Periodo actualPeriodoFacturacion;
-    private Map<LocalDateTime, Factura> facturas; //Key -> fecha de emisión de la factura.
+    private Map<Integer, Factura> facturas; //Key -> código de la factura.
     private int codigoFactura;
 
     public Cliente () {
         super();
     }
 
-    public Cliente (String nombre, String nif, Direccion direccion, String correoElectronico, LocalDateTime fechaDeAlta, Tarifa tarifa){
+    public Cliente (String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa){
         this.nombre = nombre;
         this.nif = nif;
         this.direccion = direccion;
         this.correoElectronico = correoElectronico;
-        this.fechaDeAlta = fechaDeAlta;
+        this.fechaDeAlta = LocalDateTime.now();
         this.tarifa = tarifa;
         this.codigoFactura = 0;
         this.llamadas = new HashMap<>();
@@ -43,6 +41,18 @@ public abstract class Cliente {
         return fechaDeAlta;
     }
 
+    public Factura getFactura(int codigo){
+        return facturas.get(codigo);
+    }
+
+    public Map<Integer, Factura> getFacturas(){
+        return facturas;
+    }
+
+    public Map<Periodo, List<Llamada>> getLlamadas(){
+        return llamadas;
+    }
+
     public String getNif(){
         return nif;
     }
@@ -53,15 +63,16 @@ public abstract class Cliente {
         llamadas.put(actualPeriodoFacturacion, listaLlamadas);
     }
 
-    public void añadirFactura(Factura factura){
-        facturas.put(factura.getFecha(), factura);
+    private void añadirFactura(int codigo, Factura factura){
+        facturas.put(codigo, factura);
     }
 
-    public void emitirFactura(){
-        Factura factura = new Factura(tarifa, codigoFactura++, actualPeriodoFacturacion);
+    public Factura emitirFactura(){
+        Factura factura = new Factura(tarifa, codigoFactura, actualPeriodoFacturacion);
         factura.calcularImporte(llamadas.get(actualPeriodoFacturacion));
-        facturas.put(factura.getFecha(), factura);
+        añadirFactura(codigoFactura++, factura);
         setActualPeriodoFacturacion();
+        return factura;
     }
 
     private void setActualPeriodoFacturacion(){

@@ -19,4 +19,9 @@ public class Periodo {
     public LocalDateTime getFechaFin(){
         return fechaFin;
     }
+
+    @Override
+    public String toString(){
+        return fechaInicio.toLocalDate() + " - " + fechaFin.toLocalDate();
+    }
 }
