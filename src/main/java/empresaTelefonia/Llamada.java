@@ -1,18 +1,28 @@
 package empresaTelefonia;
 
+import java.time.LocalDateTime;
+
 public class Llamada implements Comparable<Llamada>{
     private int numero;
-    private Fecha fechaYHora;
+    private LocalDateTime fechaYHora;
     private int duración;
 
-    public Llamada (int numero, Fecha fechaYHora, int duración){
+    public Llamada (int numero, LocalDateTime fechaYHora, int duración){
         this.numero = numero;
         this.fechaYHora = fechaYHora;
         this.duración = duración;
     }
 
-    public Fecha getFecha(){
+    public LocalDateTime getFecha(){
         return fechaYHora;
+    }
+
+    public int getDuración(){
+        return duración;
+    }
+
+    public int getNumero(){
+        return numero;
     }
 
     @Override

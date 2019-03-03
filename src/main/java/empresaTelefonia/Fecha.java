@@ -1,7 +1,7 @@
 package empresaTelefonia;
 
+
 import java.time.LocalDateTime;
-import java.time.Period;
 
 public class Fecha implements Comparable<Fecha>{
     private LocalDateTime fecha;
@@ -10,16 +10,24 @@ public class Fecha implements Comparable<Fecha>{
         this.fecha = LocalDateTime.now();
     }
 
-    /*public Fecha (LocalDateTime fecha){
-        this.fecha = fecha;
-    }*/
-
     public LocalDateTime getFecha(){
         return fecha;
     }
 
-    public Period getPeriodo (Fecha otraFecha){
-        return  Period.between(fecha.toLocalDate(), otraFecha.getFecha().toLocalDate());
+    public static Periodo getPeriodo(LocalDateTime fecha, LocalDateTime otraFecha){
+        return new Periodo(fecha, otraFecha);
+    }
+
+    public void masDias(int dias){
+        this.fecha = fecha.plusDays(dias);
+    }
+
+    public void masMeses(int meses){
+        this.fecha = fecha.plusMonths(meses);
+    }
+
+    public void masAños(int años){
+        this.fecha = fecha.plusYears(años);
     }
 
     @Override
