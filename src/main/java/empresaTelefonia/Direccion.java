@@ -15,6 +15,6 @@ public class Direccion {
 
     @Override
     public String toString(){
-        return "Código postal: " + cp + "\nProvincia: " + provincia + "\nPoblación: " + poblacion ;
+        return "\t-Código postal: " + cp + "\n\t-Provincia: " + provincia + "\n\t-Población: " + poblacion ;
     }
 }

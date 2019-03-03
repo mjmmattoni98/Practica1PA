@@ -22,6 +22,6 @@ public class Periodo {
 
     @Override
     public String toString(){
-        return fechaInicio.toLocalDate() + " - " + fechaFin.toLocalDate();
+        return "(" + fechaInicio.toLocalDate() + " - " + fechaFin.toLocalDate() + ")";
     }
 }

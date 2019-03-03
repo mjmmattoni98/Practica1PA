@@ -8,4 +8,9 @@ public class ClienteParticular extends  Cliente {
         this.apellidos = apellidos;
     }
 
+    @Override
+    public String toString(){
+        return super.toString() + "Apellidos: " + apellidos;
+    }
+
 }

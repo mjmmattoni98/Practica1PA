@@ -92,4 +92,25 @@ public abstract class Cliente {
     private void setActualPeriodoFacturacion(){
         this.actualPeriodoFacturacion = new Periodo(LocalDateTime.now(), LocalDateTime.now().plusDays(30));
     }
+
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Nombre: " + nombre + "\n");
+        sb.append("NIF: " + nif + "\n");
+        sb.append("Direción: " + direccion + "\n");
+        sb.append("Correo electrónico: " + correoElectronico + "\n");
+        sb.append("Fecha de alta: " + fechaDeAlta + "\n");
+        sb.append("Tarifa: " + tarifa + "\n");
+        sb.append("Listado de llamadas:\n");
+        Iterator<Periodo> iterLlamadas = llamadas.keySet().iterator();
+        while (iterLlamadas.hasNext())
+            for (Llamada llamada : llamadas.get(iterLlamadas.next()))
+                sb.append("\t-" + llamada);
+        sb.append("Listado de facturas:\n");
+        Collection<Factura> colFacturas = facturas.values();
+        for(Factura factura : colFacturas)
+            sb.append(factura);
+        return sb.toString();
+    }
 }

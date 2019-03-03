@@ -50,11 +50,11 @@ public class Factura {
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
-        sb.append("Tarifa aplicada: " + tarifa + "\n");
-        sb.append("El código de la factura es: " + codigo + "\n");
-        sb.append("Fecha de emisión: " + fechaEmision + "\n");
-        sb.append("Periodo de facturación: " + periodoFacturacion + "\n");
-        sb.append("El importe final de la factura sería: " + importe + " euros.\n");
+        sb.append("\t-Tarifa aplicada: " + tarifa + "\n");
+        sb.append("\t-El código de la factura es: " + codigo + "\n");
+        sb.append("\t-Fecha de emisión: " + fechaEmision + "\n");
+        sb.append("\t-Periodo de facturación: " + periodoFacturacion + "\n");
+        sb.append("\t-El importe final de la factura sería: " + importe + " euros.\n");
         return sb.toString();
     }
 

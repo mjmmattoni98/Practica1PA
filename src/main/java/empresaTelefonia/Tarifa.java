@@ -11,4 +11,8 @@ public class Tarifa {
         return tarifa;
     }
 
+    @Override
+    public String toString(){
+        return tarifa + "";
+    }
 }
