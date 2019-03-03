@@ -13,7 +13,8 @@ public class Direccion {
         this.poblacion = poblacion;
     }
 
-    public String getDireccion(){
+    @Override
+    public String toString(){
         return "Código postal: " + cp + "\nProvincia: " + provincia + "\nPoblación: " + poblacion ;
     }
 }

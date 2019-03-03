@@ -1,10 +1,16 @@
 package empresaTelefonia;
 
+import es.uji.www.GeneradorDatosINE;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 
 public class Main {
     public static void main(String[] args){
-        System.out.println(Period.between(LocalDate.now(), LocalDate.now().plusYears(7).plusMonths(4).plusDays(30)));
+        InterfazUsuario interfazUsuario = new InterfazUsuario();
+        interfazUsuario.menu();
+        GeneradorDatosINE generadorDatosINE = new GeneradorDatosINE();
+
     }
 }
