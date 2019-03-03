@@ -13,7 +13,6 @@ public abstract class Cliente {
     private Map<Periodo, List<Llamada>> llamadas;
     private Periodo actualPeriodoFacturacion;
     private Map<Integer, Factura> facturas; //Key -> código de la factura.
-    private int codigoFactura;
 
     public Cliente () {
         super();
@@ -26,7 +25,6 @@ public abstract class Cliente {
         this.correoElectronico = correoElectronico;
         this.fechaDeAlta = LocalDateTime.now();
         this.tarifa = tarifa;
-        this.codigoFactura = 0;
         this.llamadas = new HashMap<>();
         this.actualPeriodoFacturacion = new Periodo(LocalDateTime.now(), LocalDateTime.now().plusDays(30));
         this.llamadas.put(actualPeriodoFacturacion, new LinkedList<>());
@@ -35,6 +33,22 @@ public abstract class Cliente {
 
     public void setTarifa(Tarifa nuevaTarifa){
         this.tarifa = nuevaTarifa;
+    }
+
+    public Tarifa getTarifa(){
+        return tarifa;
+    }
+
+    public String getNombre(){
+        return nombre;
+    }
+
+    public String getCorreoElectronico(){
+        return correoElectronico;
+    }
+
+    public Direccion getDireccion(){
+        return direccion;
     }
 
     public LocalDateTime getFecha (){
@@ -67,10 +81,10 @@ public abstract class Cliente {
         facturas.put(codigo, factura);
     }
 
-    public Factura emitirFactura(){
+    public Factura emitirFactura(int codigoFactura){
         Factura factura = new Factura(tarifa, codigoFactura, actualPeriodoFacturacion);
         factura.calcularImporte(llamadas.get(actualPeriodoFacturacion));
-        añadirFactura(codigoFactura++, factura);
+        añadirFactura(codigoFactura, factura);
         setActualPeriodoFacturacion();
         return factura;
     }

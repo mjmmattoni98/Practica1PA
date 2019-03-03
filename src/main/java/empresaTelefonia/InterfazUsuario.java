@@ -21,43 +21,47 @@ public class InterfazUsuario {
 
     private void ejecutarAccion(int opcion){
         OpcionesMenu opcionMenu = OpcionesMenu.getOpcion(opcion);
+        String nif = "";
         switch (opcionMenu){
-            case CREAR_CUENTA:
-                crearCuenta();
-                break;
-            case BORRAR_CUENTA:
-                borrarCuenta();
-                break;
-            case CAMBIAR_TARIFA:
-                cambiarTarifa();
-                break;
-            case EMITIR_FACTURA:
-                emitirFactura();
-                break;
-            case DAR_ALTA_LLAMADA:
-                guardarLlamada();
-                break;
             case MOSTRAR_CLIENTES:
                 mostrarClientes();
                 break;
-            case MOSTRAR_DATOS_CLIENTE:
-                mostrarDatosCliente();
-                break;
             case MOSTRAR_DATOS_FACTURA:
-                mostrarDatosFactura();
+                System.out.println("Codigo de factura: ");
+                int codigo = scanner.nextInt();
+                mostrarDatosFactura(codigo);
+                break;
+            default:
+                System.out.println("NIF: ");
+                nif = scanner.next();
+            case CREAR_CUENTA:
+                crearCuenta(nif);
+                break;
+            case BORRAR_CUENTA:
+                borrarCuenta(nif);
+                break;
+            case CAMBIAR_TARIFA:
+                cambiarTarifa(nif);
+                break;
+            case EMITIR_FACTURA:
+                emitirFactura(nif);
+                break;
+            case DAR_ALTA_LLAMADA:
+                guardarLlamada(nif);
                 break;
             case MOSTRAR_FACTURAS_CLIENTE:
-                mostrarFacturasCliente();
+                mostrarFacturasCliente(nif);
                 break;
             case MOSTRAR_LLAMADAS_CLIENTE:
-                mostrarLlamadasCliente();
+                mostrarLlamadasCliente(nif);
                 break;
-             default:
-                 System.out.println("Error en el switch.");
+            case MOSTRAR_DATOS_CLIENTE:
+                mostrarDatosCliente(nif);
+                break;
         }
     }
 
-    private void crearCuenta(){
+    private void crearCuenta(String nif){
         System.out.println("Empresa o particular? ");
         boolean particular = scanner.next().equals("particular");
         System.out.println("Nombre: ");
@@ -67,62 +71,58 @@ public class InterfazUsuario {
             System.out.println("Apellidos: ");
             apellidos = scanner.next();
         }
-        System.out.println("NIF: ");
-        String nif = scanner.next();
         System.out.println("CP: ");
         int cp = scanner.nextInt();
         System.out.println("Provincia: ");
         String provincia = scanner.next();
         System.out.println("Población: ");
         String poblacion = scanner.next();
-        Direccion direccion = new Direccion(cp, provincia, poblacion);
         System.out.println("Correo electrónico: ");
         String correoElectronico = scanner.next();
         System.out.println("Tarifa: ");
         double tarifa = scanner.nextDouble();
         if (particular)
-            empresa.añadirCliente(nif, new ClienteParticular(nombre, nif, direccion, correoElectronico, new Tarifa(tarifa), apellidos));
-        empresa.añadirCliente(nif, new ClienteEmpresa(nombre, nif, direccion, correoElectronico, new Tarifa(tarifa)));
+            empresa.añadirCliente(nif, nombre, cp, provincia, poblacion, correoElectronico, tarifa, apellidos);
+        empresa.añadirCliente(nif, nombre, cp, provincia, poblacion, correoElectronico, tarifa);
         System.out.println("El cliente se ha añadido correctamente.");
     }
 
-    private void borrarCuenta(){
-        System.out.println("NIF del cliente que desea borrar: ");
-        String nif = scanner.next();
+    private void borrarCuenta(String nif){
         empresa.borrarCliente(nif);
         System.out.println("Cliente borrado con éxito.");
     }
 
-    private void cambiarTarifa(){
+    private void cambiarTarifa(String nif){
+        System.out.println("Introduzca la nueva tarifa: ");
+        double tarifa = scanner.nextDouble();
+    }
+
+    private void emitirFactura(String nif){
 
     }
 
-    private void emitirFactura(){
-
-    }
-
-    private void guardarLlamada(){
-
+    private void guardarLlamada(String nif){
+        
     }
 
     private void mostrarClientes(){
-
+        empresa.getClientes();
     }
 
-    private void mostrarDatosCliente(){
-
+    private void mostrarDatosCliente(String nif){
+        empresa.getCliente(nif);
     }
 
-    private void mostrarDatosFactura(){
-
+    private void mostrarDatosFactura(int codigo){
+        empresa.getFactura(codigo);
     }
 
-    private void mostrarFacturasCliente(){
-
+    private void mostrarFacturasCliente(String nif){
+        empresa.getFacturasCliente(nif);
     }
 
-    private void mostrarLlamadasCliente(){
-
+    private void mostrarLlamadasCliente(String nif){
+        empresa.getLlamadasCliente(nif);
     }
 
 
