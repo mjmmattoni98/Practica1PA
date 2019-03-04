@@ -34,7 +34,8 @@ public class Llamada implements Comparable<Llamada>{
 
     @Override
     public String toString(){
-        return "Llamada al número: " + numero + " con fecha: " + fechaYHora + " y duración: " + duración;
+        return "Llamada al número: " + numero + " con fecha: " + fechaYHora + " y duración: " + duración + " minutos.\n";
     }
+
 
 }

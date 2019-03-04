@@ -2,6 +2,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ ClienteTest.class, ParametizadaClienteTest.class })
+@Suite.SuiteClasses({ ClienteTest.class/*, ParametizadaClienteTest.class */})
 public class AllTests {
 }

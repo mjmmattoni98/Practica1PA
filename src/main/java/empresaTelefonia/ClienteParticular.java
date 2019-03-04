@@ -8,9 +8,13 @@ public class ClienteParticular extends  Cliente {
         this.apellidos = apellidos;
     }
 
+    public String getApellidos(){
+        return apellidos;
+    }
+
     @Override
     public String toString(){
-        return super.toString() + "Apellidos: " + apellidos;
-    }
+        return super.toString() + "\n-Apellidos: " + apellidos;
+    } //Va mal, no imprime apellidos.
 
 }

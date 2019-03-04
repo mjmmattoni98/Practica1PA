@@ -12,6 +12,7 @@ public class Empresa {
 
     public Empresa(){
         this.clientes = new HashMap<>();
+        this.facturas = new HashMap<>();
         this.codigoFactura = 0;
     }
 
@@ -27,15 +28,15 @@ public class Empresa {
 
     public Cliente getCliente(String nif){
         return clientes.get(nif);
-    } //modificar
+    }
 
     public Map<String, Cliente> getClientes(){
         return clientes;
-    }//modificar
+    }
 
-    public Map<String, Cliente> borrarCliente(String nif){
+    public String borrarCliente(String nif){
         clientes.remove(nif);
-        return clientes;
+        return nif;
     }
 
     public void cambiarTarifaCliente(String nif, double tarifa){
@@ -43,16 +44,16 @@ public class Empresa {
         clientes.get(nif).setTarifa(nuevaTarifa);
     }
 
-    public void emitirFacturaCliente(String nif){
-        Cliente cliente = clientes.get(nif);
-        cliente.emitirFactura(codigoFactura);
-        facturas.put(codigoFactura, cliente.getFactura(codigoFactura));
+    public Factura emitirFacturaCliente(String nif){
+        Factura factura = clientes.get(nif).emitirFactura(codigoFactura);
+        facturas.put(codigoFactura, factura);
         codigoFactura++;
+        return factura;
     }
 
-    public void añadirLlamada(String nif, int numero, int duración){
-        Llamada llamada = new Llamada(numero, LocalDateTime.now(), duración);
-        clientes.get(nif).añadirLlamada(llamada);
+    public Llamada añadirLlamada(String nif, int numero, int duracion){
+        Llamada llamada = clientes.get(nif).añadirLlamada(numero, duracion);
+        return llamada;
     }
 
     public Factura getFactura(int codigo){

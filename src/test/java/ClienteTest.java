@@ -26,8 +26,9 @@ public class ClienteTest {
 
    /* @Test
     public void testSuma() {
-        assertThat(aritmetica, notNullValue());
-        assertThat(aritmetica.suma(2, 3), is(5.0));
+        fail();
+        //assertThat(cliente, notNullValue());
+        //assertThat(aritmetica.suma(2, 3), is(5.0));
     }
 
    /* @Test
