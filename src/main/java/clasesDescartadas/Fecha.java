@@ -1,5 +1,7 @@
-package empresaTelefonia;
+package clasesDescartadas;
 
+
+import empresaTelefonia.Periodo;
 
 import java.time.LocalDateTime;
 

@@ -1,6 +1,8 @@
 package empresaTelefonia;
 
 
+import excepciones.TarifaException;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -21,7 +23,7 @@ public class InterfazUsuario {
         ejecutarAccion(opción);
     }
 
-    private void ejecutarAccion(int opcion){
+    private void ejecutarAccion(int opcion) {
         OpcionesMenu opcionMenu = OpcionesMenu.getOpcion(opcion);
         System.out.println("Si va a mostrar los clientes o los datos de una factura, escriba cualquier palabra.");
         System.out.println("NIF: ");
@@ -93,9 +95,20 @@ public class InterfazUsuario {
         String correoElectronico = scanner.next();
         System.out.println("Tarifa: ");
         double tarifa = Double.parseDouble(scanner.next());
-        if (particular)
-            empresa.añadirCliente(nif, nombre.toString(), cp, provincia, poblacion, correoElectronico, tarifa, apellidos.toString());
-        empresa.añadirCliente(nif, nombre.toString(), cp, provincia, poblacion, correoElectronico, tarifa);
+        if (particular){
+            try{
+                empresa.añadirClienteParticular(nif, nombre.toString(), cp, provincia, poblacion, correoElectronico, tarifa, apellidos.toString());
+            }
+            catch (TarifaException e){
+                e.printStackTrace();
+            }
+        }
+        try{
+            empresa.añadirClienteEmpresa(nif, nombre.toString(), cp, provincia, poblacion, correoElectronico, tarifa);
+        }
+        catch (TarifaException e){
+            e.printStackTrace();
+        }
         System.out.println("El cliente se ha añadido correctamente.");
     }
 
@@ -107,14 +120,26 @@ public class InterfazUsuario {
     private void cambiarTarifa(String nif){
         System.out.println("Introduzca la nueva tarifa: ");
         double tarifa = Double.parseDouble(scanner.next());
-        empresa.cambiarTarifaCliente(nif, tarifa);
+        try{
+            empresa.cambiarTarifaCliente(nif, tarifa);
+        }
+        catch (TarifaException e){
+            e.printStackTrace();
+        }
+
     }
 
-    private void emitirFactura(String nif){
-        Factura factura = empresa.emitirFacturaCliente(nif);
-        System.out.println("Hecho");
-        System.out.println("Desea ver la factura? ");
-        mostrarInformacion(factura);
+    private void emitirFactura(String nif) {
+        Factura factura = null;
+        try{
+            factura = empresa.emitirFacturaCliente(nif);
+            System.out.println("Hecho");
+            System.out.println("Desea ver la factura? ");
+            mostrarInformacion(factura);
+        }
+        catch (TarifaException e){
+            e.printStackTrace();
+        }
     }
 
     private void guardarLlamada(String nif){

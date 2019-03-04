@@ -1,0 +1,54 @@
+import clasesDescartadas.CorreoElectronicoException;
+import clasesDescartadas.NumeroLlamadaException;
+import empresaTelefonia.*;
+import excepciones.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.core.Is.*;
+
+public class EmpresaTest {
+    private Empresa empresa = new Empresa();
+
+    @Before
+    public void beforeTest() throws TarifaException, CorreoElectronicoException {
+        empresa.añadirClienteParticular("12345678A", "ana", 12345, "Valencia", "Valencia", "anaprueba@correo.com", 15.0, "Bachueca Gimenez");
+    }
+
+    @After
+    public void afterTest() {
+        empresa.getClientes().remove("12345678A");
+    }
+
+    @Test
+    public void testCodigoFactura() {
+        assertThat(empresa.getCodigoFactura(), is(0));
+    }
+
+    @Test
+    public void testGetCliente() throws TarifaException, CorreoElectronicoException {
+        assertThat(empresa.getCliente("12345678A"), is("12345678A"));
+    }
+
+    @Test
+    public void testEmitirFacturasCliente() throws TarifaException, CorreoElectronicoException {
+        assertThat(empresa.getFacturasCliente("12345678A").get(0).getTarifa(), is(15.0));
+    }
+
+    @Test
+    public void testBorrarCliente() throws TarifaException, CorreoElectronicoException {
+        assertThat(empresa.borrarCliente("12345678A").containsKey("12345678A"), is(false));
+    }
+
+    @Test
+    public void getFacturasCliente() throws TarifaException, CorreoElectronicoException {
+        assertThat(empresa.getFacturasCliente("12345678A").get(0).getCodigo(), is(15.0));
+    }
+
+    public void getLlamadasCliente() throws NumeroLlamadaException {
+        empresa.añadirLlamada("12345678A", 123456789, 12);
+        assertThat(empresa.getLlamadasCliente("12345678A").values().iterator().next().listIterator().next().getNumero(), is(12));
+    }
+}

@@ -1,5 +1,8 @@
 package empresaTelefonia;
 
+import clasesDescartadas.NumeroLlamadaException;
+import excepciones.TarifaException;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -18,7 +21,7 @@ public abstract class Cliente {
         super();
     }
 
-    public Cliente (String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa){
+    public Cliente (String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa) {
         this.nombre = nombre;
         this.nif = nif;
         this.direccion = direccion;
@@ -71,7 +74,7 @@ public abstract class Cliente {
         return nif;
     }
 
-    public Llamada añadirLlamada(int numero, int duracion){
+    public Llamada añadirLlamada(int numero, int duracion) {
         Llamada llamada = new Llamada(numero, LocalDateTime.now(), duracion);
         List<Llamada> listaLlamadas = llamadas.get(actualPeriodoFacturacion);
         listaLlamadas.add(llamada);
@@ -83,7 +86,7 @@ public abstract class Cliente {
         facturas.put(codigo, factura);
     }
 
-    public Factura emitirFactura(int codigoFactura){
+    public Factura emitirFactura(int codigoFactura) throws TarifaException {
         Factura factura = new Factura(tarifa, codigoFactura, actualPeriodoFacturacion);
         factura.calcularImporte(llamadas.get(actualPeriodoFacturacion));
         añadirFactura(codigoFactura, factura);

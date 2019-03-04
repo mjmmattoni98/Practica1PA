@@ -1,5 +1,6 @@
 package empresaTelefonia;
 
+
 import java.time.LocalDateTime;
 
 public class Llamada implements Comparable<Llamada>{
@@ -7,7 +8,7 @@ public class Llamada implements Comparable<Llamada>{
     private LocalDateTime fechaYHora;
     private int duración;
 
-    public Llamada (int numero, LocalDateTime fechaYHora, int duración){
+    public Llamada (int numero, LocalDateTime fechaYHora, int duración) {
         this.numero = numero;
         this.fechaYHora = fechaYHora;
         this.duración = duración;

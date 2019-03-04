@@ -1,6 +1,8 @@
 package empresaTelefonia;
 
 
+import excepciones.TarifaException;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,7 +41,7 @@ public class Factura {
         return importe;
     }
 
-    public double calcularImporte(List<Llamada> llamadas){
+    public double calcularImporte(List<Llamada> llamadas) throws TarifaException {
         double tiempoLlamada = 0;
         for(Llamada llamada : llamadas)
             tiempoLlamada += llamada.getDuración();
