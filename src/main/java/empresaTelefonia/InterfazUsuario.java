@@ -1,8 +1,6 @@
 package empresaTelefonia;
 
 
-import excepciones.TarifaException;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -19,14 +17,13 @@ public class InterfazUsuario {
     public void menu(){
         System.out.println(OpcionesMenu.getMenu());
         System.out.println("Elija una opción: ");
-        int opción = scanner.nextInt();
-        ejecutarAccion(opción);
+        int opcion = scanner.nextInt();
+        ejecutarAccion(opcion);
     }
 
     private void ejecutarAccion(int opcion) {
         OpcionesMenu opcionMenu = OpcionesMenu.getOpcion(opcion);
-        System.out.println("Si va a mostrar los clientes o los datos de una factura, escriba cualquier palabra.");
-        System.out.println("NIF: ");
+        System.out.println("NIF (si va a mostrar los clientes o los datos de una factura, escriba cualquier palabra): ");
         String nif = scanner.next();
         switch (opcionMenu){
             case MOSTRAR_CLIENTES:
@@ -60,6 +57,9 @@ public class InterfazUsuario {
                 mostrarDatosCliente(nif);
                 break;
         }
+    }
+
+    private void repeatMenu(){ //CUIDADO!!!!!
         System.out.println("Desea realizar alguna otra acción? ");
         String siNo = scanner.next().toLowerCase();
         if (siNo.equals("si"))
@@ -98,23 +98,32 @@ public class InterfazUsuario {
         if (particular){
             try{
                 empresa.añadirClienteParticular(nif, nombre.toString(), cp, provincia, poblacion, correoElectronico, tarifa, apellidos.toString());
+                System.out.println("El cliente se ha añadido correctamente.");
             }
             catch (TarifaException e){
                 e.printStackTrace();
             }
+            finally {
+                repeatMenu();
+            }
         }
-        try{
-            empresa.añadirClienteEmpresa(nif, nombre.toString(), cp, provincia, poblacion, correoElectronico, tarifa);
+        else {
+            try {
+                empresa.añadirClienteEmpresa(nif, nombre.toString(), cp, provincia, poblacion, correoElectronico, tarifa);
+                System.out.println("El cliente se ha añadido correctamente.");
+            } catch (TarifaException e) {
+                e.printStackTrace();
+            }
+            finally {
+                repeatMenu();
+            }
         }
-        catch (TarifaException e){
-            e.printStackTrace();
-        }
-        System.out.println("El cliente se ha añadido correctamente.");
     }
 
     private void borrarCuenta(String nif){
         empresa.borrarCliente(nif);
         System.out.println("Cliente borrado con éxito.");
+        repeatMenu();
     }
 
     private void cambiarTarifa(String nif){
@@ -126,7 +135,9 @@ public class InterfazUsuario {
         catch (TarifaException e){
             e.printStackTrace();
         }
-
+        finally {
+            repeatMenu();
+        }
     }
 
     private void emitirFactura(String nif) {
@@ -140,6 +151,9 @@ public class InterfazUsuario {
         catch (TarifaException e){
             e.printStackTrace();
         }
+        finally {
+            repeatMenu();
+        }
     }
 
     private void guardarLlamada(String nif){
@@ -150,6 +164,7 @@ public class InterfazUsuario {
         Llamada llamada = empresa.añadirLlamada(nif, numero, duracion);
         System.out.println("Desea ver la información de la llamada? ");
         mostrarInformacion(llamada);
+        repeatMenu();
     }
 
     private void mostrarClientes(){
@@ -160,16 +175,19 @@ public class InterfazUsuario {
         }
         if (i == 1)
             System.out.println("No hay clientes aún guardados.");
+        repeatMenu();
     }
 
     private void mostrarDatosCliente(String nif){
         System.out.println(empresa.getCliente(nif));
+        repeatMenu();
     }
 
     private void mostrarDatosFactura(){
         System.out.println("Codigo de factura: ");
         int codigo = scanner.nextInt();
         System.out.println(empresa.getFactura(codigo));
+        repeatMenu();
     }
 
     private void mostrarFacturasCliente(String nif){
@@ -180,6 +198,7 @@ public class InterfazUsuario {
         }
         if (i == 1)
             System.out.println("No hay facturas asociadas aún al cliente " + empresa.getCliente(nif) + ".");
+        repeatMenu();
     }
 
     private void mostrarLlamadasCliente(String nif){
@@ -189,12 +208,14 @@ public class InterfazUsuario {
             for (Llamada llamada : llamadas.get(periodo))
                 System.out.println(llamada);
         }
+        repeatMenu();
     }
 
     private void mostrarInformacion(Object o){
         String opcion = scanner.next().toLowerCase();
         if ("si".equals(opcion))
             System.out.println(o);
+        repeatMenu();
     }
 
 }

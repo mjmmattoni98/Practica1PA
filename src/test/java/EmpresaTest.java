@@ -1,5 +1,3 @@
-import clasesDescartadas.CorreoElectronicoException;
-import clasesDescartadas.NumeroLlamadaException;
 import empresaTelefonia.*;
 import excepciones.*;
 import org.junit.After;
@@ -29,12 +27,12 @@ public class EmpresaTest {
 
     @Test
     public void testGetCliente() throws TarifaException, CorreoElectronicoException {
-        assertThat(empresa.getCliente("12345678A"), is("12345678A"));
+        assertThat(empresa.getCliente("12345678A").getNif(), is("12345678A"));
     }
 
     @Test
-    public void testEmitirFacturasCliente() throws TarifaException, CorreoElectronicoException {
-        assertThat(empresa.getFacturasCliente("12345678A").get(0).getTarifa(), is(15.0));
+    public void testEmitirFacturaCliente() throws TarifaException, CorreoElectronicoException {
+        assertThat(empresa.emitirFacturaCliente("12345678A").getTarifa().getTarifa(), is(15.0));
     }
 
     @Test
@@ -43,12 +41,13 @@ public class EmpresaTest {
     }
 
     @Test
-    public void getFacturasCliente() throws TarifaException, CorreoElectronicoException {
-        assertThat(empresa.getFacturasCliente("12345678A").get(0).getCodigo(), is(15.0));
+    public void testGetFacturasCliente() throws TarifaException, CorreoElectronicoException {
+        empresa.emitirFacturaCliente("12345678A");
+        assertThat(empresa.getFacturasCliente("12345678A").get(empresa.getCodigoFactura()-1).getTarifa().getTarifa(), is(15.0));
     }
-
-    public void getLlamadasCliente() throws NumeroLlamadaException {
+    @Test
+    public void testGetLlamadasCliente() throws NumeroLlamadaException {
         empresa.añadirLlamada("12345678A", 123456789, 12);
-        assertThat(empresa.getLlamadasCliente("12345678A").values().iterator().next().listIterator().next().getNumero(), is(12));
+        assertThat(empresa.getLlamadasCliente("12345678A").values().iterator().next().listIterator().next().getNumero(), is(123456789));
     }
 }

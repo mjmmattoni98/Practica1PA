@@ -1,4 +1,4 @@
-package clasesDescartadas;
+package excepciones;
 
 public class NumeroLlamadaException extends Exception{
     public NumeroLlamadaException(){

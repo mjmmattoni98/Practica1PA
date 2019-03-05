@@ -1,8 +1,6 @@
 package empresaTelefonia;
 
 
-import excepciones.TarifaException;
-
 import java.time.LocalDateTime;
 import java.util.List;
 

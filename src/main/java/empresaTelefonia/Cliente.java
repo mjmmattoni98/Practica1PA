@@ -1,8 +1,5 @@
 package empresaTelefonia;
 
-import clasesDescartadas.NumeroLlamadaException;
-import excepciones.TarifaException;
-
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -21,7 +18,8 @@ public abstract class Cliente {
         super();
     }
 
-    public Cliente (String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa) {
+    public Cliente (String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa) throws TarifaException{
+        //if (tarifa.getTarifa() < 0) throw new TarifaException();
         this.nombre = nombre;
         this.nif = nif;
         this.direccion = direccion;
@@ -34,7 +32,8 @@ public abstract class Cliente {
         this.facturas = new HashMap<>();
     }
 
-    public void setTarifa(Tarifa nuevaTarifa){
+    public void setTarifa(Tarifa nuevaTarifa) throws  TarifaException{
+        if (nuevaTarifa.getTarifa() < 0) throw new TarifaException();
         this.tarifa = nuevaTarifa;
     }
 

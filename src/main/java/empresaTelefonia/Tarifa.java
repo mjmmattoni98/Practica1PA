@@ -1,8 +1,6 @@
 package empresaTelefonia;
 
 
-import excepciones.TarifaException;
-
 public class Tarifa {
     private double tarifa; //Euros por minuto
 
@@ -11,7 +9,7 @@ public class Tarifa {
         this.tarifa = tarifa;
     }
 
-    public double getTarifa() throws TarifaException{
+    public double getTarifa(){
         return tarifa;
     }
 

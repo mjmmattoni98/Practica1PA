@@ -1,11 +1,8 @@
-import clasesDescartadas.CorreoElectronicoException;
-import clasesDescartadas.NumeroLlamadaException;
 import empresaTelefonia.*;
-import excepciones.*;
+import excepciones.CorreoElectronicoException;
+import excepciones.NumeroLlamadaException;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.*;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.core.Is.*;
@@ -26,22 +23,23 @@ public class ClienteTest {
     }
     @Test
     public void testSetTarifa() throws TarifaException {
-        cliente.setTarifa(new Tarifa(5.0d));
-        assertThat(cliente.getTarifa(),is(5.0d));
+        cliente.setTarifa(new Tarifa(5.0));
+        assertThat(cliente.getTarifa().getTarifa(),is(5.0));
+        //assertThat(cliente.getTarifa(),is(5.0));
     }
-    @Test(expected = TarifaException.class)
-    public void testSetTarifaMenorCero() throws TarifaException {
-        cliente.setTarifa(new Tarifa(-1));
+    @Test(expected = empresaTelefonia.TarifaException.class)
+    public void testExceptionSetTarifaMenorCero() throws TarifaException {
+        //ClienteParticular aux = new ClienteParticular("pepe","57440683Q", new Direccion(11111,"Castellón","Castellón"),"peperamirez@correo.es",new Tarifa(-10.0),"garcia");
+        cliente.setTarifa(new Tarifa(-1.0));
     }
     @Test
     public void testAñadirLlamada() throws NumeroLlamadaException {
-        Llamada llamada = cliente.añadirLlamada(222222222,10);
-        List<Llamada> listaLlamadas= cliente.getLlamadas().get(llamada.getFecha());
-        assertThat(listaLlamadas.get(listaLlamadas.size()-1).getNumero(),is(222222222));
+        Llamada llamada = cliente.añadirLlamada(123456789,10);
+        assertThat(cliente.getLlamadas().values().iterator().next().listIterator().next().getNumero(), is(123456789));
     }
 
     @Test
-    public void testCrearCliente() throws TarifaException, CorreoElectronicoException {
+    public void testCrearCliente() throws TarifaException {
         ClienteParticular clienteprueba = null;
         try {
             clienteprueba = new ClienteParticular("pepe", "03456456Z", new Direccion(12567, "Castellón", "Almazora"), "clienteprueba@correo.com", new Tarifa(15.0), "garcia");
@@ -53,9 +51,9 @@ public class ClienteTest {
         assertThat(clienteprueba.getNif(),is("03456456Z"));
         assertThat(clienteprueba.getNombre(),is("pepe"));
         assertThat(clienteprueba.getApellidos(),is("garcia"));
-        assertThat(clienteprueba.getDireccion().getCp(),is("12567"));
+        assertThat(clienteprueba.getDireccion().getCp(),is(12567));
         assertThat(clienteprueba.getDireccion().getPoblacion(),is("Almazora"));
-        assertThat(clienteprueba.getDireccion().toString(),is("Castellón"));
+        assertThat(clienteprueba.getDireccion().getProvincia(),is("Castellón"));
         assertThat(clienteprueba.getTarifa().getTarifa(),is((double) 15.0));
     }
 }
