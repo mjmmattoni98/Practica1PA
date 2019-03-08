@@ -1,6 +1,8 @@
 package empresaTelefonia;
 
 
+import excepciones.TarifaException;
+
 public class Tarifa {
     private double tarifa; //Euros por minuto
 

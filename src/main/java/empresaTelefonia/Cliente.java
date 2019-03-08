@@ -1,5 +1,7 @@
 package empresaTelefonia;
 
+import excepciones.TarifaException;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -18,7 +20,7 @@ public abstract class Cliente {
         super();
     }
 
-    public Cliente (String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa) throws TarifaException{
+    public Cliente (String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa) throws TarifaException {
         //if (tarifa.getTarifa() < 0) throw new TarifaException();
         this.nombre = nombre;
         this.nif = nif;
@@ -99,24 +101,5 @@ public abstract class Cliente {
         llamadas.put(actualPeriodoFacturacion, new LinkedList<>());
     }
 
-    @Override
-    public String toString(){
-        StringBuilder sb = new StringBuilder();
-        sb.append("-Nombre: " + nombre + "\n");
-        sb.append("-NIF: " + nif + "\n");
-        sb.append("-Direción:\n" + direccion + "\n");
-        sb.append("-Correo electrónico: " + correoElectronico + "\n");
-        sb.append("-Fecha de alta: " + fechaDeAlta + "\n");
-        sb.append("-Tarifa: " + tarifa + "\n");
-        sb.append("-Listado de llamadas:\n");
-        Iterator<Periodo> iterLlamadas = llamadas.keySet().iterator();
-        while (iterLlamadas.hasNext())
-            for (Llamada llamada : llamadas.get(iterLlamadas.next()))
-                sb.append("\t-" + llamada);
-        sb.append("-Listado de facturas:\n");
-        Collection<Factura> colFacturas = facturas.values();
-        for(Factura factura : colFacturas)
-            sb.append(factura);
-        return sb.toString();
-    }
+    public abstract String toString();
 }

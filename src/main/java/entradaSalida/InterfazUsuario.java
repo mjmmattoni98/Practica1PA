@@ -1,5 +1,8 @@
-package empresaTelefonia;
+package entradaSalida;
 
+
+import empresaTelefonia.*;
+import excepciones.TarifaException;
 
 import java.util.List;
 import java.util.Map;
@@ -23,44 +26,50 @@ public class InterfazUsuario {
     }
 
     private void ejecutarAccion(int opcion) {
-        OpcionesMenu opcionMenu = OpcionesMenu.getOpcion(opcion);
-        System.out.println("NIF (si va a mostrar los clientes o los datos de una factura, escriba cualquier palabra): ");
-        String nif = scanner.next();
-        switch (opcionMenu){
-            case MOSTRAR_CLIENTES:
-                mostrarClientes();
-                break;
-            case MOSTRAR_DATOS_FACTURA:
-                mostrarDatosFactura();
-                break;
-            case CREAR_CUENTA:
-                crearCuenta(nif);
-                break;
-            case BORRAR_CUENTA:
-                borrarCuenta(nif);
-                break;
-            case CAMBIAR_TARIFA:
-                cambiarTarifa(nif);
-                break;
-            case EMITIR_FACTURA:
-                emitirFactura(nif);
-                break;
-            case DAR_ALTA_LLAMADA:
-                guardarLlamada(nif);
-                break;
-            case MOSTRAR_FACTURAS_CLIENTE:
-                mostrarFacturasCliente(nif);
-                break;
-            case MOSTRAR_LLAMADAS_CLIENTE:
-                mostrarLlamadasCliente(nif);
-                break;
-            case MOSTRAR_DATOS_CLIENTE:
-                mostrarDatosCliente(nif);
-                break;
+        if(opcion < 0 || opcion > OpcionesMenu.values().length){
+            System.out.println("Opción incorrecta. Asegurese de elegir una opción entre 0 y " + (OpcionesMenu.values().length - 1));
+            menu();
+        }
+        else {
+            OpcionesMenu opcionMenu = OpcionesMenu.getOpcion(opcion);
+            System.out.println("NIF (si va a mostrar los clientes o los datos de una factura, escriba cualquier palabra): ");
+            String nif = scanner.next();
+            switch (opcionMenu) {
+                case MOSTRAR_CLIENTES:
+                    mostrarClientes();
+                    break;
+                case MOSTRAR_DATOS_FACTURA:
+                    mostrarDatosFactura();
+                    break;
+                case CREAR_CUENTA:
+                    crearCuenta(nif);
+                    break;
+                case BORRAR_CUENTA:
+                    borrarCuenta(nif);
+                    break;
+                case CAMBIAR_TARIFA:
+                    cambiarTarifa(nif);
+                    break;
+                case EMITIR_FACTURA:
+                    emitirFactura(nif);
+                    break;
+                case DAR_ALTA_LLAMADA:
+                    guardarLlamada(nif);
+                    break;
+                case MOSTRAR_FACTURAS_CLIENTE:
+                    mostrarFacturasCliente(nif);
+                    break;
+                case MOSTRAR_LLAMADAS_CLIENTE:
+                    mostrarLlamadasCliente(nif);
+                    break;
+                case MOSTRAR_DATOS_CLIENTE:
+                    mostrarDatosCliente(nif);
+                    break;
+            }
         }
     }
 
-    private void repeatMenu(){ //CUIDADO!!!!!
+    private void repeatMenu(){
         System.out.println("Desea realizar alguna otra acción? SI/NO");
         String siNo = scanner.next();
         if (siNo.equalsIgnoreCase("si"))

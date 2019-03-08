@@ -1,5 +1,7 @@
 package empresaTelefonia;
 
+import excepciones.TarifaException;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +17,7 @@ public class Empresa {
         this.codigoFactura = 0;
     }
 
-    public void añadirClienteParticular(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, double tarifa, String apellidos) throws TarifaException{
+    public void añadirClienteParticular(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, double tarifa, String apellidos) throws TarifaException {
         //comprobarKeyClientes(nif);
         //if (tarifa < 0) throw new TarifaException();
         Tarifa miTarifa = new Tarifa(tarifa);

@@ -1,4 +1,4 @@
-package excepciones;
+package clasesDescartadas;
 
 public class CorreoElectronicoException extends Exception{
     public CorreoElectronicoException(){

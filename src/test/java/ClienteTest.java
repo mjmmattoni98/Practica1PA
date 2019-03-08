@@ -1,6 +1,7 @@
 import empresaTelefonia.*;
-import excepciones.CorreoElectronicoException;
-import excepciones.NumeroLlamadaException;
+import clasesDescartadas.CorreoElectronicoException;
+import clasesDescartadas.NumeroLlamadaException;
+import excepciones.TarifaException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +28,7 @@ public class ClienteTest {
         assertThat(cliente.getTarifa().getTarifa(),is(5.0));
         //assertThat(cliente.getTarifa(),is(5.0));
     }
-    @Test(expected = empresaTelefonia.TarifaException.class)
+    @Test(expected = TarifaException.class)
     public void testExceptionSetTarifaMenorCero() throws TarifaException {
         //ClienteParticular aux = new ClienteParticular("pepe","57440683Q", new Direccion(11111,"Castellón","Castellón"),"peperamirez@correo.es",new Tarifa(-10.0),"garcia");
         cliente.setTarifa(new Tarifa(-1.0));

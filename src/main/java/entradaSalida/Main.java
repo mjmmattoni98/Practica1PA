@@ -1,4 +1,7 @@
-package empresaTelefonia;
+package entradaSalida;
+
+import entradaSalida.InterfazUsuario;
+import excepciones.TarifaException;
 
 public class Main {
     public static void main(String[] args) throws TarifaException {

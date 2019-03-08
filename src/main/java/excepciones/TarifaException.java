@@ -1,4 +1,4 @@
-package empresaTelefonia;
+package excepciones;
 
 public class TarifaException extends Exception {
     public TarifaException(){

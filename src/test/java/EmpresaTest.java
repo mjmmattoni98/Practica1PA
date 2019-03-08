@@ -1,3 +1,5 @@
+import clasesDescartadas.CorreoElectronicoException;
+import clasesDescartadas.NumeroLlamadaException;
 import empresaTelefonia.*;
 import excepciones.*;
 import org.junit.After;
