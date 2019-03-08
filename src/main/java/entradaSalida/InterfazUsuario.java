@@ -79,8 +79,12 @@ public class InterfazUsuario {
     }
 
     private void crearCuenta(String nif){
-        System.out.println("Empresa o Particular? ");
-        boolean particular = scanner.next().toLowerCase().equals("particular");
+//        System.out.println("Empresa o Particular? ");
+//        boolean particular = scanner.next().equalsIgnoreCase("particular");
+        ComprobarDato soyEmpresa = dato -> dato.equalsIgnoreCase("empresa");
+        ComprobarDato soyParticular = dato -> dato.equalsIgnoreCase("particular");
+        ObtencionDato datoAObtener = new ObtencionDato("Empresa o Particular?", "No le he entendido.");
+        boolean particular = datoAObtener.comprobarDato(soyEmpresa, soyParticular).equalsIgnoreCase("particular");
         StringBuilder nombre = new StringBuilder();
         System.out.println("Primer nombre: ");
         nombre.append(scanner.next());
