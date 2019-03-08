@@ -13,8 +13,4 @@ public class ClienteParticular extends  Cliente {
         return apellidos;
     }
 
-    public String toString(){
-        return super.toString() + "\n-Apellidos: " + apellidos;
-    } //Va mal, no imprime apellidos.
-
 }

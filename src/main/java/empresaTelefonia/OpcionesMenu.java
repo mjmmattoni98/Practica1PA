@@ -10,7 +10,8 @@ public enum OpcionesMenu {
     MOSTRAR_LLAMADAS_CLIENTE("Mostrar las llamadas realizadas por un cliente."),
     EMITIR_FACTURA("Emitir la factura para un cliente."),
     MOSTRAR_DATOS_FACTURA("Mostrar la informacion de una factura."),
-    MOSTRAR_FACTURAS_CLIENTE("Mostrar las facturas de un cliente.");
+    MOSTRAR_FACTURAS_CLIENTE("Mostrar las facturas de un cliente."),
+    SALIR("Salir de la aplicación.");
 
     private String descripcion;
 

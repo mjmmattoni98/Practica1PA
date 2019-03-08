@@ -15,6 +15,7 @@ public class InterfazUsuario {
     }
 
     public void menu(){
+
         System.out.println(OpcionesMenu.getMenu());
         System.out.println("Elija una opción: ");
         int opcion = scanner.nextInt();
@@ -60,9 +61,9 @@ public class InterfazUsuario {
     }
 
     private void repeatMenu(){ //CUIDADO!!!!!
-        System.out.println("Desea realizar alguna otra acción? ");
-        String siNo = scanner.next().toLowerCase();
-        if (siNo.equals("si"))
+        System.out.println("Desea realizar alguna otra acción? SI/NO");
+        String siNo = scanner.next();
+        if (siNo.equalsIgnoreCase("si"))
             menu();
         else
             System.out.println("Gracias y hasta pronto!!!");
@@ -75,15 +76,15 @@ public class InterfazUsuario {
         System.out.println("Primer nombre: ");
         nombre.append(scanner.next());
         System.out.println("Segundo nombre (si no tiene escriba no): ");
-        String sNombre = scanner.next().toLowerCase();
-        nombre.append((sNombre.equals("no"))?"":" " + sNombre);
+        String sNombre = scanner.next();
+        nombre.append((sNombre.equalsIgnoreCase("no"))?"":" " + sNombre);
         StringBuilder apellidos = new StringBuilder();
         if (particular){
             System.out.println("Primer apellido: ");
             apellidos.append(scanner.next());
             System.out.println("Segundo apellido (si no tiene escriba no): ");
-            String sApellido = scanner.next().toLowerCase();
-            apellidos.append((sApellido.equals("no"))?"":" " + sApellido);
+            String sApellido = scanner.next();
+            apellidos.append((sApellido.equalsIgnoreCase("no"))?"":" " + sApellido);
         }
         System.out.println("CP: ");
         int cp = scanner.nextInt();
@@ -141,7 +142,7 @@ public class InterfazUsuario {
     }
 
     private void emitirFactura(String nif) {
-        Factura factura = null;
+        Factura factura;
         try{
             factura = empresa.emitirFacturaCliente(nif);
             System.out.println("Hecho");
@@ -212,8 +213,8 @@ public class InterfazUsuario {
     }
 
     private void mostrarInformacion(Object o){
-        String opcion = scanner.next().toLowerCase();
-        if ("si".equals(opcion))
+        String opcion = scanner.next();
+        if ("si".equalsIgnoreCase(opcion))
             System.out.println(o);
         repeatMenu();
     }
