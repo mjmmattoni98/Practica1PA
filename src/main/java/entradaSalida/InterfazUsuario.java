@@ -99,8 +99,11 @@ public class InterfazUsuario {
             String sApellido = scanner.next();
             apellidos.append((sApellido.equalsIgnoreCase("no"))?"":" " + sApellido);
         }
-        System.out.println("CP: ");
-        int cp = scanner.nextInt();
+//        System.out.println("CP: ");
+//        int cp = scanner.nextInt();
+        ComprobarDato cpNumerico = dato -> dato.length() == 5;
+        datoAObtener = new ObtencionDato("CP: ", "El código postal tiene que estar compuesto por 5 números");
+        int cp = Integer.parseInt(datoAObtener.comprobarDato(cpNumerico));
         System.out.println("Provincia (si está compuesta por varias palabras, escríbalas separadas por un guión bajo): ");
         String provincia = scanner.next();
         System.out.println("Población (si está compuesta por varias palabras, escríbalas separadas por un guión bajo): ");
