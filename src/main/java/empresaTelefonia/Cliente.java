@@ -87,6 +87,7 @@ public abstract class Cliente {
         facturas.put(codigo, factura);
     }
 
+    //TODO Mover a/crear GestionFacturas
     public Factura emitirFactura(int codigoFactura) throws TarifaException {
         Factura factura = new Factura(tarifa, codigoFactura, actualPeriodoFacturacion);
         factura.calcularImporte(llamadas.get(actualPeriodoFacturacion));

@@ -1,6 +1,4 @@
 import empresaTelefonia.*;
-import clasesDescartadas.CorreoElectronicoException;
-import clasesDescartadas.NumeroLlamadaException;
 import excepciones.TarifaException;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +11,7 @@ public class ClienteTest {
     private ClienteParticular cliente = null;
 
     @Before
-    public void beforeTest() throws TarifaException, CorreoElectronicoException {
+    public void beforeTest() throws TarifaException{
         cliente = new ClienteParticular("pepe","57440683Q", new Direccion(11111,"Castellón","Castellón"),"peperamirez@correo.es",new Tarifa(10.0),"garcia");
     }
 
@@ -34,7 +32,7 @@ public class ClienteTest {
         cliente.setTarifa(new Tarifa(-1.0));
     }
     @Test
-    public void testAñadirLlamada() throws NumeroLlamadaException {
+    public void testAñadirLlamada(){
         Llamada llamada = cliente.añadirLlamada(123456789,10);
         assertThat(cliente.getLlamadas().values().iterator().next().listIterator().next().getNumero(), is(123456789));
     }

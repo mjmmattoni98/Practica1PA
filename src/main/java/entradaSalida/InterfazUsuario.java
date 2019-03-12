@@ -4,21 +4,39 @@ package entradaSalida;
 import empresaTelefonia.*;
 import excepciones.TarifaException;
 
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 public class InterfazUsuario {
     Scanner scanner;
-    Empresa empresa;
+    GestionClientes gestionClientes;
 
     public InterfazUsuario(){
         this.scanner = new Scanner(System.in);
-        this.empresa = new Empresa();
+        this.gestionClientes = new GestionClientes();
+        FileInputStream fis;
+        ObjectInputStream ois;
+        try {
+            fis = new FileInputStream("empresaTelefonia.bin");
+            ois = new ObjectInputStream(fis);
+            this.gestionClientes = (GestionClientes) ois.readObject();
+            fis.close();
+            ois.close();
+        }
+        catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public void menu(){
-
         System.out.println(OpcionesMenu.getMenu());
         System.out.println("Elija una opción: ");
         int opcion = scanner.nextInt();
@@ -74,12 +92,28 @@ public class InterfazUsuario {
         String siNo = scanner.next();
         if (siNo.equalsIgnoreCase("si"))
             menu();
-        else
+        else {
+            FileOutputStream fos;
+            ObjectOutputStream oos;
+            try {
+                fos = new FileOutputStream("empresaTelefonia.bin");
+                oos = new ObjectOutputStream(fos);
+                oos.writeObject(this.gestionClientes);
+                fos.close();
+                oos.close();
+            }
+            catch (FileNotFoundException e){
+                e.printStackTrace();
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
             System.out.println("Gracias y hasta pronto!!!");
+        }
     }
 
     private void crearCuenta(String nif){
-//        System.out.println("Empresa o Particular? ");
+//        System.out.println("GestionClientes o Particular? ");
 //        boolean particular = scanner.next().equalsIgnoreCase("particular");
         ComprobarDato soyEmpresa = dato -> dato.equalsIgnoreCase("empresa");
         ComprobarDato soyParticular = dato -> dato.equalsIgnoreCase("particular");
@@ -101,6 +135,7 @@ public class InterfazUsuario {
         }
 //        System.out.println("CP: ");
 //        int cp = scanner.nextInt();
+        // TODO Dos scanners: para lineas y para texto
         ComprobarDato cpNumerico = dato -> dato.length() == 5;
         datoAObtener = new ObtencionDato("CP: ", "El código postal tiene que estar compuesto por 5 números");
         int cp = Integer.parseInt(datoAObtener.comprobarDato(cpNumerico));
@@ -114,7 +149,7 @@ public class InterfazUsuario {
         double tarifa = Double.parseDouble(scanner.next());
         if (particular){
             try{
-                empresa.añadirClienteParticular(nif, nombre.toString(), cp, provincia, poblacion, correoElectronico, tarifa, apellidos.toString());
+                gestionClientes.addClienteParticular(nif, nombre.toString(), cp, provincia, poblacion, correoElectronico, tarifa, apellidos.toString());
                 System.out.println("El cliente se ha añadido correctamente.");
             }
             catch (TarifaException e){
@@ -126,7 +161,7 @@ public class InterfazUsuario {
         }
         else {
             try {
-                empresa.añadirClienteEmpresa(nif, nombre.toString(), cp, provincia, poblacion, correoElectronico, tarifa);
+                gestionClientes.addClienteEmpresa(nif, nombre.toString(), cp, provincia, poblacion, correoElectronico, tarifa);
                 System.out.println("El cliente se ha añadido correctamente.");
             } catch (TarifaException e) {
                 e.printStackTrace();
@@ -138,7 +173,7 @@ public class InterfazUsuario {
     }
 
     private void borrarCuenta(String nif){
-        empresa.borrarCliente(nif);
+        gestionClientes.borrarCliente(nif);
         System.out.println("Cliente borrado con éxito.");
         repeatMenu();
     }
@@ -147,7 +182,7 @@ public class InterfazUsuario {
         System.out.println("Introduzca la nueva tarifa: ");
         double tarifa = Double.parseDouble(scanner.next());
         try{
-            empresa.cambiarTarifaCliente(nif, tarifa);
+            gestionClientes.cambiarTarifaCliente(nif, tarifa);
         }
         catch (TarifaException e){
             e.printStackTrace();
@@ -160,7 +195,7 @@ public class InterfazUsuario {
     private void emitirFactura(String nif) {
         Factura factura;
         try{
-            factura = empresa.emitirFacturaCliente(nif);
+            factura = gestionClientes.emitirFacturaCliente(nif);
             System.out.println("Hecho");
             System.out.println("Desea ver la factura? ");
             mostrarInformacion(factura);
@@ -178,7 +213,7 @@ public class InterfazUsuario {
         int numero = scanner.nextInt();
         System.out.println("Duración de la llamada: ");
         int duracion = scanner.nextInt();
-        Llamada llamada = empresa.añadirLlamada(nif, numero, duracion);
+        Llamada llamada = gestionClientes.añadirLlamada(nif, numero, duracion);
         System.out.println("Desea ver la información de la llamada? ");
         mostrarInformacion(llamada);
         repeatMenu();
@@ -186,9 +221,9 @@ public class InterfazUsuario {
 
     private void mostrarClientes(){
         int i = 1;
-        for (String nif : empresa.getClientes().keySet()){
+        for (String nif : gestionClientes.getClientes().keySet()){
             System.out.println("Cliente " + i++ + ":");
-            System.out.println(empresa.getCliente(nif));
+            System.out.println(gestionClientes.getCliente(nif));
         }
         if (i == 1)
             System.out.println("No hay clientes aún guardados.");
@@ -196,30 +231,30 @@ public class InterfazUsuario {
     }
 
     private void mostrarDatosCliente(String nif){
-        System.out.println(empresa.getCliente(nif));
+        System.out.println(gestionClientes.getCliente(nif));
         repeatMenu();
     }
 
     private void mostrarDatosFactura(){
         System.out.println("Codigo de factura: ");
         int codigo = scanner.nextInt();
-        System.out.println(empresa.getFactura(codigo));
+        System.out.println(gestionClientes.getFactura(codigo));
         repeatMenu();
     }
 
     private void mostrarFacturasCliente(String nif){
         int i = 1;
-        for (Integer codigo : empresa.getFacturasCliente(nif).keySet()){
+        for (Integer codigo : gestionClientes.getFacturasCliente(nif).keySet()){
             System.out.println("Factura " + i++ + ":");
-            System.out.println(empresa.getFactura(codigo));
+            System.out.println(gestionClientes.getFactura(codigo));
         }
         if (i == 1)
-            System.out.println("No hay facturas asociadas aún al cliente " + empresa.getCliente(nif) + ".");
+            System.out.println("No hay facturas asociadas aún al cliente " + gestionClientes.getCliente(nif) + ".");
         repeatMenu();
     }
 
     private void mostrarLlamadasCliente(String nif){
-        Map<Periodo, List<Llamada>> llamadas = empresa.getLlamadasCliente(nif);
+        Map<Periodo, List<Llamada>> llamadas = gestionClientes.getLlamadasCliente(nif);
         for (Periodo periodo : llamadas.keySet()){
             System.out.println("Llamadas hechas en el periodo " + periodo + ":");
             for (Llamada llamada : llamadas.get(periodo))

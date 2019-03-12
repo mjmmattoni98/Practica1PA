@@ -6,18 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Empresa {
+public class GestionClientes {
     private Map<String, Cliente> clientes;
     private Map<Integer, Factura> facturas;
     private int codigoFactura;
 
-    public Empresa(){
+    public GestionClientes(){
         this.clientes = new HashMap<>();
         this.facturas = new HashMap<>();
         this.codigoFactura = 0;
     }
 
-    public void añadirClienteParticular(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, double tarifa, String apellidos) throws TarifaException {
+    public void addClienteParticular(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, double tarifa, String apellidos) throws TarifaException {
         //comprobarKeyClientes(nif);
         //if (tarifa < 0) throw new TarifaException();
         Tarifa miTarifa = new Tarifa(tarifa);
@@ -25,7 +25,7 @@ public class Empresa {
         clientes.put(nif, cliente);
     }
 
-    public void añadirClienteEmpresa(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, double tarifa) throws TarifaException{
+    public void addClienteEmpresa(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, double tarifa) throws TarifaException{
        // comprobarKeyClientes(nif);
         Cliente cliente = new ClienteEmpresa(nombre, nif, new Direccion(cp, provincia, poblacion), correoElectronico, new Tarifa(tarifa));
         clientes.put(nif, cliente);
