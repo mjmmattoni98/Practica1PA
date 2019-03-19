@@ -1,5 +1,6 @@
 package empresaTelefonia;
 
+import excepciones.NIFException;
 import excepciones.TarifaException;
 
 import java.util.Collection;
@@ -9,7 +10,7 @@ import java.util.Map;
 
 public class ClienteEmpresa extends Cliente {
 
-    public ClienteEmpresa(String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa) throws TarifaException {
+    public ClienteEmpresa(String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa) throws TarifaException, NIFException {
         super(nombre, nif, direccion, correoElectronico, tarifa);
     }
 

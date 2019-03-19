@@ -2,6 +2,7 @@ package entradaSalida;
 
 
 import empresaTelefonia.*;
+import excepciones.NIFException;
 import excepciones.TarifaException;
 
 import java.io.*;
@@ -24,26 +25,20 @@ public class InterfazUsuario {
             this.gestionClientes = (GestionClientes) ois.readObject();
             fis.close();
             ois.close();
-        }
-        catch (FileNotFoundException e){
+        } catch (ClassNotFoundException | IOException e){
             e.printStackTrace();
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
-        catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("No hay clientes aun.");
         }
     }
 
-    public void menu(){
+    public void menu() throws NIFException{
         System.out.println(OpcionesMenu.getMenu());
         System.out.println("Elija una opción: ");
         int opcion = scanner.nextInt();
         ejecutarAccion(opcion);
     }
 
-    private void ejecutarAccion(int opcion) {
+    private void ejecutarAccion(int opcion) throws NIFException{
         if(opcion < 0 || opcion > OpcionesMenu.values().length){
             System.out.println("Opción incorrecta. Asegurese de elegir una opción entre 0 y " + (OpcionesMenu.values().length - 1));
             menu();
@@ -87,7 +82,7 @@ public class InterfazUsuario {
         }
     }
 
-    private void repeatMenu(){
+    private void repeatMenu() throws NIFException{
         System.out.println("Desea realizar alguna otra acción? SI/NO");
         String siNo = scanner.next();
         if (siNo.equalsIgnoreCase("si"))
@@ -101,18 +96,14 @@ public class InterfazUsuario {
                 oos.writeObject(this.gestionClientes);
                 fos.close();
                 oos.close();
-            }
-            catch (FileNotFoundException e){
-                e.printStackTrace();
-            }
-            catch (IOException e){
+            } catch (IOException e){
                 e.printStackTrace();
             }
             System.out.println("Gracias y hasta pronto!!!");
         }
     }
 
-    private void crearCuenta(String nif){
+    private void crearCuenta(String nif) throws NIFException {
 //        System.out.println("GestionClientes o Particular? ");
 //        boolean particular = scanner.next().equalsIgnoreCase("particular");
         ComprobarDato soyEmpresa = dato -> dato.equalsIgnoreCase("empresa");
@@ -172,13 +163,13 @@ public class InterfazUsuario {
         }
     }
 
-    private void borrarCuenta(String nif){
+    private void borrarCuenta(String nif)throws NIFException{
         gestionClientes.borrarCliente(nif);
         System.out.println("Cliente borrado con éxito.");
         repeatMenu();
     }
 
-    private void cambiarTarifa(String nif){
+    private void cambiarTarifa(String nif)throws NIFException{
         System.out.println("Introduzca la nueva tarifa: ");
         double tarifa = Double.parseDouble(scanner.next());
         try{
@@ -192,7 +183,7 @@ public class InterfazUsuario {
         }
     }
 
-    private void emitirFactura(String nif) {
+    private void emitirFactura(String nif) throws NIFException{
         Factura factura;
         try{
             factura = gestionClientes.emitirFacturaCliente(nif);
@@ -208,18 +199,18 @@ public class InterfazUsuario {
         }
     }
 
-    private void guardarLlamada(String nif){
+    private void guardarLlamada(String nif)throws NIFException{
         System.out.println("Número al que ha llamado: ");
         int numero = scanner.nextInt();
         System.out.println("Duración de la llamada: ");
-        int duracion = scanner.nextInt();
+        double duracion = Double.parseDouble(scanner.next());
         Llamada llamada = gestionClientes.añadirLlamada(nif, numero, duracion);
         System.out.println("Desea ver la información de la llamada? ");
         mostrarInformacion(llamada);
         repeatMenu();
     }
 
-    private void mostrarClientes(){
+    private void mostrarClientes()throws NIFException{
         int i = 1;
         for (String nif : gestionClientes.getClientes().keySet()){
             System.out.println("Cliente " + i++ + ":");
@@ -230,19 +221,19 @@ public class InterfazUsuario {
         repeatMenu();
     }
 
-    private void mostrarDatosCliente(String nif){
+    private void mostrarDatosCliente(String nif)throws NIFException{
         System.out.println(gestionClientes.getCliente(nif));
         repeatMenu();
     }
 
-    private void mostrarDatosFactura(){
+    private void mostrarDatosFactura()throws NIFException{
         System.out.println("Codigo de factura: ");
         int codigo = scanner.nextInt();
         System.out.println(gestionClientes.getFactura(codigo));
         repeatMenu();
     }
 
-    private void mostrarFacturasCliente(String nif){
+    private void mostrarFacturasCliente(String nif)throws NIFException{
         int i = 1;
         for (Integer codigo : gestionClientes.getFacturasCliente(nif).keySet()){
             System.out.println("Factura " + i++ + ":");
@@ -253,7 +244,7 @@ public class InterfazUsuario {
         repeatMenu();
     }
 
-    private void mostrarLlamadasCliente(String nif){
+    private void mostrarLlamadasCliente(String nif)throws NIFException{
         Map<Periodo, List<Llamada>> llamadas = gestionClientes.getLlamadasCliente(nif);
         for (Periodo periodo : llamadas.keySet()){
             System.out.println("Llamadas hechas en el periodo " + periodo + ":");
@@ -263,7 +254,7 @@ public class InterfazUsuario {
         repeatMenu();
     }
 
-    private void mostrarInformacion(Object o){
+    private void mostrarInformacion(Object o)throws NIFException{
         String opcion = scanner.next();
         if ("si".equalsIgnoreCase(opcion))
             System.out.println(o);

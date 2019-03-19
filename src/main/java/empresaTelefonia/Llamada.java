@@ -1,14 +1,15 @@
 package empresaTelefonia;
 
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Llamada implements Comparable<Llamada>{
+public class Llamada implements Comparable<Llamada>, Serializable {
     private int numero;
     private LocalDateTime fechaYHora;
-    private int duración;
+    private double duración;
 
-    public Llamada (int numero, LocalDateTime fechaYHora, int duración) {
+    public Llamada (int numero, LocalDateTime fechaYHora, double duración) {
         this.numero = numero;
         this.fechaYHora = fechaYHora;
         this.duración = duración;
@@ -18,7 +19,7 @@ public class Llamada implements Comparable<Llamada>{
         return fechaYHora;
     }
 
-    public int getDuración(){
+    public double getDuración(){
         return duración;
     }
 

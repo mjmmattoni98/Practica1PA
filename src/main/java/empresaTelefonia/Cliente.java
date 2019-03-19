@@ -1,11 +1,13 @@
 package empresaTelefonia;
 
+import excepciones.NIFException;
 import excepciones.TarifaException;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public abstract class Cliente {
+public abstract class Cliente implements Serializable {
     private String nombre;
     private String nif;
     private Direccion direccion;
@@ -20,9 +22,18 @@ public abstract class Cliente {
         super();
     }
 
-    public Cliente (String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa) throws TarifaException {
+    public Cliente (String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa) throws TarifaException, NIFException {
         //if (tarifa.getTarifa() < 0) throw new TarifaException();
         this.nombre = nombre;
+        if(nif.length() == 9 || Character.isLetter(nif.charAt(8))) {
+            try {
+                Integer.parseInt(nif.substring(0,8));
+            }catch (NumberFormatException e) {
+                throw new NIFException();
+            }
+        }
+        else
+            throw new NIFException();
         this.nif = nif;
         this.direccion = direccion;
         this.correoElectronico = correoElectronico;
@@ -75,7 +86,7 @@ public abstract class Cliente {
         return nif;
     }
 
-    public Llamada añadirLlamada(int numero, int duracion) {
+    public Llamada añadirLlamada(int numero, double duracion) {
         Llamada llamada = new Llamada(numero, LocalDateTime.now(), duracion);
         List<Llamada> listaLlamadas = llamadas.get(actualPeriodoFacturacion);
         listaLlamadas.add(llamada);

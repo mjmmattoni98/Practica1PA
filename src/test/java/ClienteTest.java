@@ -1,4 +1,5 @@
 import empresaTelefonia.*;
+import excepciones.NIFException;
 import excepciones.TarifaException;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +12,7 @@ public class ClienteTest {
     private ClienteParticular cliente = null;
 
     @Before
-    public void beforeTest() throws TarifaException{
+    public void beforeTest() throws TarifaException, NIFException {
         cliente = new ClienteParticular("pepe","57440683Q", new Direccion(11111,"Castellón","Castellón"),"peperamirez@correo.es",new Tarifa(10.0),"garcia");
     }
 
@@ -38,7 +39,7 @@ public class ClienteTest {
     }
 
     @Test
-    public void testCrearCliente() throws TarifaException {
+    public void testCrearCliente() throws TarifaException, NIFException {
         ClienteParticular clienteprueba = null;
         try {
             clienteprueba = new ClienteParticular("pepe", "03456456Z", new Direccion(12567, "Castellón", "Almazora"), "clienteprueba@correo.com", new Tarifa(15.0), "garcia");

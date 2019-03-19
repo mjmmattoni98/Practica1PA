@@ -3,10 +3,11 @@ package empresaTelefonia;
 
 import excepciones.TarifaException;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class Factura {
+public class Factura implements Serializable {
     private Tarifa tarifa; //El cambio de tarifa se verá reflejado en la siguiente factura
     private int codigo;
     private LocalDateTime fechaEmision;

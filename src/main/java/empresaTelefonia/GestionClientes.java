@@ -1,12 +1,16 @@
 package empresaTelefonia;
 
+import excepciones.NIFException;
 import excepciones.TarifaException;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GestionClientes {
+public class GestionClientes implements Serializable {
     private Map<String, Cliente> clientes;
     private Map<Integer, Factura> facturas;
     private int codigoFactura;
@@ -17,7 +21,7 @@ public class GestionClientes {
         this.codigoFactura = 0;
     }
 
-    public void addClienteParticular(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, double tarifa, String apellidos) throws TarifaException {
+    public void addClienteParticular(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, double tarifa, String apellidos) throws TarifaException, NIFException {
         //comprobarKeyClientes(nif);
         //if (tarifa < 0) throw new TarifaException();
         Tarifa miTarifa = new Tarifa(tarifa);
@@ -25,7 +29,7 @@ public class GestionClientes {
         clientes.put(nif, cliente);
     }
 
-    public void addClienteEmpresa(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, double tarifa) throws TarifaException{
+    public void addClienteEmpresa(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, double tarifa) throws TarifaException, NIFException{
        // comprobarKeyClientes(nif);
         Cliente cliente = new ClienteEmpresa(nombre, nif, new Direccion(cp, provincia, poblacion), correoElectronico, new Tarifa(tarifa));
         clientes.put(nif, cliente);
@@ -73,7 +77,7 @@ public class GestionClientes {
         return factura;
     }
 
-    public Llamada añadirLlamada(String nif, int numero, int duracion) {
+    public Llamada añadirLlamada(String nif, int numero, double duracion) {
         //comprobarKeyClientes(nif);
         Llamada llamada = clientes.get(nif).añadirLlamada(numero, duracion);
         return llamada;
@@ -92,6 +96,16 @@ public class GestionClientes {
     public Map<Periodo, List<Llamada>> getLlamadasCliente(String nif) {
         //comprobarKeyClientes(nif);
         return clientes.get(nif).getLlamadas();
+    }
+
+    public <T extends Cliente> List<T> getFecha(List<T> conjuntoObjetos, LocalDateTime fechaInicio, LocalDateTime fechaFin){
+        ArrayList<T> listaAux = new ArrayList<>();
+        for(T obj : conjuntoObjetos){
+            if (obj.getFecha().isAfter(fechaInicio) && obj.getFecha().isBefore(fechaFin)) {
+                listaAux.add(obj);
+            }
+        }
+        return listaAux;
     }
 
 

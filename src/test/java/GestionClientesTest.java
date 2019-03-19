@@ -11,7 +11,7 @@ public class GestionClientesTest {
     private GestionClientes gestionClientes = new GestionClientes();
 
     @Before
-    public void beforeTest() throws TarifaException{
+    public void beforeTest() throws TarifaException, NIFException{
         gestionClientes.addClienteParticular("12345678A", "ana", 12345, "Valencia", "Valencia", "anaprueba@correo.com", 15.0, "Bachueca Gimenez");
     }
 

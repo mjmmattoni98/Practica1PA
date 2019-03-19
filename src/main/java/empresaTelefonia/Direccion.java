@@ -1,6 +1,8 @@
 package empresaTelefonia;
 
-public class Direccion {
+import java.io.Serializable;
+
+public class Direccion implements Serializable {
     private int cp;
     private String provincia;
     private String poblacion;

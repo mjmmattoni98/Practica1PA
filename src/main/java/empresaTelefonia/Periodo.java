@@ -1,9 +1,10 @@
 package empresaTelefonia;
 
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Periodo {
+public class Periodo implements Serializable {
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaFin;
 
@@ -23,5 +24,11 @@ public class Periodo {
     @Override
     public String toString(){
         return "(" + fechaInicio.toLocalDate() + " - " + fechaFin.toLocalDate() + ")";
+    }
+
+    @Override
+    public boolean equals(Object o){
+        Periodo otroPeriodo = (Periodo) o;
+        return fechaInicio.equals(otroPeriodo.getFechaInicio()) && fechaFin.equals(otroPeriodo.getFechaFin());
     }
 }
