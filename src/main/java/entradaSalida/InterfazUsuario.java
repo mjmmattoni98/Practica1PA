@@ -12,10 +12,12 @@ import java.util.Scanner;
 
 public class InterfazUsuario {
     Scanner scanner;
+    Scanner scannerPalabra;
     GestionClientes gestionClientes;
 
     public InterfazUsuario(){
         this.scanner = new Scanner(System.in);
+        this.scannerPalabra = new Scanner(System.in);
         this.gestionClientes = new GestionClientes();
         FileInputStream fis;
         ObjectInputStream ois;
@@ -26,7 +28,6 @@ public class InterfazUsuario {
             fis.close();
             ois.close();
         } catch (ClassNotFoundException | IOException e){
-            e.printStackTrace();
             System.out.println("No hay clientes aun.");
         }
     }
@@ -34,7 +35,7 @@ public class InterfazUsuario {
     public void menu() throws NIFException{
         System.out.println(OpcionesMenu.getMenu());
         System.out.println("Elija una opción: ");
-        int opcion = scanner.nextInt();
+        int opcion = scannerPalabra.nextInt();
         ejecutarAccion(opcion);
     }
 
@@ -46,7 +47,7 @@ public class InterfazUsuario {
         else {
             OpcionesMenu opcionMenu = OpcionesMenu.getOpcion(opcion);
             System.out.println("NIF (si va a mostrar los clientes o los datos de una factura, escriba cualquier palabra): ");
-            String nif = scanner.next();
+            String nif = scannerPalabra.next();
             switch (opcionMenu) {
                 case MOSTRAR_CLIENTES:
                     mostrarClientes();
@@ -84,7 +85,7 @@ public class InterfazUsuario {
 
     private void repeatMenu() throws NIFException{
         System.out.println("Desea realizar alguna otra acción? SI/NO");
-        String siNo = scanner.next();
+        String siNo = scannerPalabra.next();
         if (siNo.equalsIgnoreCase("si"))
             menu();
         else {
@@ -109,13 +110,15 @@ public class InterfazUsuario {
         ComprobarDato soyEmpresa = dato -> dato.equalsIgnoreCase("empresa");
         ComprobarDato soyParticular = dato -> dato.equalsIgnoreCase("particular");
         ObtencionDato datoAObtener = new ObtencionDato("Empresa o Particular?", "No le he entendido.");
-        boolean particular = datoAObtener.comprobarDato(soyEmpresa, soyParticular).equalsIgnoreCase("particular");
-        StringBuilder nombre = new StringBuilder();
+        boolean particular = datoAObtener.comprobarDato(soyEmpresa, soyParticular, scannerPalabra).equalsIgnoreCase("particular");
+        /*StringBuilder nombre = new StringBuilder();
         System.out.println("Primer nombre: ");
         nombre.append(scanner.next());
         System.out.println("Segundo nombre (si no tiene escriba no): ");
         String sNombre = scanner.next();
-        nombre.append((sNombre.equalsIgnoreCase("no"))?"":" " + sNombre);
+        nombre.append((sNombre.equalsIgnoreCase("no"))?"":" " + sNombre);*/
+        System.out.println("Nombre: ");
+        String nombre = scanner.nextLine();
         StringBuilder apellidos = new StringBuilder();
         if (particular){
             System.out.println("Primer apellido: ");
@@ -129,7 +132,7 @@ public class InterfazUsuario {
         // TODO Dos scanners: para lineas y para texto
         ComprobarDato cpNumerico = dato -> dato.length() == 5;
         datoAObtener = new ObtencionDato("CP: ", "El código postal tiene que estar compuesto por 5 números");
-        int cp = Integer.parseInt(datoAObtener.comprobarDato(cpNumerico));
+        int cp = Integer.parseInt(datoAObtener.comprobarDato(cpNumerico, scannerPalabra));
         System.out.println("Provincia (si está compuesta por varias palabras, escríbalas separadas por un guión bajo): ");
         String provincia = scanner.next();
         System.out.println("Población (si está compuesta por varias palabras, escríbalas separadas por un guión bajo): ");

@@ -5,15 +5,13 @@ import java.util.Scanner;
 public class ObtencionDato {
     private String consultaDato;
     private String mensajeError;
-    private Scanner scanner;
 
     public ObtencionDato(String consultaDato, String mensajeError){
         this.consultaDato = consultaDato;
         this.mensajeError = mensajeError;
-        this.scanner = new Scanner(System.in);
     }
 
-    public String comprobarDato(ComprobarDato comprobacion){
+    public String comprobarDato(ComprobarDato comprobacion, Scanner scanner){
         String dato;
         boolean okay;
         do{
@@ -28,7 +26,7 @@ public class ObtencionDato {
         return dato;
     }
 
-    public String comprobarDato(ComprobarDato comprobacion1, ComprobarDato comprobacion2){
+    public String comprobarDato(ComprobarDato comprobacion1, ComprobarDato comprobacion2, Scanner scanner){
         String dato;
         boolean okay;
         do{
