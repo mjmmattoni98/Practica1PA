@@ -11,12 +11,14 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class InterfazUsuario {
-    Scanner scanner;
+    Scanner scannerLinea;
     Scanner scannerPalabra;
     GestionClientes gestionClientes;
+    ObtencionDato datoAObtener;
 
     public InterfazUsuario(){
-        this.scanner = new Scanner(System.in);
+        this.datoAObtener = new ObtencionDato();
+        this.scannerLinea = new Scanner(System.in);
         this.scannerPalabra = new Scanner(System.in);
         this.gestionClientes = new GestionClientes();
         FileInputStream fis;
@@ -105,45 +107,31 @@ public class InterfazUsuario {
     }
 
     private void crearCuenta(String nif) throws NIFException {
-//        System.out.println("GestionClientes o Particular? ");
-//        boolean particular = scanner.next().equalsIgnoreCase("particular");
         ComprobarDato soyEmpresa = dato -> dato.equalsIgnoreCase("empresa");
         ComprobarDato soyParticular = dato -> dato.equalsIgnoreCase("particular");
-        ObtencionDato datoAObtener = new ObtencionDato("Empresa o Particular?", "No le he entendido.");
+        datoAObtener.withConsulta("Empresa o Particular?").withMensajeError("No le he entendido.");
         boolean particular = datoAObtener.comprobarDato(soyEmpresa, soyParticular, scannerPalabra).equalsIgnoreCase("particular");
-        /*StringBuilder nombre = new StringBuilder();
-        System.out.println("Primer nombre: ");
-        nombre.append(scanner.next());
-        System.out.println("Segundo nombre (si no tiene escriba no): ");
-        String sNombre = scanner.next();
-        nombre.append((sNombre.equalsIgnoreCase("no"))?"":" " + sNombre);*/
         System.out.println("Nombre: ");
-        String nombre = scanner.nextLine();
-        StringBuilder apellidos = new StringBuilder();
+        String nombre = scannerLinea.nextLine();
+        String apellidos = "";
         if (particular){
-            System.out.println("Primer apellido: ");
-            apellidos.append(scanner.next());
-            System.out.println("Segundo apellido (si no tiene escriba no): ");
-            String sApellido = scanner.next();
-            apellidos.append((sApellido.equalsIgnoreCase("no"))?"":" " + sApellido);
+            System.out.println("Apellidos: ");
+            apellidos = scannerLinea.nextLine();
         }
-//        System.out.println("CP: ");
-//        int cp = scanner.nextInt();
-        // TODO Dos scanners: para lineas y para texto
         ComprobarDato cpNumerico = dato -> dato.length() == 5;
-        datoAObtener = new ObtencionDato("CP: ", "El código postal tiene que estar compuesto por 5 números");
+        datoAObtener.withConsulta("CP: ").withMensajeError("El código postal tiene que estar compuesto por 5 números");
         int cp = Integer.parseInt(datoAObtener.comprobarDato(cpNumerico, scannerPalabra));
-        System.out.println("Provincia (si está compuesta por varias palabras, escríbalas separadas por un guión bajo): ");
-        String provincia = scanner.next();
-        System.out.println("Población (si está compuesta por varias palabras, escríbalas separadas por un guión bajo): ");
-        String poblacion = scanner.next();
+        System.out.println("Provincia: ");
+        String provincia = scannerLinea.nextLine();
+        System.out.println("Población: ");
+        String poblacion = scannerLinea.nextLine();
         System.out.println("Correo electrónico: ");
-        String correoElectronico = scanner.next();
+        String correoElectronico = scannerPalabra.next();
         System.out.println("Tarifa: ");
-        double tarifa = Double.parseDouble(scanner.next());
+        double tarifa = Double.parseDouble(scannerPalabra.next());
         if (particular){
             try{
-                gestionClientes.addClienteParticular(nif, nombre.toString(), cp, provincia, poblacion, correoElectronico, tarifa, apellidos.toString());
+                gestionClientes.addClienteParticular(nif, nombre, cp, provincia, poblacion, correoElectronico, tarifa, apellidos);
                 System.out.println("El cliente se ha añadido correctamente.");
             }
             catch (TarifaException e){
@@ -155,7 +143,7 @@ public class InterfazUsuario {
         }
         else {
             try {
-                gestionClientes.addClienteEmpresa(nif, nombre.toString(), cp, provincia, poblacion, correoElectronico, tarifa);
+                gestionClientes.addClienteEmpresa(nif, nombre, cp, provincia, poblacion, correoElectronico, tarifa);
                 System.out.println("El cliente se ha añadido correctamente.");
             } catch (TarifaException e) {
                 e.printStackTrace();
@@ -174,7 +162,7 @@ public class InterfazUsuario {
 
     private void cambiarTarifa(String nif)throws NIFException{
         System.out.println("Introduzca la nueva tarifa: ");
-        double tarifa = Double.parseDouble(scanner.next());
+        double tarifa = Double.parseDouble(scannerPalabra.next());
         try{
             gestionClientes.cambiarTarifaCliente(nif, tarifa);
         }
@@ -204,11 +192,11 @@ public class InterfazUsuario {
 
     private void guardarLlamada(String nif)throws NIFException{
         System.out.println("Número al que ha llamado: ");
-        int numero = scanner.nextInt();
+        int numero = scannerPalabra.nextInt();
         System.out.println("Duración de la llamada: ");
-        double duracion = Double.parseDouble(scanner.next());
+        double duracion = Double.parseDouble(scannerPalabra.next());
         Llamada llamada = gestionClientes.añadirLlamada(nif, numero, duracion);
-        System.out.println("Desea ver la información de la llamada? ");
+        System.out.println("Desea ver la información de la llamada? SI/NO");
         mostrarInformacion(llamada);
         repeatMenu();
     }
@@ -231,7 +219,7 @@ public class InterfazUsuario {
 
     private void mostrarDatosFactura()throws NIFException{
         System.out.println("Codigo de factura: ");
-        int codigo = scanner.nextInt();
+        int codigo = scannerPalabra.nextInt();
         System.out.println(gestionClientes.getFactura(codigo));
         repeatMenu();
     }
@@ -258,7 +246,7 @@ public class InterfazUsuario {
     }
 
     private void mostrarInformacion(Object o)throws NIFException{
-        String opcion = scanner.next();
+        String opcion = scannerPalabra.next();
         if ("si".equalsIgnoreCase(opcion))
             System.out.println(o);
         repeatMenu();

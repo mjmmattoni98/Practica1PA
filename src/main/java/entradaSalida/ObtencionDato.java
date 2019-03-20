@@ -6,9 +6,19 @@ public class ObtencionDato {
     private String consultaDato;
     private String mensajeError;
 
-    public ObtencionDato(String consultaDato, String mensajeError){
-        this.consultaDato = consultaDato;
+    //TODO Modificar la clase para que no sea necesario crearla cada vez que se quiere obtener un nuevo dato.
+    public ObtencionDato(){
+        super();
+    }
+
+    public ObtencionDato withConsulta(String consulta){
+        this.consultaDato = consulta;
+        return this;
+    }
+
+    public ObtencionDato withMensajeError(String mensajeError){
         this.mensajeError = mensajeError;
+        return this;
     }
 
     public String comprobarDato(ComprobarDato comprobacion, Scanner scanner){
@@ -16,7 +26,7 @@ public class ObtencionDato {
         boolean okay;
         do{
             System.out.println(consultaDato);
-            dato = scanner.next();
+            dato = scanner.nextLine();
             okay = comprobacion.comprobarDato(dato);
             if (!okay) {
                 System.out.println(mensajeError);
@@ -31,7 +41,7 @@ public class ObtencionDato {
         boolean okay;
         do{
             System.out.println(consultaDato);
-            dato = scanner.next();
+            dato = scanner.nextLine();
             okay = comprobacion1.comprobarDato(dato) || comprobacion2.comprobarDato(dato);
             if (!okay) {
                 System.out.println(mensajeError);
