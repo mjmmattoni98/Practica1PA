@@ -1,4 +1,4 @@
-package entradaSalida;
+package entrada.salida;
 
 @FunctionalInterface
 public interface ComprobarDato {

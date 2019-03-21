@@ -1,4 +1,4 @@
-package empresaTelefonia;
+package empresa.telefonia;
 
 import excepciones.NIFException;
 import excepciones.TarifaException;
@@ -22,7 +22,7 @@ public abstract class Cliente implements Serializable {
         super();
     }
 
-    public Cliente (String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa) throws TarifaException, NIFException {
+    public Cliente (String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa) throws NIFException {
         //if (tarifa.getTarifa() < 0) throw new TarifaException();
         this.nombre = nombre;
         if(nif.length() == 9 || Character.isLetter(nif.charAt(8))) {

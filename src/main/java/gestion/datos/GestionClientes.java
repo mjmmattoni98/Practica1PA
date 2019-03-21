@@ -1,29 +1,23 @@
-package empresaTelefonia;
+package gestion.datos;
 
+import empresa.telefonia.*;
 import excepciones.NIFException;
 import excepciones.TarifaException;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GestionClientes implements Serializable {
-    private Map<String, Cliente> clientes;
-    private Map<Integer, Factura> facturas;
-    private int codigoFactura;
+public class GestionClientes extends BaseDatosClientes implements Serializable {
 
     public GestionClientes(){
-        this.clientes = new HashMap<>();
-        this.facturas = new HashMap<>();
-        this.codigoFactura = 0;
+        super();
     }
 
     public void addClienteParticular(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, double tarifa, String apellidos) throws TarifaException, NIFException {
         //comprobarKeyClientes(nif);
-        //if (tarifa < 0) throw new TarifaException();
         Tarifa miTarifa = new Tarifa(tarifa);
         Cliente cliente = new ClienteParticular(nombre, nif, new Direccion(cp, provincia, poblacion), correoElectronico, /*new Tarifa(tarifa)*/ miTarifa, apellidos);
         clientes.put(nif, cliente);

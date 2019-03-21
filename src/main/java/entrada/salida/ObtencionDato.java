@@ -1,4 +1,4 @@
-package entradaSalida;
+package entrada.salida;
 
 import java.util.Scanner;
 
@@ -6,7 +6,6 @@ public class ObtencionDato {
     private String consultaDato;
     private String mensajeError;
 
-    //TODO Modificar la clase para que no sea necesario crearla cada vez que se quiere obtener un nuevo dato.
     public ObtencionDato(){
         super();
     }

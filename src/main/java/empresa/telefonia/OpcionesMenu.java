@@ -1,4 +1,4 @@
-package empresaTelefonia;
+package empresa.telefonia;
 
 public enum OpcionesMenu {
     CREAR_CUENTA("Crear una cuenta nueva."),

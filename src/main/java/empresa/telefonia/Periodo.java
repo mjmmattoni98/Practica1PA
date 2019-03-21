@@ -1,4 +1,4 @@
-package empresaTelefonia;
+package empresa.telefonia;
 
 
 import java.io.Serializable;

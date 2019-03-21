@@ -1,4 +1,7 @@
-import empresaTelefonia.*;
+import empresa.telefonia.ClienteParticular;
+import empresa.telefonia.Direccion;
+import empresa.telefonia.Llamada;
+import empresa.telefonia.Tarifa;
 import excepciones.NIFException;
 import excepciones.TarifaException;
 import org.junit.Before;

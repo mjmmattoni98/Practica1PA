@@ -1,4 +1,4 @@
-package empresaTelefonia;
+package empresa.telefonia;
 
 
 import excepciones.TarifaException;
@@ -9,7 +9,7 @@ public class Tarifa implements Serializable {
     private double tarifa; //Euros por minuto
 
     public Tarifa(double tarifa) throws TarifaException {
-        if(this.tarifa<0) throw new TarifaException();
+        if(tarifa<0) throw new TarifaException();
         this.tarifa = tarifa;
     }
 

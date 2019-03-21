@@ -1,4 +1,4 @@
-import empresaTelefonia.*;
+import gestion.datos.GestionClientes;
 import excepciones.*;
 import org.junit.After;
 import org.junit.Before;

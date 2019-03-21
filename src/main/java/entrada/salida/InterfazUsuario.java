@@ -1,9 +1,10 @@
-package entradaSalida;
+package entrada.salida;
 
 
-import empresaTelefonia.*;
+import empresa.telefonia.*;
 import excepciones.NIFException;
 import excepciones.TarifaException;
+import gestion.datos.GestionClientes;
 
 import java.io.*;
 import java.util.List;
@@ -110,7 +111,7 @@ public class InterfazUsuario {
         ComprobarDato soyEmpresa = dato -> dato.equalsIgnoreCase("empresa");
         ComprobarDato soyParticular = dato -> dato.equalsIgnoreCase("particular");
         datoAObtener.withConsulta("Empresa o Particular?").withMensajeError("No le he entendido.");
-        boolean particular = datoAObtener.comprobarDato(soyEmpresa, soyParticular, scannerPalabra).equalsIgnoreCase("particular");
+        boolean particular = datoAObtener.comprobarDato(soyEmpresa, soyParticular, scannerLinea).equalsIgnoreCase("particular");
         System.out.println("Nombre: ");
         String nombre = scannerLinea.nextLine();
         String apellidos = "";
@@ -120,15 +121,16 @@ public class InterfazUsuario {
         }
         ComprobarDato cpNumerico = dato -> dato.length() == 5;
         datoAObtener.withConsulta("CP: ").withMensajeError("El código postal tiene que estar compuesto por 5 números");
-        int cp = Integer.parseInt(datoAObtener.comprobarDato(cpNumerico, scannerPalabra));
+        int cp = Integer.parseInt(datoAObtener.comprobarDato(cpNumerico, scannerLinea));
         System.out.println("Provincia: ");
         String provincia = scannerLinea.nextLine();
         System.out.println("Población: ");
         String poblacion = scannerLinea.nextLine();
         System.out.println("Correo electrónico: ");
         String correoElectronico = scannerPalabra.next();
-        System.out.println("Tarifa: ");
-        double tarifa = Double.parseDouble(scannerPalabra.next());
+        ComprobarDato tarifaPositiva = dato -> Double.parseDouble(dato) > 0;
+        datoAObtener.withConsulta("Tarifa: ").withMensajeError("La tarifa no puede ser negativa.");
+        double tarifa = Double.parseDouble(datoAObtener.comprobarDato(tarifaPositiva, scannerLinea));
         if (particular){
             try{
                 gestionClientes.addClienteParticular(nif, nombre, cp, provincia, poblacion, correoElectronico, tarifa, apellidos);

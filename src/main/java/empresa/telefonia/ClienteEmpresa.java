@@ -1,5 +1,4 @@
-package empresaTelefonia;
-
+package empresa.telefonia;
 
 import excepciones.NIFException;
 import excepciones.TarifaException;
@@ -9,23 +8,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class ClienteParticular extends  Cliente {
-    private String apellidos;
+public class ClienteEmpresa extends Cliente {
 
-    public ClienteParticular(String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa, String apellidos) throws TarifaException, NIFException {
+    public ClienteEmpresa(String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa) throws TarifaException, NIFException {
         super(nombre, nif, direccion, correoElectronico, tarifa);
-        this.apellidos = apellidos;
-    }
-
-    public String getApellidos(){
-        return apellidos;
     }
 
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
         sb.append("-Nombre: " + super.getNombre() + "\n");
-        sb.append("-Apellidos: " + apellidos + "\n");
         sb.append("-NIF: " + super.getNif() + "\n");
         sb.append("-Direción:\n" + super.getDireccion() + "\n");
         sb.append("-Correo electrónico: " + super.getCorreoElectronico() + "\n");

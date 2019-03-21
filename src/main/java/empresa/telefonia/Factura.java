@@ -1,4 +1,4 @@
-package empresaTelefonia;
+package empresa.telefonia;
 
 
 import excepciones.TarifaException;
