@@ -29,13 +29,6 @@ public class GestionClientes extends BaseDatosClientes implements Serializable {
         clientes.put(nif, cliente);
     }
 
-    /*public void comprobarKeyClientes(String nif) throws IllegalArgumentException{
-        if (!clientes.containsKey(nif)) throw new IllegalArgumentException("El cliente no exixte o ya está la cuenta creada.");
-    }
-    public void comprobarKeyFacturas(int codigo) throws IllegalArgumentException{
-        if (!facturas.containsKey(codigo)) throw new IllegalArgumentException("Codigo erróneo.");
-    }*/
-
     public Cliente getCliente(String nif){
         //comprobarKeyClientes(nif);
         return clientes.get(nif);

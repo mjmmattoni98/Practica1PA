@@ -18,4 +18,16 @@ public abstract class BaseDatosClientes {
         this.codigoFactura = 0;
     }
 
+    public void checkContainsClient(String nif) throws IllegalArgumentException{
+        if (!clientes.containsKey(nif)) throw new IllegalArgumentException("El cliente no exixte o ya está la cuenta creada.");
+    }
+
+    public void checkNotContainsClient(String nif) throws IllegalArgumentException{
+        if (!clientes.containsKey(nif)) throw new IllegalArgumentException("El cliente no exixte o ya está la cuenta creada.");
+    }
+
+    public void checkContainsKey(int codigo) throws IllegalArgumentException{
+        if (!facturas.containsKey(codigo)) throw new IllegalArgumentException("Codigo erróneo.");
+    }
+
 }
