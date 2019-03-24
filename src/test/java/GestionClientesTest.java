@@ -1,5 +1,7 @@
 import gestion.datos.GestionClientes;
 import excepciones.*;
+import gestion.datos.GestionFacturas;
+import gestion.datos.GestionLlamadas;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +11,8 @@ import static org.hamcrest.core.Is.*;
 
 public class GestionClientesTest {
     private GestionClientes gestionClientes = new GestionClientes();
+    private GestionFacturas gestionFacturas = new GestionFacturas();
+    private GestionLlamadas gestionLlamadas = new GestionLlamadas();
 
     @Before
     public void beforeTest() throws TarifaException, NIFException{
@@ -22,7 +26,7 @@ public class GestionClientesTest {
 
     @Test
     public void testCodigoFactura() {
-        assertThat(gestionClientes.getCodigoFactura(), is(0));
+        assertThat(gestionFacturas.getCodigoFactura(), is(0));
     }
 
     @Test
@@ -32,7 +36,8 @@ public class GestionClientesTest {
 
     @Test
     public void testEmitirFacturaCliente() throws TarifaException{
-        assertThat(gestionClientes.emitirFacturaCliente("12345678A").getTarifa().getTarifa(), is(15.0));
+        assertThat(gestionFacturas.emitirFacturaCliente("12345678A").getTarifa(), is(15.0));
+        assertThat(gestionFacturas.getCodigoFactura(), is(1));
     }
 
     @Test
@@ -42,12 +47,12 @@ public class GestionClientesTest {
 
     @Test
     public void testGetFacturasCliente() throws TarifaException{
-        gestionClientes.emitirFacturaCliente("12345678A");
-        assertThat(gestionClientes.getFacturasCliente("12345678A").get(gestionClientes.getCodigoFactura()-1).getTarifa().getTarifa(), is(15.0));
+        gestionFacturas.emitirFacturaCliente("12345678A");
+        assertThat(gestionFacturas.getFacturasCliente("12345678A").get(gestionFacturas.getCodigoFactura()-1).getTarifa(), is(15.0));
     }
     @Test
     public void testGetLlamadasCliente() {
-        gestionClientes.añadirLlamada("12345678A", 123456789, 12);
-        assertThat(gestionClientes.getLlamadasCliente("12345678A").values().iterator().next().listIterator().next().getNumero(), is(123456789));
+        gestionLlamadas.añadirLlamada("12345678A", 123456789, 12);
+        assertThat(gestionLlamadas.getLlamadasCliente("12345678A").values().iterator().next().listIterator().next().getNumero(), is(123456789));
     }
 }

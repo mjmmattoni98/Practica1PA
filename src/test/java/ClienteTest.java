@@ -19,15 +19,15 @@ public class ClienteTest {
         cliente = new ClienteParticular("pepe","57440683Q", new Direccion(11111,"Castellón","Castellón"),"peperamirez@correo.es",new Tarifa(10.0),"garcia");
     }
 
-    @Test
+    /*@Test
     public void testEmitirFactura() throws TarifaException{
         assertThat(cliente.emitirFactura(0).getCodigo(),is(0));
 
-    }
+    }*/
     @Test
     public void testSetTarifa() throws TarifaException {
         cliente.setTarifa(new Tarifa(5.0));
-        assertThat(cliente.getTarifa().getTarifa(),is(5.0));
+        assertThat(cliente.getTarifa(),is(5.0));
         //assertThat(cliente.getTarifa(),is(5.0));
     }
     @Test(expected = TarifaException.class)
@@ -57,6 +57,6 @@ public class ClienteTest {
         assertThat(clienteprueba.getDireccion().getCp(),is(12567));
         assertThat(clienteprueba.getDireccion().getPoblacion(),is("Almazora"));
         assertThat(clienteprueba.getDireccion().getProvincia(),is("Castellón"));
-        assertThat(clienteprueba.getTarifa().getTarifa(),is((double) 15.0));
+        assertThat(clienteprueba.getTarifa(),is((double) 15.0));
     }
 }

@@ -50,8 +50,8 @@ public abstract class Cliente implements Serializable {
         this.tarifa = nuevaTarifa;
     }
 
-    public Tarifa getTarifa(){
-        return tarifa;
+    public double getTarifa(){
+        return tarifa.getTarifa();
     }
 
     public String getNombre(){
@@ -86,6 +86,15 @@ public abstract class Cliente implements Serializable {
         return nif;
     }
 
+    public Periodo getActualPeriodoFacturacion(){
+        return actualPeriodoFacturacion;
+    }
+
+    public Periodo setActualPeriodoFacturacion(Periodo periodoFacturacion){
+        this.actualPeriodoFacturacion = periodoFacturacion;
+        return actualPeriodoFacturacion;
+    }
+
     public Llamada añadirLlamada(int numero, double duracion) {
         Llamada llamada = new Llamada(numero, LocalDateTime.now(), duracion);
         List<Llamada> listaLlamadas = llamadas.get(actualPeriodoFacturacion);
@@ -94,24 +103,23 @@ public abstract class Cliente implements Serializable {
         return llamada;
     }
 
-    private void añadirFactura(int codigo, Factura factura){
+    public void añadirFactura(int codigo, Factura factura){
         facturas.put(codigo, factura);
     }
 
-    //TODO Mover a/crear GestionFacturas
-    public Factura emitirFactura(int codigoFactura) throws TarifaException {
+    /*public Factura emitirFactura(int codigoFactura) throws TarifaException {
         Factura factura = new Factura(tarifa, codigoFactura, actualPeriodoFacturacion);
         factura.calcularImporte(llamadas.get(actualPeriodoFacturacion));
         añadirFactura(codigoFactura, factura);
         setActualPeriodoFacturacion();
         return factura;
-    }
+    }*/
 
-    private void setActualPeriodoFacturacion(){
+    /*public void setActualPeriodoFacturacion(){
         LocalDateTime fechaFin = actualPeriodoFacturacion.getFechaFin();
         this.actualPeriodoFacturacion = new Periodo(fechaFin, fechaFin.plusDays(30));
         llamadas.put(actualPeriodoFacturacion, new LinkedList<>());
-    }
+    }*/
 
     public abstract String toString();
 }

@@ -4,30 +4,43 @@ package entrada.salida;
 import empresa.telefonia.*;
 import excepciones.NIFException;
 import excepciones.TarifaException;
+import gestion.datos.BaseDatos;
 import gestion.datos.GestionClientes;
+import gestion.datos.GestionFacturas;
+import gestion.datos.GestionLlamadas;
 
 import java.io.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class InterfazUsuario {
     Scanner scannerLinea;
     Scanner scannerPalabra;
-    GestionClientes gestionClientes;
     ObtencionDato datoAObtener;
+    GestionLlamadas gestionLlamadas;
+    GestionFacturas gestionFacturas;
+    GestionClientes gestionClientes;
 
     public InterfazUsuario(){
         this.datoAObtener = new ObtencionDato();
         this.scannerLinea = new Scanner(System.in);
         this.scannerPalabra = new Scanner(System.in);
         this.gestionClientes = new GestionClientes();
+        this.gestionFacturas = new GestionFacturas();
+        this.gestionLlamadas = new GestionLlamadas();
         FileInputStream fis;
         ObjectInputStream ois;
         try {
-            fis = new FileInputStream("empresaTelefonia.bin");
+            fis = new FileInputStream("clientes.bin");
             ois = new ObjectInputStream(fis);
-            this.gestionClientes = (GestionClientes) ois.readObject();
+            gestionClientes = (GestionClientes) ois.readObject();
+            fis = new FileInputStream("llamadas.bin");
+            ois = new ObjectInputStream(fis);
+            gestionLlamadas = (GestionLlamadas) ois.readObject();
+            fis = new FileInputStream("facturas.bin");
+            ois = new ObjectInputStream(fis);
+            gestionFacturas = (GestionFacturas) ois.readObject();
             fis.close();
             ois.close();
         } catch (ClassNotFoundException | IOException e){
@@ -82,12 +95,21 @@ public class InterfazUsuario {
                 case MOSTRAR_DATOS_CLIENTE:
                     mostrarDatosCliente(nif);
                     break;
+                case MOSTRAR_CLIENTES_ENTRE_FECHAS:
+                    mostrarClientesEntreFechas();
+                    break;
+                case MOSTRAR_LLAMADAS_ENTRE_FECHAS:
+                    mostrarLlamadasEntreFechas(nif);
+                    break;
+                case MOSTRAR_FACTURAS_ENTRE_FECHAS:
+                    mostrarFacturasEntreFechas(nif);
+                    break;
             }
         }
     }
 
     private void repeatMenu() throws NIFException{
-        System.out.println("Desea realizar alguna otra acción? SI/NO");
+        System.out.println("Desea realizar alguna otra acción? (SI/NO)");
         String siNo = scannerPalabra.next();
         if (siNo.equalsIgnoreCase("si"))
             menu();
@@ -95,9 +117,15 @@ public class InterfazUsuario {
             FileOutputStream fos;
             ObjectOutputStream oos;
             try {
-                fos = new FileOutputStream("empresaTelefonia.bin");
+                fos = new FileOutputStream("clientes.bin");
                 oos = new ObjectOutputStream(fos);
                 oos.writeObject(this.gestionClientes);
+                fos = new FileOutputStream("llamadas.bin");
+                oos = new ObjectOutputStream(fos);
+                oos.writeObject(this.gestionLlamadas);
+                fos = new FileOutputStream("facturas.bin");
+                oos = new ObjectOutputStream(fos);
+                oos.writeObject(this.gestionFacturas);
                 fos.close();
                 oos.close();
             } catch (IOException e){
@@ -179,7 +207,7 @@ public class InterfazUsuario {
     private void emitirFactura(String nif) throws NIFException{
         Factura factura;
         try{
-            factura = gestionClientes.emitirFacturaCliente(nif);
+            factura = gestionFacturas.emitirFacturaCliente(nif);
             System.out.println("Hecho");
             System.out.println("Desea ver la factura? ");
             mostrarInformacion(factura);
@@ -197,8 +225,8 @@ public class InterfazUsuario {
         int numero = scannerPalabra.nextInt();
         System.out.println("Duración de la llamada: ");
         double duracion = Double.parseDouble(scannerPalabra.next());
-        Llamada llamada = gestionClientes.añadirLlamada(nif, numero, duracion);
-        System.out.println("Desea ver la información de la llamada? SI/NO");
+        Llamada llamada = gestionLlamadas.añadirLlamada(nif, numero, duracion);
+        System.out.println("Desea ver la información de la llamada? (SI/NO)");
         mostrarInformacion(llamada);
         repeatMenu();
     }
@@ -222,15 +250,15 @@ public class InterfazUsuario {
     private void mostrarDatosFactura()throws NIFException{
         System.out.println("Codigo de factura: ");
         int codigo = scannerPalabra.nextInt();
-        System.out.println(gestionClientes.getFactura(codigo));
+        System.out.println(gestionFacturas.getFactura(codigo));
         repeatMenu();
     }
 
     private void mostrarFacturasCliente(String nif)throws NIFException{
         int i = 1;
-        for (Integer codigo : gestionClientes.getFacturasCliente(nif).keySet()){
+        for (Integer codigo : gestionFacturas.getFacturasCliente(nif).keySet()){
             System.out.println("Factura " + i++ + ":");
-            System.out.println(gestionClientes.getFactura(codigo));
+            System.out.println(gestionFacturas.getFactura(codigo));
         }
         if (i == 1)
             System.out.println("No hay facturas asociadas aún al cliente " + gestionClientes.getCliente(nif) + ".");
@@ -238,7 +266,7 @@ public class InterfazUsuario {
     }
 
     private void mostrarLlamadasCliente(String nif)throws NIFException{
-        Map<Periodo, List<Llamada>> llamadas = gestionClientes.getLlamadasCliente(nif);
+        Map<Periodo, List<Llamada>> llamadas = gestionLlamadas.getLlamadasCliente(nif);
         for (Periodo periodo : llamadas.keySet()){
             System.out.println("Llamadas hechas en el periodo " + periodo + ":");
             for (Llamada llamada : llamadas.get(periodo))
@@ -247,11 +275,68 @@ public class InterfazUsuario {
         repeatMenu();
     }
 
-    private void mostrarInformacion(Object o)throws NIFException{
+    private void mostrarClientesEntreFechas() {
+        LocalDateTime[] intervaloFechas = intervaloFecha();
+        Set<Cliente> setClientes= null;
+        for(Cliente cliente : gestionClientes.getClientes().values()) {
+            setClientes.add(cliente);
+        }
+
+        Set<Cliente> setClientesIntervalo = gestionClientes.getConjuntoObjetosEntreFechas(setClientes,intervaloFechas[0],intervaloFechas[1]);
+
+        for (Cliente cliente : setClientesIntervalo) {
+            System.out.println(cliente.getNombre());
+        }
+
+    }
+
+    private void mostrarLlamadasEntreFechas(String nif) {
+        LocalDateTime[] intervaloFechas = intervaloFecha();
+        Set<Llamada> setLlamadas=null;
+        for(List<Llamada> listaLlamadas : gestionLlamadas.getLlamadasCliente(nif).values()) {
+            for (Llamada llamada : listaLlamadas) {
+                setLlamadas.add(llamada);
+            }
+        }
+        Set<Llamada> setLlamadasIntervalo = gestionLlamadas.getConjuntoObjetosEntreFechas(setLlamadas,intervaloFechas[0],intervaloFechas[1]);
+
+        for (Llamada llamada : setLlamadasIntervalo) {
+            System.out.println(llamada.toString());
+        }
+    }
+
+    private void mostrarFacturasEntreFechas(String nif) {
+        LocalDateTime[] intervaloFechas = intervaloFecha();
+        Set<Cliente> setFacturas= null;
+        for(Cliente factura : gestionFacturas.getFacturas().values()) {
+            setFacturas.add(factura);
+        }
+        Set<Cliente> setFacturasIntervalo = gestionFacturas.getConjuntoObjetosEntreFechas(setFacturas,intervaloFechas[0],intervaloFechas[1]);
+
+        for (Cliente cliente : setFacturasIntervalo) {
+            System.out.println(cliente.getNombre());
+        }
+    }
+
+    private <T> void mostrarInformacion(T o)throws NIFException{
         String opcion = scannerPalabra.next();
         if ("si".equalsIgnoreCase(opcion))
             System.out.println(o);
         repeatMenu();
     }
 
+    private LocalDateTime[] intervaloFecha() {
+        String fecha;
+        LocalDateTime[] intervaloFechas = new LocalDateTime[2];
+        DateTimeFormatter formatter;
+        System.out.println("Fecha inicial, dd-MM-yyyy HH:mm:ss:");
+        fecha = scannerPalabra.next();
+        formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        intervaloFechas[0] = LocalDateTime.parse(fecha, formatter);
+        System.out.println("Fecha final, dd-MM-yyyy HH:mm:ss:");
+        fecha = scannerPalabra.next();
+        formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        intervaloFechas[1] = LocalDateTime.parse(fecha, formatter);
+        return intervaloFechas;
+    }
 }

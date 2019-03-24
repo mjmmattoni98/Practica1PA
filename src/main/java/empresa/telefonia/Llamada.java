@@ -4,7 +4,7 @@ package empresa.telefonia;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Llamada implements Comparable<Llamada>, Serializable {
+public class Llamada extends Cliente implements Comparable<Llamada>, Serializable{
     private int numero;
     private LocalDateTime fechaYHora;
     private double duración;
