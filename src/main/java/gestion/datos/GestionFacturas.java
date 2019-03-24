@@ -7,14 +7,17 @@ import empresa.telefonia.Periodo;
 import empresa.telefonia.Tarifa;
 import excepciones.TarifaException;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class GestionFacturas extends BaseDatos {
+public class GestionFacturas extends BaseDatos implements Serializable {
+    int codigoFactura;
 
     public GestionFacturas(){
         super();
+        this.codigoFactura = 0;
     }
 
     public Map<Integer, Factura> getFacturas(){
@@ -23,19 +26,13 @@ public class GestionFacturas extends BaseDatos {
 
     public int getCodigoFactura(){return codigoFactura;}
 
-    /*public Factura emitirFacturaCliente(String nif) throws TarifaException {
-        //comprobarKeyClientes(nif);
-        Factura factura = clientes.get(nif).emitirFactura(codigoFactura);
-        facturas.put(codigoFactura, factura);
-        codigoFactura++;
-        return factura;
-    }*/
-
-    public Factura emitirFacturaCliente(String nif) throws TarifaException {
+    public Factura emitirFacturaCliente(String nif) throws TarifaException, IllegalArgumentException {
+        checkContainsClient(nif);
         Cliente miCliente = clientes.get(nif);
         Factura factura = new Factura(new Tarifa(miCliente.getTarifa()), codigoFactura, miCliente.getActualPeriodoFacturacion());
         factura.calcularImporte(miCliente.getLlamadas().get(miCliente.getActualPeriodoFacturacion()));
         miCliente.añadirFactura(codigoFactura, factura);
+        facturas.put(codigoFactura, factura);
         //miCliente.setActualPeriodoFacturacion();
         setActualPeriodoFacturacionCliente(miCliente);
         codigoFactura++;
@@ -48,13 +45,13 @@ public class GestionFacturas extends BaseDatos {
         miCliente.getLlamadas().put(actualPeriodoFacturacion, new LinkedList<>());
     }
 
-    public Factura getFactura(int codigo){
-        //comprobarKeyFacturas(codigo);
+    public Factura getFactura(int codigo) throws IllegalArgumentException{
+        checkContainsBill(codigo);
         return facturas.get(codigo);
     }
 
-    public Map<Integer, Factura> getFacturasCliente(String nif) {
-        //comprobarKeyClientes(nif);
+    public Map<Integer, Factura> getFacturasCliente(String nif) throws IllegalArgumentException{
+        checkContainsClient(nif);
         return clientes.get(nif).getFacturas();
     }
 

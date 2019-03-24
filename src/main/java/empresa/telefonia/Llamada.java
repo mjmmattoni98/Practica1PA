@@ -4,7 +4,7 @@ package empresa.telefonia;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Llamada extends Cliente implements Comparable<Llamada>, Serializable{
+public class Llamada implements Comparable<Llamada>, Serializable, Fecha{
     private int numero;
     private LocalDateTime fechaYHora;
     private double duración;
@@ -15,6 +15,7 @@ public class Llamada extends Cliente implements Comparable<Llamada>, Serializabl
         this.duración = duración;
     }
 
+    @Override
     public LocalDateTime getFecha(){
         return fechaYHora;
     }
@@ -29,8 +30,8 @@ public class Llamada extends Cliente implements Comparable<Llamada>, Serializabl
 
     @Override
     public int compareTo(Llamada otraLlamada){
-        if (this.fechaYHora.compareTo(otraLlamada.getFecha()) < 0) return -1;
-        if (this.fechaYHora.compareTo(otraLlamada.getFecha()) > 0) return 1;
+        if (this.numero < otraLlamada.getNumero()) return -1;
+        if (this.numero > otraLlamada.getNumero()) return 1;
         return 0;
     }
 

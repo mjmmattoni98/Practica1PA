@@ -1,13 +1,12 @@
 package empresa.telefonia;
 
-import excepciones.NIFException;
 import excepciones.TarifaException;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public abstract class Cliente implements Serializable {
+public abstract class Cliente implements Serializable, Fecha {
     private String nombre;
     private String nif;
     private Direccion direccion;
@@ -22,18 +21,8 @@ public abstract class Cliente implements Serializable {
         super();
     }
 
-    public Cliente (String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa) throws NIFException {
-        //if (tarifa.getTarifa() < 0) throw new TarifaException();
+    public Cliente (String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa){
         this.nombre = nombre;
-        if(nif.length() == 9 || Character.isLetter(nif.charAt(8))) {
-            try {
-                Integer.parseInt(nif.substring(0,8));
-            }catch (NumberFormatException e) {
-                throw new NIFException();
-            }
-        }
-        else
-            throw new NIFException();
         this.nif = nif;
         this.direccion = direccion;
         this.correoElectronico = correoElectronico;
@@ -66,12 +55,9 @@ public abstract class Cliente implements Serializable {
         return direccion;
     }
 
+    @Override
     public LocalDateTime getFecha (){
         return fechaDeAlta;
-    }
-
-    public Factura getFactura(int codigo){
-        return facturas.get(codigo);
     }
 
     public Map<Integer, Factura> getFacturas(){
@@ -106,20 +92,6 @@ public abstract class Cliente implements Serializable {
     public void añadirFactura(int codigo, Factura factura){
         facturas.put(codigo, factura);
     }
-
-    /*public Factura emitirFactura(int codigoFactura) throws TarifaException {
-        Factura factura = new Factura(tarifa, codigoFactura, actualPeriodoFacturacion);
-        factura.calcularImporte(llamadas.get(actualPeriodoFacturacion));
-        añadirFactura(codigoFactura, factura);
-        setActualPeriodoFacturacion();
-        return factura;
-    }*/
-
-    /*public void setActualPeriodoFacturacion(){
-        LocalDateTime fechaFin = actualPeriodoFacturacion.getFechaFin();
-        this.actualPeriodoFacturacion = new Periodo(fechaFin, fechaFin.plusDays(30));
-        llamadas.put(actualPeriodoFacturacion, new LinkedList<>());
-    }*/
 
     public abstract String toString();
 }

@@ -17,7 +17,7 @@ public enum OpcionesMenu {
 
     private String descripcion;
 
-    private OpcionesMenu(String descripcion){
+    OpcionesMenu(String descripcion){
         this.descripcion = descripcion;
     }
 

@@ -25,7 +25,7 @@ public class ObtencionDato {
         boolean okay;
         do{
             System.out.println(consultaDato);
-            dato = scanner.nextLine();
+            dato = scanner.next();
             okay = comprobacion.comprobarDato(dato);
             if (!okay) {
                 System.out.println(mensajeError);
@@ -35,18 +35,4 @@ public class ObtencionDato {
         return dato;
     }
 
-    public String comprobarDato(ComprobarDato comprobacion1, ComprobarDato comprobacion2, Scanner scanner){
-        String dato;
-        boolean okay;
-        do{
-            System.out.println(consultaDato);
-            dato = scanner.nextLine();
-            okay = comprobacion1.comprobarDato(dato) || comprobacion2.comprobarDato(dato);
-            if (!okay) {
-                System.out.println(mensajeError);
-                System.out.println("Por favor, vuelva a introducir el dato.");
-            }
-        }while (!okay);
-        return dato;
-    }
 }

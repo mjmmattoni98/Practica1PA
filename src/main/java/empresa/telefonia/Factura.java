@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class Factura extends Cliente implements Serializable {
+public class Factura implements Serializable, Fecha {
     private Tarifa tarifa; //El cambio de tarifa se verá reflejado en la siguiente factura
     private int codigo;
     private LocalDateTime fechaEmision;
@@ -22,6 +22,7 @@ public class Factura extends Cliente implements Serializable {
         this.fechaEmision = LocalDateTime.now();
     }
 
+    @Override
     public LocalDateTime getFecha(){
         return fechaEmision;
     }

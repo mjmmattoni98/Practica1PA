@@ -12,7 +12,7 @@ import java.util.Map;
 public class ClienteParticular extends  Cliente {
     private String apellidos;
 
-    public ClienteParticular(String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa, String apellidos) throws TarifaException, NIFException {
+    public ClienteParticular(String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa, String apellidos){
         super(nombre, nif, direccion, correoElectronico, tarifa);
         this.apellidos = apellidos;
     }
