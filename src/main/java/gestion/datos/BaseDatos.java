@@ -7,6 +7,7 @@ import empresa.telefonia.Fecha;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Predicate;
 
 public abstract class BaseDatos implements Serializable {
     static Map<String, Cliente> clientes = new HashMap<>();
@@ -33,13 +34,19 @@ public abstract class BaseDatos implements Serializable {
     }
 
     public <T extends Fecha> Set<T> filtrarEntreFechas(Set<T> conjuntoObjetos, LocalDateTime fechaInicio, LocalDateTime fechaFin){
-        Set<T> setAux = new HashSet<>();
-        for(T obj : conjuntoObjetos){
-            if (obj.getFecha().isAfter(fechaInicio) && obj.getFecha().isBefore(fechaFin)) {
-                setAux.add(obj);
-            }
-        }
-        return setAux;
+        Set<T> conjuntoFiltrado = new HashSet<>();
+        for(T obj : conjuntoObjetos)
+            if (obj.getFecha().isAfter(fechaInicio) && obj.getFecha().isBefore(fechaFin))
+                conjuntoFiltrado.add(obj);
+        return conjuntoFiltrado;
+    }
+
+    public <T> Set<T> filter(Set<T> conjuntoObjetos, Predicate<T> predicate){
+        Set<T> conjuntoFiltrado = new HashSet<>();
+        for(T obj : conjuntoObjetos)
+            if (predicate.test(obj))
+                conjuntoFiltrado.add(obj);
+        return conjuntoFiltrado;
     }
 
     public void checkNotContainsClient(String nif) throws IllegalArgumentException{

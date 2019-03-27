@@ -12,6 +12,7 @@ import gestion.datos.GestionLlamadas;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
+//TODO import apache WordUtils.capitalize;
 
 public class InterfazUsuario {
     private Scanner scannerLinea;
@@ -357,7 +358,8 @@ public class InterfazUsuario {
         Set<Cliente> setClientes = new HashSet<>();
         setClientes.addAll(gestionClientes.getClientes().values());
 
-        Set<Cliente> setClientesIntervalo = gestionClientes.filtrarEntreFechas(setClientes,intervaloFechas[0],intervaloFechas[1]);
+//        Set<Cliente> setClientesIntervalo = gestionClientes.filtrarEntreFechas(setClientes,intervaloFechas[0],intervaloFechas[1]);
+        Set<Cliente> setClientesIntervalo = gestionClientes.filterClientsByDate(setClientes, new Periodo(intervaloFechas[0], intervaloFechas[1]));
 
         int i = 0;
         for (Cliente cliente : setClientesIntervalo) {
@@ -439,6 +441,7 @@ public class InterfazUsuario {
         return isNumber;
     }
 
+    //TODO modificar para devolver un periodo en vez de un vector.
     private LocalDateTime[] intervaloFecha() {
         String fecha;
         LocalDateTime[] intervaloFechas = new LocalDateTime[2];

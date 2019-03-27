@@ -5,6 +5,8 @@ import excepciones.TarifaException;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class GestionClientes extends BaseDatos implements Serializable {
 
@@ -50,6 +52,12 @@ public class GestionClientes extends BaseDatos implements Serializable {
         checkContainsClient(nif);
         Tarifa nuevaTarifa = new Tarifa(tarifa);
         clientes.get(nif).setTarifa(nuevaTarifa);
+    }
+
+    public Set<Cliente> filterClientsByDate(Set<Cliente> clients, Periodo periodo){
+        Predicate<Cliente> predicate = cliente -> cliente.getFecha().isAfter(periodo.getFechaInicio())
+                                                && cliente.getFecha().isBefore(periodo.getFechaFin());
+        return filter(clients, predicate);
     }
 
 }

@@ -11,6 +11,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class GestionFacturas extends BaseDatos implements Serializable {
     int codigoFactura;
@@ -57,6 +59,12 @@ public class GestionFacturas extends BaseDatos implements Serializable {
 
     public void checkContainsBill(int codigo) throws IllegalArgumentException{
         if (!facturas.containsKey(codigo)) throw new IllegalArgumentException("Codigo erróneo. No hay ninguna factura asociada a ese codigo.");
+    }
+
+    public Set<Factura> filterClientsByDate(Set<Factura> bills, Periodo periodo){
+        Predicate<Factura> predicate = bill -> bill.getFecha().isAfter(periodo.getFechaInicio())
+                                            && bill.getFecha().isBefore(periodo.getFechaFin());
+        return filter(bills, predicate);
     }
 
 }
