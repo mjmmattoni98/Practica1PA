@@ -61,7 +61,7 @@ public class GestionFacturas extends BaseDatos implements Serializable {
         if (!facturas.containsKey(codigo)) throw new IllegalArgumentException("Codigo erróneo. No hay ninguna factura asociada a ese codigo.");
     }
 
-    public Set<Factura> filterClientsByDate(Set<Factura> bills, Periodo periodo){
+    public Set<Factura> filterBillsByDate(Set<Factura> bills, Periodo periodo){
         Predicate<Factura> predicate = bill -> bill.getFecha().isAfter(periodo.getFechaInicio())
                                             && bill.getFecha().isBefore(periodo.getFechaFin());
         return filter(bills, predicate);

@@ -47,7 +47,7 @@ public class GestionLlamadas extends BaseDatos implements Serializable {
         return BaseDatos.clientes.get(nif).getLlamadas();
     }
 
-    public Set<Llamada> filterClientsByDate(Set<Llamada> calls, Periodo periodo){
+    public Set<Llamada> filterCallsByDate(Set<Llamada> calls, Periodo periodo){
         Predicate<Llamada> predicate = call -> call.getFecha().isAfter(periodo.getFechaInicio())
                                             && call.getFecha().isBefore(periodo.getFechaFin());
         return filter(calls, predicate);

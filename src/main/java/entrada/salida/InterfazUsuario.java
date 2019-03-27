@@ -3,6 +3,7 @@ package entrada.salida;
 
 import empresa.telefonia.*;
 import excepciones.NIFException;
+import excepciones.PeriodoException;
 import excepciones.TarifaException;
 import gestion.datos.BaseDatos;
 import gestion.datos.GestionClientes;
@@ -11,6 +12,7 @@ import gestion.datos.GestionLlamadas;
 
 import java.io.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 //TODO import apache WordUtils.capitalize;
 
@@ -354,12 +356,12 @@ public class InterfazUsuario {
     }
 
     private void mostrarClientesEntreFechas() {
-        LocalDateTime[] intervaloFechas = intervaloFecha();
+        Periodo periodo = getPeriod();
         Set<Cliente> setClientes = new HashSet<>();
         setClientes.addAll(gestionClientes.getClientes().values());
 
 //        Set<Cliente> setClientesIntervalo = gestionClientes.filtrarEntreFechas(setClientes,intervaloFechas[0],intervaloFechas[1]);
-        Set<Cliente> setClientesIntervalo = gestionClientes.filterClientsByDate(setClientes, new Periodo(intervaloFechas[0], intervaloFechas[1]));
+        Set<Cliente> setClientesIntervalo = gestionClientes.filterClientsByDate(setClientes, periodo);
 
         int i = 0;
         for (Cliente cliente : setClientesIntervalo) {
@@ -374,14 +376,15 @@ public class InterfazUsuario {
     }
 
     private void mostrarLlamadasEntreFechas(String nif) {
-        LocalDateTime[] intervaloFechas = intervaloFecha();
+        Periodo periodo = getPeriod();
         Set<Llamada> setLlamadas = new HashSet<>();
         try {
             for (List<Llamada> listaLlamadas : gestionLlamadas.getLlamadasCliente(nif).values()) {
                 setLlamadas.addAll(listaLlamadas);
             }
 
-            Set<Llamada> setLlamadasIntervalo = gestionLlamadas.filtrarEntreFechas(setLlamadas, intervaloFechas[0], intervaloFechas[1]);
+//            Set<Llamada> setLlamadasIntervalo = gestionLlamadas.filtrarEntreFechas(setLlamadas, intervaloFechas[0], intervaloFechas[1]);
+            Set<Llamada> setLlamadasIntervalo = gestionLlamadas.filterCallsByDate(setLlamadas, periodo);
 
             int i = 0;
             for (Llamada llamada : setLlamadasIntervalo) {
@@ -401,11 +404,12 @@ public class InterfazUsuario {
     }
 
     private void mostrarFacturasEntreFechas(String nif) {
-        LocalDateTime[] intervaloFechas = intervaloFecha();
+        Periodo periodo = getPeriod();
         Set<Factura> setFacturas = new HashSet<>();
         try {
             setFacturas.addAll(gestionFacturas.getFacturasCliente(nif).values());
-            Set<Factura> setFacturasIntervalo = gestionFacturas.filtrarEntreFechas(setFacturas, intervaloFechas[0], intervaloFechas[1]);
+//            Set<Factura> setFacturasIntervalo = gestionFacturas.filtrarEntreFechas(setFacturas, intervaloFechas[0], intervaloFechas[1]);
+            Set<Factura> setFacturasIntervalo = gestionFacturas.filterBillsByDate(setFacturas, periodo);
 
             int i = 0;
             for (Factura factura : setFacturasIntervalo) {
@@ -441,16 +445,27 @@ public class InterfazUsuario {
         return isNumber;
     }
 
-    //TODO modificar para devolver un periodo en vez de un vector.
-    private LocalDateTime[] intervaloFecha() {
-        String fecha;
-        LocalDateTime[] intervaloFechas = new LocalDateTime[2];
-        System.out.println("Fecha inicial: (yyyy-MM-ddThh:mm:ss)");
-        fecha = scannerPalabra.next();
-        intervaloFechas[0] = LocalDateTime.parse(fecha);
-        System.out.println("Fecha final: (yyyy-MM-ddThh:mm:ss)");
-        fecha = scannerPalabra.next();
-        intervaloFechas[1] = LocalDateTime.parse(fecha);
-        return intervaloFechas;
+    private Periodo getPeriod() {
+        boolean fechasCorrectas = false;
+        LocalDateTime fechaInicio = null;
+        LocalDateTime fechaFin = null;
+        do {
+            try {
+                System.out.println("Fecha inicial: (yyyy-MM-ddThh:mm:ss)");
+                fechaInicio = LocalDateTime.parse(scannerPalabra.next());
+                System.out.println("Fecha final: (yyyy-MM-ddThh:mm:ss)");
+                fechaFin = LocalDateTime.parse(scannerPalabra.next());
+
+                if (fechaInicio.isAfter(fechaFin))
+                    throw new PeriodoException();
+                fechasCorrectas = true;
+            } catch (PeriodoException e) {
+                System.out.println(e);
+                System.out.println("Por favor, vuelva a introducir las fechas.");
+            } catch (DateTimeParseException e){
+                System.out.println("Lo siento, no le he entendido bn. Vuelva a introducir las fechas otra vez.");
+            }
+        } while (!fechasCorrectas);
+        return new Periodo(fechaInicio, fechaFin);
     }
 }
