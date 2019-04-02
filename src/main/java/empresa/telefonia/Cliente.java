@@ -34,8 +34,7 @@ public abstract class Cliente implements Serializable, Fecha {
         this.facturas = new HashMap<>();
     }
 
-    public void setTarifa(Tarifa nuevaTarifa) throws  TarifaException{
-        if (nuevaTarifa.getTarifa() < 0) throw new TarifaException();
+    public void setTarifa(Tarifa nuevaTarifa) {
         this.tarifa = nuevaTarifa;
     }
 

@@ -14,8 +14,9 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.*;
-//TODO import apache WordUtils.capitalize;
+import org.apache.commons.lang3.text.WordUtils;
 
+//TODO ver como no hacer superposicion de metodos.
 public class InterfazUsuario {
     private Scanner scannerLinea;
     private Scanner scannerPalabra;
@@ -53,11 +54,27 @@ public class InterfazUsuario {
         }
     }
 
+    //TODO eliminar switch.
     public void menu(){
         System.out.println(OpcionesMenu.getMenu());
         System.out.println("Elija una opción: ");
         int opcion = scannerPalabra.nextInt();
         ejecutarAccion(opcion);
+    }
+
+    private boolean comprobarNif(String nif) throws NIFException {
+        boolean nifCorrecto;
+        if (nif.length() == 9 && Character.isLetter(nif.charAt(8))) {
+            try {
+                Integer.parseInt(nif.substring(0, 8));
+                nifCorrecto = true;
+            } catch (NumberFormatException e) {
+                throw new NIFException();
+            }
+        } else
+            throw new NIFException();
+
+        return nifCorrecto;
     }
 
     private void ejecutarAccion(int opcion){
@@ -73,18 +90,10 @@ public class InterfazUsuario {
                 System.out.println("Introduzca un NIF válido: ");
                 nif = scannerPalabra.next().toUpperCase();
                 try {
-                    if (nif.length() == 9 && Character.isLetter(nif.charAt(8))) {
-                        try {
-                            Integer.parseInt(nif.substring(0, 8));
-                            nifCorrecto = true;
-                        } catch (NumberFormatException e) {
-                            throw new NIFException();
-                        }
-                    } else
-                        throw new NIFException();
+                    nifCorrecto = comprobarNif(nif);
                 }
                 catch (NIFException e){
-                    e.printStackTrace();
+                    System.out.println(e);
                     System.out.println("Vuelva a introducir el NIF.");
                 }
             }while (!nifCorrecto);
@@ -167,19 +176,19 @@ public class InterfazUsuario {
         datoAObtener.withConsulta("Empresa o Particular?").withMensajeError("No le he entendido.");
         boolean particular = datoAObtener.comprobarDato(soyParticularOEmpresa, scannerPalabra).equalsIgnoreCase("particular");
         System.out.println("Nombre: ");
-        String nombre = scannerLinea.nextLine();
+        String nombre = WordUtils.capitalizeFully(scannerLinea.nextLine());
         String apellidos = "";
         if (particular){
             System.out.println("Apellidos: ");
-            apellidos = scannerLinea.nextLine();
+            apellidos = WordUtils.capitalizeFully(scannerLinea.nextLine());
         }
         ComprobarDato cpLongitud = dato -> dato.length() == 5 && isNum(dato);
         datoAObtener.withConsulta("CP: ").withMensajeError("El código postal tiene que estar compuesto por 5 números y ser numerico.");
         int cp = Integer.parseInt(datoAObtener.comprobarDato(cpLongitud, scannerPalabra));
         System.out.println("Provincia: ");
-        String provincia = scannerLinea.nextLine();
+        String provincia = WordUtils.capitalizeFully(scannerLinea.nextLine());
         System.out.println("Población: ");
-        String poblacion = scannerLinea.nextLine();
+        String poblacion = WordUtils.capitalizeFully(scannerLinea.nextLine());
         ComprobarDato formatoCorreoElectronico = dato -> dato.contains("@");
         datoAObtener.withConsulta("Correo electronico: ").withMensajeError("El correo electronico tiene que tener el simbolo '@'.");
         String correoElectronico = datoAObtener.comprobarDato(formatoCorreoElectronico, scannerPalabra);

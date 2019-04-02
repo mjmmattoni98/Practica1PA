@@ -35,7 +35,6 @@ public class GestionFacturas extends BaseDatos implements Serializable {
         factura.calcularImporte(miCliente.getLlamadas().get(miCliente.getActualPeriodoFacturacion()));
         miCliente.añadirFactura(codigoFactura, factura);
         facturas.put(codigoFactura, factura);
-        //miCliente.setActualPeriodoFacturacion();
         setActualPeriodoFacturacionCliente(miCliente);
         codigoFactura++;
         return factura;

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Predicate;
 
+//TODO hacer composicion de objetos.
 public abstract class BaseDatos implements Serializable {
     static Map<String, Cliente> clientes = new HashMap<>();
     static Map<Integer, Factura> facturas = new HashMap<>();
@@ -41,6 +42,7 @@ public abstract class BaseDatos implements Serializable {
         return conjuntoFiltrado;
     }
 
+    //TODO utilizar streams
     public <T> Set<T> filter(Set<T> conjuntoObjetos, Predicate<T> predicate){
         Set<T> conjuntoFiltrado = new HashSet<>();
         for(T obj : conjuntoObjetos)
