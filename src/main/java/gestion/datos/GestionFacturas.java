@@ -4,22 +4,25 @@ package gestion.datos;
 import empresa.telefonia.Cliente;
 import empresa.telefonia.Factura;
 import empresa.telefonia.Periodo;
-import empresa.telefonia.Tarifa;
+import empresa.telefonia.TarifaBasica;
 import excepciones.TarifaException;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
 public class GestionFacturas extends BaseDatos implements Serializable {
+    Map<Integer, Factura> facturas;
     int codigoFactura;
 
     public GestionFacturas(){
         super();
         this.codigoFactura = 0;
+        this.facturas = new HashMap<>();
     }
 
     public Map<Integer, Factura> getFacturas(){
@@ -28,10 +31,13 @@ public class GestionFacturas extends BaseDatos implements Serializable {
 
     public int getCodigoFactura(){return codigoFactura;}
 
+    public void removeBill(int codigoFactura){
+        facturas.remove(codigoFactura);
+    }
+
     public Factura emitirFacturaCliente(String nif) throws TarifaException, IllegalArgumentException {
-        checkContainsClient(nif);
-        Cliente miCliente = clientes.get(nif);
-        Factura factura = new Factura(new Tarifa(miCliente.getTarifa()), codigoFactura, miCliente.getActualPeriodoFacturacion());
+        Cliente miCliente = gestionClientes.getCliente(nif);
+        Factura factura = new Factura(new TarifaBasica(), codigoFactura, miCliente.getActualPeriodoFacturacion());
         factura.calcularImporte(miCliente.getLlamadas().get(miCliente.getActualPeriodoFacturacion()));
         miCliente.añadirFactura(codigoFactura, factura);
         facturas.put(codigoFactura, factura);
@@ -52,8 +58,7 @@ public class GestionFacturas extends BaseDatos implements Serializable {
     }
 
     public Map<Integer, Factura> getFacturasCliente(String nif) throws IllegalArgumentException{
-        checkContainsClient(nif);
-        return clientes.get(nif).getFacturas();
+        return gestionClientes.getClientBills(nif);
     }
 
     public void checkContainsBill(int codigo) throws IllegalArgumentException{

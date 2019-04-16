@@ -8,17 +8,25 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 //TODO hacer composicion de objetos.
-public abstract class BaseDatos implements Serializable {
-    static Map<String, Cliente> clientes = new HashMap<>();
-    static Map<Integer, Factura> facturas = new HashMap<>();
+public class BaseDatos implements Serializable {
+//    static Map<String, Cliente> clientes = new HashMap<>();
+//    static Map<Integer, Factura> facturas = new HashMap<>();
+    GestionClientes gestionClientes;
+    GestionFacturas gestionFacturas;
+    GestionLlamadas gestionLlamadas;
+
 
     public BaseDatos(){
         super();
+        this.gestionClientes = new GestionClientes();
+        this.gestionFacturas = new GestionFacturas();
+        this.gestionLlamadas = new GestionLlamadas();
     }
 
-    public static void setClientesBD(Map<String, Cliente> nuevosClientes){
+    /*public static void setClientesBD(Map<String, Cliente> nuevosClientes){
         clientes = nuevosClientes;
     }
 
@@ -33,7 +41,7 @@ public abstract class BaseDatos implements Serializable {
     public static Map<String, Cliente> getClientesBD() {
         return clientes;
     }
-
+*/
     public <T extends Fecha> Set<T> filtrarEntreFechas(Set<T> conjuntoObjetos, LocalDateTime fechaInicio, LocalDateTime fechaFin){
         Set<T> conjuntoFiltrado = new HashSet<>();
         for(T obj : conjuntoObjetos)
@@ -42,21 +50,10 @@ public abstract class BaseDatos implements Serializable {
         return conjuntoFiltrado;
     }
 
-    //TODO utilizar streams
     public <T> Set<T> filter(Set<T> conjuntoObjetos, Predicate<T> predicate){
-        Set<T> conjuntoFiltrado = new HashSet<>();
-        for(T obj : conjuntoObjetos)
-            if (predicate.test(obj))
-                conjuntoFiltrado.add(obj);
-        return conjuntoFiltrado;
-    }
-
-    public void checkNotContainsClient(String nif) throws IllegalArgumentException{
-        if (clientes.containsKey(nif)) throw new IllegalArgumentException("Ya hay una cuenta asociada a ese NIF.");
-    }
-
-    public void checkContainsClient(String nif) throws IllegalArgumentException{
-        if (!clientes.containsKey(nif)) throw new IllegalArgumentException("El cliente no exixte.");
+        return conjuntoObjetos.stream()
+                .filter(predicate)
+                .collect(Collectors.toSet());
     }
 
 }

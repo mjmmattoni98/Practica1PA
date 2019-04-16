@@ -1,7 +1,5 @@
 package empresa.telefonia;
 
-import excepciones.TarifaException;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -16,6 +14,7 @@ public abstract class Cliente implements Serializable, Fecha {
     private Map<Periodo, List<Llamada>> llamadas;
     private Periodo actualPeriodoFacturacion;
     private Map<Integer, Factura> facturas; //Key -> código de la factura.
+    public static final Cliente NULL_CLIENT = new ClienteParticular();
 
     public Cliente () {
         super();
@@ -38,8 +37,9 @@ public abstract class Cliente implements Serializable, Fecha {
         this.tarifa = nuevaTarifa;
     }
 
+    //TODO hacer bien el método.
     public double getTarifa(){
-        return tarifa.getTarifa();
+        return tarifa.getTarifa(LocalDateTime.now());
     }
 
     public String getNombre(){

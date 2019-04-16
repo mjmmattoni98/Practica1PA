@@ -24,6 +24,7 @@ public class InterfazUsuario {
     private GestionLlamadas gestionLlamadas;
     private GestionFacturas gestionFacturas;
     private GestionClientes gestionClientes;
+    private BaseDatos baseDeDatos;
 
     public InterfazUsuario(){
         this.datoAObtener = new ObtencionDato();
@@ -32,10 +33,11 @@ public class InterfazUsuario {
         this.gestionClientes = new GestionClientes();
         this.gestionFacturas = new GestionFacturas();
         this.gestionLlamadas = new GestionLlamadas();
+        this.baseDeDatos = new BaseDatos();
         FileInputStream fis;
         ObjectInputStream ois;
         try {
-            fis = new FileInputStream("clientes.bin");
+            /*fis = new FileInputStream("clientes.bin");
             ois = new ObjectInputStream(fis);
             gestionClientes = (GestionClientes) ois.readObject();
             fis = new FileInputStream("llamadas.bin");
@@ -46,6 +48,10 @@ public class InterfazUsuario {
             gestionFacturas = (GestionFacturas) ois.readObject();
             BaseDatos.setClientesBD(gestionLlamadas.getClientes());
             BaseDatos.setFacturasBD(gestionLlamadas.getFacturas());
+            */
+            fis = new FileInputStream("baseDeDatos.bin");
+            ois = new ObjectInputStream(fis);
+            this.baseDeDatos = (BaseDatos) ois.readObject();
             fis.close();
             ois.close();
         } catch (ClassNotFoundException | IOException e){
@@ -151,7 +157,7 @@ public class InterfazUsuario {
             FileOutputStream fos;
             ObjectOutputStream oos;
             try {
-                gestionLlamadas.setClientes(BaseDatos.getClientesBD());
+                /*gestionLlamadas.setClientes(BaseDatos.getClientesBD());
                 gestionLlamadas.setFacturas(BaseDatos.getFacturasBD());
                 fos = new FileOutputStream("clientes.bin");
                 oos = new ObjectOutputStream(fos);
@@ -162,6 +168,10 @@ public class InterfazUsuario {
                 fos = new FileOutputStream("facturas.bin");
                 oos = new ObjectOutputStream(fos);
                 oos.writeObject(this.gestionFacturas);
+                */
+                fos = new FileOutputStream("baseDeDatos.bin");
+                oos = new ObjectOutputStream(fos);
+                oos.writeObject(fos);
                 fos.close();
                 oos.close();
             } catch (IOException e){
@@ -193,7 +203,7 @@ public class InterfazUsuario {
         datoAObtener.withConsulta("Correo electronico: ").withMensajeError("El correo electronico tiene que tener el simbolo '@'.");
         String correoElectronico = datoAObtener.comprobarDato(formatoCorreoElectronico, scannerPalabra);
         ComprobarDato tarifaPositiva = dato -> isNum(dato) && Double.parseDouble(dato) > 0;
-        datoAObtener.withConsulta("Tarifa: ").withMensajeError("La tarifa tiene que ser un numero y no puede ser negativa.");
+        datoAObtener.withConsulta("TarifaBasica: ").withMensajeError("La tarifa tiene que ser un numero y no puede ser negativa.");
         double tarifa = Double.parseDouble(datoAObtener.comprobarDato(tarifaPositiva, scannerPalabra));
         if (particular){
             try{

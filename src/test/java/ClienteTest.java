@@ -1,8 +1,6 @@
 import empresa.telefonia.ClienteParticular;
 import empresa.telefonia.Direccion;
-import empresa.telefonia.Llamada;
-import empresa.telefonia.Tarifa;
-import excepciones.NIFException;
+import empresa.telefonia.TarifaBasica;
 import excepciones.TarifaException;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,19 +14,20 @@ public class ClienteTest {
 
     @Before
     public void beforeTest() throws TarifaException{
-        cliente = new ClienteParticular("pepe","57440683Q", new Direccion(11111,"Castellón","Castellón"),"peperamirez@correo.es",new Tarifa(10.0),"garcia");
+        cliente = new ClienteParticular("pepe","57440683Q", new Direccion(11111,"Castellón","Castellón"),"peperamirez@correo.es",new TarifaBasica(),"garcia");
     }
 
     @Test
     public void testSetTarifa() throws TarifaException {
-        cliente.setTarifa(new Tarifa(5.0));
-        assertThat(cliente.getTarifa(),is(5.0));
+        cliente.setTarifa(new TarifaBasica());
+        assertThat(cliente.getTarifa(),is(15.0));
 
     }
-    @Test(expected = TarifaException.class)
+    /*@Test(expected = TarifaException.class)
     public void testExceptionSetTarifaMenorCero() throws TarifaException {
-        cliente.setTarifa(new Tarifa(-1.0));
+        cliente.setTarifa(new TarifaBasica());
     }
+    */
     @Test
     public void testAñadirLlamada(){
         cliente.añadirLlamada(123456789,10);
@@ -38,11 +37,11 @@ public class ClienteTest {
     @Test
     public void testCrearCliente(){
         ClienteParticular clienteprueba = null;
-        try {
-            clienteprueba = new ClienteParticular("pepe", "03456456Z", new Direccion(12567, "Castellón", "Almazora"), "clienteprueba@correo.com", new Tarifa(15.0), "garcia");
-        } catch (TarifaException e) {
-            e.printStackTrace();
-        }
+        //try {
+            clienteprueba = new ClienteParticular("pepe", "03456456Z", new Direccion(12567, "Castellón", "Almazora"), "clienteprueba@correo.com", new TarifaBasica(), "garcia");
+//        } catch (TarifaException e) {
+//            e.printStackTrace();
+//        }
 
         assertThat(clienteprueba.getCorreoElectronico(),is("clienteprueba@correo.com"));
         assertThat(clienteprueba.getNif(),is("03456456Z"));

@@ -1,19 +1,33 @@
 package empresa.telefonia;
 
 
-import excepciones.TarifaException;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.function.Predicate;
 
-public class Tarifa implements Serializable {
-    private double tarifa; //Euros por minuto
+public abstract class Tarifa implements Serializable {
+    private double tarifa; //Céntimos por minuto.
+    private Predicate<LocalDateTime> aplicarDescuento;
 
-    public Tarifa(double tarifa) throws TarifaException {
-        if(tarifa<0) throw new TarifaException();
+    public Tarifa(){
+        super();
+    }
+
+    public Tarifa(Predicate<LocalDateTime> aplicarDescuento, double tarifa){
+        this.aplicarDescuento = aplicarDescuento;
         this.tarifa = tarifa;
     }
 
-    public double getTarifa(){
+    public Tarifa withTarifa(double tarifa){
+        this.tarifa = tarifa;
+        return this;
+    }
+
+    public double descuento(LocalDateTime fecha){
+        return aplicarDescuento.test(fecha) ? tarifa : 100000.0;
+    }
+
+    public double getTarifa(LocalDateTime fecha){
         return tarifa;
     }
 
@@ -21,4 +35,5 @@ public class Tarifa implements Serializable {
     public String toString(){
         return tarifa + "";
     }
+
 }
