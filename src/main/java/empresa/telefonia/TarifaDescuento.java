@@ -1,5 +1,8 @@
 package empresa.telefonia;
 
+import excepciones.TarifaException;
+import utilities.SerializablePredicate;
+
 import java.time.LocalDateTime;
 import java.util.function.Predicate;
 
@@ -10,21 +13,20 @@ public abstract class TarifaDescuento extends Tarifa{
         super();
     }
 
-    public TarifaDescuento(Tarifa tarifa, double nuevaTarifa, Predicate<LocalDateTime> aplicarDescuento){
+    public TarifaDescuento(Tarifa tarifa, double nuevaTarifa, SerializablePredicate<LocalDateTime> aplicarDescuento) {
         super(aplicarDescuento, nuevaTarifa);
         this.tarifa = tarifa;
     }
 
     @Override
     public double getTarifa(LocalDateTime fecha){
-        double miTarifa = tarifa.descuento(fecha);
-        double otraTarifa = super.descuento(fecha);
+        double miTarifa = tarifa.getTarifa(fecha);
+        double otraTarifa = super.getTarifa(fecha);
         return miTarifa<otraTarifa?miTarifa:otraTarifa;
     }
 
     @Override
     public String toString(){
-        return tarifa + "";
+        return super.toString();
     }
-
 }

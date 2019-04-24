@@ -5,10 +5,7 @@ import empresa.telefonia.*;
 import excepciones.NIFException;
 import excepciones.PeriodoException;
 import excepciones.TarifaException;
-import gestion.datos.BaseDatos;
-import gestion.datos.GestionClientes;
-import gestion.datos.GestionFacturas;
-import gestion.datos.GestionLlamadas;
+import gestion.datos.*;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -24,7 +21,8 @@ public class InterfazUsuario {
     private GestionLlamadas gestionLlamadas;
     private GestionFacturas gestionFacturas;
     private GestionClientes gestionClientes;
-    private BaseDatos baseDeDatos;
+//    private BaseDatos baseDeDatos;
+    private Datos datos;
 
     public InterfazUsuario(){
         this.datoAObtener = new ObtencionDato();
@@ -33,11 +31,13 @@ public class InterfazUsuario {
         this.gestionClientes = new GestionClientes();
         this.gestionFacturas = new GestionFacturas();
         this.gestionLlamadas = new GestionLlamadas();
-        this.baseDeDatos = new BaseDatos();
+        this.datos = new Datos();
+//        this.baseDeDatos = new BaseDatos();
         FileInputStream fis;
         ObjectInputStream ois;
         try {
-            /*fis = new FileInputStream("clientes.bin");
+/*
+            fis = new FileInputStream("clientes.bin");
             ois = new ObjectInputStream(fis);
             gestionClientes = (GestionClientes) ois.readObject();
             fis = new FileInputStream("llamadas.bin");
@@ -48,10 +48,16 @@ public class InterfazUsuario {
             gestionFacturas = (GestionFacturas) ois.readObject();
             BaseDatos.setClientesBD(gestionLlamadas.getClientes());
             BaseDatos.setFacturasBD(gestionLlamadas.getFacturas());
-            */
             fis = new FileInputStream("baseDeDatos.bin");
             ois = new ObjectInputStream(fis);
             this.baseDeDatos = (BaseDatos) ois.readObject();
+*/
+            fis = new FileInputStream("datos.bin");
+            ois = new ObjectInputStream(fis);
+            datos = (Datos) ois.readObject();
+            BaseDatos.setClientesBD(datos.getClientes());
+            BaseDatos.setFacturasBD(datos.getFacturas());
+            gestionFacturas.setCodigoFactura(datos.getCodigoFactura());
             fis.close();
             ois.close();
         } catch (ClassNotFoundException | IOException e){
@@ -157,9 +163,10 @@ public class InterfazUsuario {
             FileOutputStream fos;
             ObjectOutputStream oos;
             try {
-                /*gestionLlamadas.setClientes(BaseDatos.getClientesBD());
-                gestionLlamadas.setFacturas(BaseDatos.getFacturasBD());
-                fos = new FileOutputStream("clientes.bin");
+                datos.setClientes(BaseDatos.getClientesBD());
+                datos.setFacturas(BaseDatos.getFacturasBD());
+                datos.setCodigoFactura(gestionFacturas.getCodigoFactura());
+                /*fos = new FileOutputStream("clientes.bin");
                 oos = new ObjectOutputStream(fos);
                 oos.writeObject(this.gestionClientes);
                 fos = new FileOutputStream("llamadas.bin");
@@ -168,10 +175,13 @@ public class InterfazUsuario {
                 fos = new FileOutputStream("facturas.bin");
                 oos = new ObjectOutputStream(fos);
                 oos.writeObject(this.gestionFacturas);
-                */
                 fos = new FileOutputStream("baseDeDatos.bin");
                 oos = new ObjectOutputStream(fos);
                 oos.writeObject(fos);
+                */
+                fos = new FileOutputStream("datos.bin");
+                oos = new ObjectOutputStream(fos);
+                oos.writeObject(this.datos);
                 fos.close();
                 oos.close();
             } catch (IOException e){
@@ -181,6 +191,7 @@ public class InterfazUsuario {
         }
     }
 
+    //TODO rehacer el codigo con el nuevo sistema de tarifas.
     private void crearCuenta(String nif){
         ComprobarDato soyParticularOEmpresa = dato -> dato.equalsIgnoreCase("particular") || dato.equalsIgnoreCase("empresa");
         datoAObtener.withConsulta("Empresa o Particular?").withMensajeError("No le he entendido.");
@@ -202,15 +213,12 @@ public class InterfazUsuario {
         ComprobarDato formatoCorreoElectronico = dato -> dato.contains("@");
         datoAObtener.withConsulta("Correo electronico: ").withMensajeError("El correo electronico tiene que tener el simbolo '@'.");
         String correoElectronico = datoAObtener.comprobarDato(formatoCorreoElectronico, scannerPalabra);
-        ComprobarDato tarifaPositiva = dato -> isNum(dato) && Double.parseDouble(dato) > 0;
-        datoAObtener.withConsulta("TarifaBasica: ").withMensajeError("La tarifa tiene que ser un numero y no puede ser negativa.");
-        double tarifa = Double.parseDouble(datoAObtener.comprobarDato(tarifaPositiva, scannerPalabra));
         if (particular){
             try{
-                gestionClientes.addClienteParticular(nif, nombre, cp, provincia, poblacion, correoElectronico, tarifa, apellidos);
+                gestionClientes.addClienteParticular(nif, nombre, cp, provincia, poblacion, correoElectronico, apellidos);
                 System.out.println("El cliente se ha añadido correctamente.");
             }
-            catch (TarifaException | IllegalArgumentException e){
+            catch (IllegalArgumentException e){
                 e.printStackTrace();
             }
             finally {
@@ -219,9 +227,9 @@ public class InterfazUsuario {
         }
         else {
             try {
-                gestionClientes.addClienteEmpresa(nif, nombre, cp, provincia, poblacion, correoElectronico, tarifa);
+                gestionClientes.addClienteEmpresa(nif, nombre, cp, provincia, poblacion, correoElectronico);
                 System.out.println("El cliente se ha añadido correctamente.");
-            } catch (TarifaException | IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
             finally {
@@ -250,7 +258,7 @@ public class InterfazUsuario {
         try{
             gestionClientes.cambiarTarifaCliente(nif, tarifa);
         }
-        catch (TarifaException | IllegalArgumentException e){
+        catch (IllegalArgumentException e){
             e.printStackTrace();
         }
         finally {
@@ -266,7 +274,7 @@ public class InterfazUsuario {
             System.out.println("Desea ver la factura? (SI/NO)");
             mostrarInformacion(factura);
         }
-        catch (TarifaException | IllegalArgumentException e){
+        catch (IllegalArgumentException e){
             e.printStackTrace();
         }
         finally {

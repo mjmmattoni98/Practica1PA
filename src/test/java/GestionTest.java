@@ -1,6 +1,7 @@
 import empresa.telefonia.Cliente;
 import empresa.telefonia.Factura;
 import empresa.telefonia.Llamada;
+import empresa.telefonia.Periodo;
 import gestion.datos.GestionClientes;
 import excepciones.*;
 import gestion.datos.GestionFacturas;
@@ -21,8 +22,8 @@ public class GestionTest {
     private GestionLlamadas gestionLlamadas = new GestionLlamadas();
 
     @Before
-    public void beforeTest() throws TarifaException{
-        gestionClientes.addClienteParticular("12345678A", "ana", 12345, "Valencia", "Valencia", "anaprueba@correo.com", 15.0, "Bachueca Gimenez");
+    public void beforeTest(){
+        gestionClientes.addClienteParticular("12345678A", "ana", 12345, "Valencia", "Valencia", "anaprueba@correo.com", "Bachueca Gimenez");
     }
 
     @After
@@ -64,13 +65,15 @@ public class GestionTest {
 
     @Test
     public void testIntervaloClientes() throws TarifaException{
-        gestionClientes.addClienteParticular("93456872D", "marcos", 12345, "Valencia", "Valencia", "marcosprueba@correo.com", 1.34, "Apelli2");
-        gestionClientes.addClienteParticular("48567392B", "broh", 12345, "Alicante", "Marte", "broh@correo.com", 10.0, "quepasa brohh");
+        gestionClientes.addClienteParticular("93456872D", "marcos", 12345, "Valencia", "Valencia", "marcosprueba@correo.com", "Apelli2");
+        gestionClientes.addClienteParticular("48567392B", "broh", 12345, "Alicante", "Marte", "broh@correo.com", "quepasa brohh");
         LocalDateTime fechaInicio = LocalDateTime.parse("2018-11-03T10:15:30");
         LocalDateTime fechaFinal = LocalDateTime.parse("2019-12-03T10:15:30");
+        Periodo periodo = new Periodo(fechaInicio, fechaFinal);
         Set<Cliente> setClientes = new HashSet<>();
         setClientes.addAll(gestionClientes.getClientes().values());
-        Iterator<Cliente> iter= gestionClientes.filtrarEntreFechas(setClientes,fechaInicio,fechaFinal).iterator();
+//        Iterator<Cliente> iter= gestionClientes.filtrarEntreFechas(setClientes,fechaInicio,fechaFinal).iterator();
+        Iterator<Cliente> iter= gestionClientes.filterClientsByDate(setClientes, periodo).iterator();
 
         ArrayList<String> listaNifs= new ArrayList<>();
 
@@ -90,11 +93,14 @@ public class GestionTest {
 
         LocalDateTime fechaInicio = LocalDateTime.parse("2018-11-03T10:15:30");
         LocalDateTime fechaFinal = LocalDateTime.parse("2019-12-03T10:15:30");
+        Periodo periodo = new Periodo(fechaInicio, fechaFinal);
         Set<Llamada> setLlamadas = new HashSet<>();
         for ( List<Llamada> listaLlamadas : gestionLlamadas.getLlamadasCliente("12345678A").values()){
             setLlamadas.addAll(listaLlamadas);
         }
-        setLlamadas = gestionClientes.filtrarEntreFechas(setLlamadas,fechaInicio,fechaFinal);
+//        setLlamadas = gestionClientes.filtrarEntreFechas(setLlamadas,fechaInicio,fechaFinal);
+        setLlamadas = gestionLlamadas.filterCallsByDate(setLlamadas,periodo);
+
         List <Llamada> listaLlamadas= new ArrayList<>();
         listaLlamadas.addAll(setLlamadas);
         Collections.sort(listaLlamadas);
@@ -110,10 +116,13 @@ public class GestionTest {
 
         LocalDateTime fechaInicio = LocalDateTime.parse("2018-11-03T10:15:30");
         LocalDateTime fechaFinal = LocalDateTime.parse("2019-12-03T10:15:30");
+        Periodo periodo = new Periodo(fechaInicio, fechaFinal);
         Set<Factura> setFacturas = new HashSet<>();
         setFacturas.addAll(gestionFacturas.getFacturasCliente("12345678A").values());
 
-        Iterator<Factura> iter = gestionClientes.filtrarEntreFechas(setFacturas,fechaInicio,fechaFinal).iterator();
+//        Iterator<Factura> iter = gestionClientes.filtrarEntreFechas(setFacturas,fechaInicio,fechaFinal).iterator();
+        Iterator<Factura> iter = gestionFacturas.filterBillsByDate(setFacturas,periodo).iterator();
+
         List<Integer> listaCodigos= new ArrayList<>();
 
         while(iter.hasNext()){

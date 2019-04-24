@@ -14,12 +14,12 @@ public class ClienteTest {
 
     @Before
     public void beforeTest() throws TarifaException{
-        cliente = new ClienteParticular("pepe","57440683Q", new Direccion(11111,"Castellón","Castellón"),"peperamirez@correo.es",new TarifaBasica(),"garcia");
+        cliente = new ClienteParticular("pepe","57440683Q", new Direccion(11111,"Castellón","Castellón"),"peperamirez@correo.es",new TarifaBasica(15.0),"garcia");
     }
 
     @Test
     public void testSetTarifa() throws TarifaException {
-        cliente.setTarifa(new TarifaBasica());
+        cliente.setTarifa(new TarifaBasica(15.0));
         assertThat(cliente.getTarifa(),is(15.0));
 
     }
@@ -35,10 +35,10 @@ public class ClienteTest {
     }
 
     @Test
-    public void testCrearCliente(){
+    public void testCrearCliente()throws TarifaException{
         ClienteParticular clienteprueba = null;
         //try {
-            clienteprueba = new ClienteParticular("pepe", "03456456Z", new Direccion(12567, "Castellón", "Almazora"), "clienteprueba@correo.com", new TarifaBasica(), "garcia");
+            clienteprueba = new ClienteParticular("pepe", "03456456Z", new Direccion(12567, "Castellón", "Almazora"), "clienteprueba@correo.com", new TarifaBasica(15.0), "garcia");
 //        } catch (TarifaException e) {
 //            e.printStackTrace();
 //        }

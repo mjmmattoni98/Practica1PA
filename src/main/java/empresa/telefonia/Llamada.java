@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class Llamada implements Comparable<Llamada>, Serializable, Fecha{
     private int numero;
     private LocalDateTime fechaYHora;
-    private double duración;
+    private double duración; //duracion en minutos.
 
     public Llamada (int numero, LocalDateTime fechaYHora, double duración) {
         this.numero = numero;

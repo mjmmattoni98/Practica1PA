@@ -1,15 +1,19 @@
 package empresa.telefonia;
 
 
-public class TarifaBasica extends Tarifa {
+import excepciones.TarifaException;
 
-    public TarifaBasica() {
-        super(fecha -> true, 15.0);
+import java.io.Serializable;
+
+public class TarifaBasica extends Tarifa implements Serializable {
+
+    public TarifaBasica(double tarifa) {
+        super(fecha -> true, tarifa);
     }
 
     @Override
     public String toString(){
-        return "Tarifa básica: " + 15.0 + " céntimos.";
+        return "\nTarifa básica: " + super.toString() + " céntimos.";
     }
 
 }

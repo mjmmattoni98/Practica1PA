@@ -1,19 +1,22 @@
 package empresa.telefonia;
 
 
+import excepciones.TarifaException;
+import utilities.SerializablePredicate;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.function.Predicate;
 
 public abstract class Tarifa implements Serializable {
     private double tarifa; //Céntimos por minuto.
-    private Predicate<LocalDateTime> aplicarDescuento;
+    private SerializablePredicate<LocalDateTime> aplicarDescuento;
 
     public Tarifa(){
         super();
     }
 
-    public Tarifa(Predicate<LocalDateTime> aplicarDescuento, double tarifa){
+    public Tarifa(SerializablePredicate<LocalDateTime> aplicarDescuento, double tarifa) {
         this.aplicarDescuento = aplicarDescuento;
         this.tarifa = tarifa;
     }
@@ -23,12 +26,8 @@ public abstract class Tarifa implements Serializable {
         return this;
     }
 
-    public double descuento(LocalDateTime fecha){
-        return aplicarDescuento.test(fecha) ? tarifa : 100000.0;
-    }
-
     public double getTarifa(LocalDateTime fecha){
-        return tarifa;
+        return aplicarDescuento.test(fecha) ? tarifa : 100000.0;
     }
 
     @Override

@@ -16,13 +16,13 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class GestionFacturas extends BaseDatos implements Serializable {
-    Map<Integer, Factura> facturas;
+//    Map<Integer, Factura> facturas;
     int codigoFactura;
 
     public GestionFacturas(){
         super();
         this.codigoFactura = 0;
-        this.facturas = new HashMap<>();
+//        this.facturas = new HashMap<>();
     }
 
     public Map<Integer, Factura> getFacturas(){
@@ -31,13 +31,18 @@ public class GestionFacturas extends BaseDatos implements Serializable {
 
     public int getCodigoFactura(){return codigoFactura;}
 
+    public void setCodigoFactura(int codigoFactura){
+        this.codigoFactura = codigoFactura;
+    }
+
     public void removeBill(int codigoFactura){
         facturas.remove(codigoFactura);
     }
 
-    public Factura emitirFacturaCliente(String nif) throws TarifaException, IllegalArgumentException {
-        Cliente miCliente = gestionClientes.getCliente(nif);
-        Factura factura = new Factura(new TarifaBasica(), codigoFactura, miCliente.getActualPeriodoFacturacion());
+    public Factura emitirFacturaCliente(String nif) throws IllegalArgumentException {
+        checkContainsClient(nif);
+        Cliente miCliente = clientes.get(nif);
+        Factura factura = new Factura(new TarifaBasica(15.0), codigoFactura, miCliente.getActualPeriodoFacturacion());
         factura.calcularImporte(miCliente.getLlamadas().get(miCliente.getActualPeriodoFacturacion()));
         miCliente.añadirFactura(codigoFactura, factura);
         facturas.put(codigoFactura, factura);
@@ -58,7 +63,8 @@ public class GestionFacturas extends BaseDatos implements Serializable {
     }
 
     public Map<Integer, Factura> getFacturasCliente(String nif) throws IllegalArgumentException{
-        return gestionClientes.getClientBills(nif);
+        checkContainsClient(nif);
+        return clientes.get(nif).getFacturas();
     }
 
     public void checkContainsBill(int codigo) throws IllegalArgumentException{
@@ -68,7 +74,7 @@ public class GestionFacturas extends BaseDatos implements Serializable {
     public Set<Factura> filterBillsByDate(Set<Factura> bills, Periodo periodo){
         Predicate<Factura> predicate = bill -> bill.getFecha().isAfter(periodo.getFechaInicio())
                                             && bill.getFecha().isBefore(periodo.getFechaFin());
-        return filter(bills, predicate);
+        return BaseDatos.filter(bills, predicate);
     }
 
 }

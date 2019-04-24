@@ -37,9 +37,9 @@ public abstract class Cliente implements Serializable, Fecha {
         this.tarifa = nuevaTarifa;
     }
 
-    //TODO hacer bien el método.
-    public double getTarifa(){
-        return tarifa.getTarifa(LocalDateTime.now());
+    //TODO ver como mejorar el método.
+    public Tarifa getTarifa(){
+        return tarifa;
     }
 
     public String getNombre(){

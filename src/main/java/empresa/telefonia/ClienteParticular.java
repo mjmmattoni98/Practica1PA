@@ -22,6 +22,7 @@ public class ClienteParticular extends  Cliente {
         return apellidos;
     }
 
+    //TODO rehacer el metodo toString.
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();

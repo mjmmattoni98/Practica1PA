@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 public class GestionLlamadas extends BaseDatos implements Serializable {
 //    private Map<String, Cliente> clientes;
 //    private Map<Integer, Factura> facturas;
-    private Map<String, List> llamadas;
+//    private Map<String, List> llamadas;
 
     public GestionLlamadas(){
         super();
@@ -36,19 +36,19 @@ public class GestionLlamadas extends BaseDatos implements Serializable {
     }
 */
     public Llamada añadirLlamada(String nif, int numero, double duracion) throws IllegalArgumentException {
-        gestionClientes.checkContainsClient(nif);
-        Llamada llamada = gestionClientes.clientes.get(nif).añadirLlamada(numero, duracion);
+        checkContainsClient(nif);
+        Llamada llamada = clientes.get(nif).añadirLlamada(numero, duracion);
         return llamada;
     }
 
     public Map<Periodo, List<Llamada>> getLlamadasCliente(String nif) throws IllegalArgumentException {
-        gestionClientes.checkContainsClient(nif);
-        return gestionClientes.clientes.get(nif).getLlamadas();
+        checkContainsClient(nif);
+        return clientes.get(nif).getLlamadas();
     }
 
     public Set<Llamada> filterCallsByDate(Set<Llamada> calls, Periodo periodo){
         Predicate<Llamada> predicate = call -> call.getFecha().isAfter(periodo.getFechaInicio())
                                             && call.getFecha().isBefore(periodo.getFechaFin());
-        return filter(calls, predicate);
+        return BaseDatos.filter(calls, predicate);
     }
 }
