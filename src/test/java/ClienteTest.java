@@ -1,6 +1,4 @@
-import empresa.telefonia.ClienteParticular;
-import empresa.telefonia.Direccion;
-import empresa.telefonia.TarifaBasica;
+import empresa.telefonia.*;
 import excepciones.TarifaException;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,5 +49,27 @@ public class ClienteTest {
         assertThat(clienteprueba.getDireccion().getPoblacion(),is("Almazora"));
         assertThat(clienteprueba.getDireccion().getProvincia(),is("Castellón"));
         assertThat(clienteprueba.getTarifa(),is(15.0));
+    }
+
+    @Test
+    public void testFabricaClienteParticular() throws TarifaException {
+        FabricadoCliente fabrica = new FabricadoCliente("03456456Z", "pepe", 12530 , "Albacete","Reus","alkdkm@pep.com",12.3,"Sapee");
+        TipoCliente tipo = TipoCliente.PARTICULAR;
+        Cliente cliente = fabrica.getCliente(tipo);
+        assertThat(cliente.getNif(),is("03456456Z"));
+    }
+    @Test
+    public void testFabricaClienteEmpresa() throws TarifaException {
+        FabricadoCliente fabrica = new FabricadoCliente("03456456Z", "Ibai", 12530 , "Albacete","Reus","alkdkm@pep.com",12.3,"Sapee");
+        TipoCliente tipo = TipoCliente.getOpcion(1);
+        Cliente cliente = fabrica.getCliente(tipo);
+        assertThat(cliente.getNombre(),is("Ibai"));
+    }
+    @Test
+    public void testFabricaTarifa() throws TarifaException {
+        FabricadoTarifa fabrica = new FabricadoTarifa(10,5);
+        TipoTarifa tipo = TipoTarifa.DOMINGO_GRATIS;
+        Tarifa tarifa = fabrica.getTarifa(tipo);
+        assertThat(tarifa.toString(),is("Domingos gratis."));
     }
 }

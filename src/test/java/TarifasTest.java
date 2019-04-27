@@ -18,22 +18,22 @@ public class TarifasTest {
         Tarifa tarifa = new TarifaBasica(15.0);
         LocalDateTime fecha = LocalDateTime.parse("2019-04-07T16:00:00");
         assertThat(tarifa.getTarifa(fecha), is(15.0));
-        System.out.println(tarifa);
+        System.out.println(tarifa.description());
         tarifa = new TardesReducidas(tarifa, 5.0);
         assertThat(tarifa.getTarifa(fecha), is(5.0));
-        System.out.println(tarifa);
+        System.out.println(tarifa.description());
         tarifa = new DomingoGratis(tarifa);
         assertThat(tarifa.getTarifa(fecha), is(0.0));
-        System.out.println(tarifa);
+        System.out.println(tarifa.description());
         tarifa = new TarifaBasica(15.0);
         assertThat(tarifa.getTarifa(fecha), is(15.0));
-        System.out.println(tarifa);
+        System.out.println(tarifa.description());
         tarifa = new DomingoGratis(tarifa);
         assertThat(tarifa.getTarifa(fecha), is(0.0));
-        System.out.println(tarifa);
+        System.out.println(tarifa.description());
         tarifa = new TardesReducidas(tarifa, 5.0);
         assertThat(tarifa.getTarifa(fecha), is(0.0));
-        System.out.println(tarifa);
+        System.out.println(tarifa.description());
 
         tarifa = new TarifaBasica(15.0);
         fecha = LocalDateTime.parse("2019-04-07T16:00:00");

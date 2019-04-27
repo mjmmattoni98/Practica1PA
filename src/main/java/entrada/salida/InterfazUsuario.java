@@ -192,49 +192,44 @@ public class InterfazUsuario {
     }
 
     //TODO rehacer el codigo con el nuevo sistema de tarifas.
-    private void crearCuenta(String nif){
-        ComprobarDato soyParticularOEmpresa = dato -> dato.equalsIgnoreCase("particular") || dato.equalsIgnoreCase("empresa");
-        datoAObtener.withConsulta("Empresa o Particular?").withMensajeError("No le he entendido.");
-        boolean particular = datoAObtener.comprobarDato(soyParticularOEmpresa, scannerPalabra).equalsIgnoreCase("particular");
+    private void crearCuenta(String nif) /*throws TarifaException*/ {
+        System.out.println("Qué tipo de cliente desea añadir?\n");
+        System.out.println(TipoCliente.opciones());
+        TipoCliente tipo;
+        int opcion = scannerPalabra.nextInt();
+        tipo = TipoCliente.getOpcion(opcion);
+
         System.out.println("Nombre: ");
-        String nombre = WordUtils.capitalizeFully(scannerLinea.nextLine());
+        String nombre = scannerLinea.nextLine();
         String apellidos = "";
-        if (particular){
+        if (tipo == TipoCliente.PARTICULAR){
             System.out.println("Apellidos: ");
-            apellidos = WordUtils.capitalizeFully(scannerLinea.nextLine());
+            apellidos = scannerLinea.nextLine();
         }
         ComprobarDato cpLongitud = dato -> dato.length() == 5 && isNum(dato);
         datoAObtener.withConsulta("CP: ").withMensajeError("El código postal tiene que estar compuesto por 5 números y ser numerico.");
         int cp = Integer.parseInt(datoAObtener.comprobarDato(cpLongitud, scannerPalabra));
         System.out.println("Provincia: ");
-        String provincia = WordUtils.capitalizeFully(scannerLinea.nextLine());
+        String provincia = scannerLinea.nextLine();
         System.out.println("Población: ");
-        String poblacion = WordUtils.capitalizeFully(scannerLinea.nextLine());
+        String poblacion = scannerLinea.nextLine();
         ComprobarDato formatoCorreoElectronico = dato -> dato.contains("@");
         datoAObtener.withConsulta("Correo electronico: ").withMensajeError("El correo electronico tiene que tener el simbolo '@'.");
         String correoElectronico = datoAObtener.comprobarDato(formatoCorreoElectronico, scannerPalabra);
-        if (particular){
-            try{
-                gestionClientes.addClienteParticular(nif, nombre, cp, provincia, poblacion, correoElectronico, apellidos);
-                System.out.println("El cliente se ha añadido correctamente.");
-            }
-            catch (IllegalArgumentException e){
-                e.printStackTrace();
-            }
-            finally {
-                repeatMenu();
-            }
+        ComprobarDato tarifaPositiva = dato -> isNum(dato) && Double.parseDouble(dato) > 0;
+        datoAObtener.withConsulta("Tarifa: ").withMensajeError("La tarifa tiene que ser un numero y no puede ser negativa.");
+        double tarifa = Double.parseDouble(datoAObtener.comprobarDato(tarifaPositiva, scannerPalabra));
+        try{
+            FabricadoCliente fabrica= new FabricadoCliente(nif,nombre,cp,provincia,poblacion,correoElectronico,tarifa,apellidos);
+            Cliente cliente= fabrica.getCliente(tipo);
+            gestionClientes.addCliente(cliente);
+            System.out.println("El cliente se ha añadido correctamente.");
         }
-        else {
-            try {
-                gestionClientes.addClienteEmpresa(nif, nombre, cp, provincia, poblacion, correoElectronico);
-                System.out.println("El cliente se ha añadido correctamente.");
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            }
-            finally {
-                repeatMenu();
-            }
+        catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }
+        finally {
+            repeatMenu();
         }
     }
 
@@ -251,17 +246,28 @@ public class InterfazUsuario {
         }
     }
 
-    private void cambiarTarifa(String nif){
-        ComprobarDato tarifaPositiva = dato -> isNum(dato) && Double.parseDouble(dato) > 0;
-        datoAObtener.withConsulta("Introduzca la nueva tarifa: ").withMensajeError("La tarifa tiene que ser un número y no puede ser negativa.");
-        double tarifa = Double.parseDouble(datoAObtener.comprobarDato(tarifaPositiva, scannerPalabra));
+    private void cambiarTarifa(String nif) /*throws TarifaException */{
+        double nuevaTarifa = 0;
+        System.out.println("Qué tipo de tarifa desea aplicar?\n");
+        System.out.println(TipoTarifa.opciones());
+        TipoTarifa tipo;
+        int opcion = scannerPalabra.nextInt();
+        tipo = TipoTarifa.getOpcion(opcion);
+//        ComprobarDato tarifaPositiva = dato -> isNum(dato) && Double.parseDouble(dato) > 0;
+
+        if (tipo == TipoTarifa.TARDES_REDUCIDAS){
+            System.out.println("Introduce decuento aplicado en: "+ tipo.name());
+            nuevaTarifa = scannerPalabra.nextDouble();
+        }
+
         try{
+            FabricadoTarifa fabrica = new FabricadoTarifa(GestionClientes.getClientesBD().get(nif).getTarifa().getTarifa(LocalDateTime.now()),nuevaTarifa);
+            Tarifa tarifa = fabrica.getTarifa(tipo);
             gestionClientes.cambiarTarifaCliente(nif, tarifa);
         }
-        catch (IllegalArgumentException e){
+        catch (IllegalArgumentException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             repeatMenu();
         }
     }

@@ -32,6 +32,11 @@ public class GestionClientes extends BaseDatos implements Serializable {
         clientes.put(nif, cliente);
     }
 
+    public void addCliente(Cliente cliente){
+        String nif = cliente.getNif();
+        clientes.put(nif, cliente);
+    }
+
     public Cliente getCliente(String nif) throws IllegalArgumentException{
         checkContainsClient(nif);
         return clientes.get(nif);
@@ -52,10 +57,9 @@ public class GestionClientes extends BaseDatos implements Serializable {
     }
 //      facturas.remove(codigoFactura);
 
-    public void cambiarTarifaCliente(String nif, double tarifa) throws IllegalArgumentException{
+    public void cambiarTarifaCliente(String nif, Tarifa tarifa) throws IllegalArgumentException{
         checkContainsClient(nif);
-        TarifaBasica nuevaTarifa = new TarifaBasica(15.0);
-        clientes.get(nif).setTarifa(nuevaTarifa);
+        clientes.get(nif).setTarifa(tarifa);
     }
 
     public Set<Cliente> filterClientsByDate(Set<Cliente> clients, Periodo periodo){

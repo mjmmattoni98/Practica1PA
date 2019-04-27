@@ -30,6 +30,8 @@ public abstract class Tarifa implements Serializable {
         return aplicarDescuento.test(fecha) ? tarifa : 100000.0;
     }
 
+    public abstract String description();
+
     @Override
     public String toString(){
         return tarifa + "";

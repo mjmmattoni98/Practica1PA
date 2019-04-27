@@ -26,6 +26,11 @@ public abstract class TarifaDescuento extends Tarifa{
     }
 
     @Override
+    public String description(){
+        return tarifa.description();
+    }
+
+    @Override
     public String toString(){
         return super.toString();
     }

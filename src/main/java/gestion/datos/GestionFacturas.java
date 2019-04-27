@@ -5,11 +5,9 @@ import empresa.telefonia.Cliente;
 import empresa.telefonia.Factura;
 import empresa.telefonia.Periodo;
 import empresa.telefonia.TarifaBasica;
-import excepciones.TarifaException;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
