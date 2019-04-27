@@ -1,7 +1,5 @@
 package empresa.telefonia;
 
-import excepciones.TarifaException;
-
 public class FabricadoCliente implements FabricaCliente {
     private String nif;
     private String nombre;

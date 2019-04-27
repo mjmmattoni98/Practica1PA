@@ -220,8 +220,8 @@ public class InterfazUsuario {
         datoAObtener.withConsulta("Tarifa: ").withMensajeError("La tarifa tiene que ser un numero y no puede ser negativa.");
         double tarifa = Double.parseDouble(datoAObtener.comprobarDato(tarifaPositiva, scannerPalabra));
         try{
-            FabricadoCliente fabrica= new FabricadoCliente(nif,nombre,cp,provincia,poblacion,correoElectronico,tarifa,apellidos);
-            Cliente cliente= fabrica.getCliente(tipo);
+            FabricadoCliente fabrica = new FabricadoCliente(nif,nombre,cp,provincia,poblacion,correoElectronico,tarifa,apellidos);
+            Cliente cliente = fabrica.getCliente(tipo);
             gestionClientes.addCliente(cliente);
             System.out.println("El cliente se ha añadido correctamente.");
         }
@@ -264,6 +264,7 @@ public class InterfazUsuario {
             FabricadoTarifa fabrica = new FabricadoTarifa(GestionClientes.getClientesBD().get(nif).getTarifa().getTarifa(LocalDateTime.now()),nuevaTarifa);
             Tarifa tarifa = fabrica.getTarifa(tipo);
             gestionClientes.cambiarTarifaCliente(nif, tarifa);
+            System.out.println("La tarifa ha sido modificada con éxito.");
         }
         catch (IllegalArgumentException e) {
             e.printStackTrace();

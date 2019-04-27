@@ -1,11 +1,11 @@
 package empresa.telefonia;
 
 public enum TipoCliente {
-    PARTICULAR("Cliente particular"),
-    EMPRESA("Cliente empresa");
+    PARTICULAR("Cliente particular."),
+    EMPRESA("Cliente empresa.");
     private String descripcion;
 
-    private TipoCliente(String descripcion) {
+    TipoCliente(String descripcion) {
         this.descripcion = descripcion;
     }
 

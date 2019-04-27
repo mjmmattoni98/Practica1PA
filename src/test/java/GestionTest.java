@@ -3,7 +3,6 @@ import empresa.telefonia.Factura;
 import empresa.telefonia.Llamada;
 import empresa.telefonia.Periodo;
 import gestion.datos.GestionClientes;
-import excepciones.*;
 import gestion.datos.GestionFacturas;
 import gestion.datos.GestionLlamadas;
 import org.junit.After;
@@ -28,7 +27,8 @@ public class GestionTest {
 
     @After
     public void afterTest() {
-        gestionClientes.getClientes().remove("12345678A");
+//        gestionClientes.getClientes().remove("12345678A");
+        gestionClientes.resetClients();
     }
 
     @Test
@@ -42,8 +42,8 @@ public class GestionTest {
     }
 
     @Test
-    public void testEmitirFacturaCliente() throws TarifaException{
-        assertThat(gestionFacturas.emitirFacturaCliente("12345678A").getTarifa(), is(15.0));
+    public void testEmitirFacturaCliente() {
+        assertThat(Double.parseDouble(gestionFacturas.emitirFacturaCliente("12345678A").getTarifa().toString()), is(15.0));
         assertThat(gestionFacturas.getCodigoFactura(), is(1));
     }
 
@@ -53,9 +53,9 @@ public class GestionTest {
     }
 
     @Test
-    public void testGetFacturasCliente() throws TarifaException{
+    public void testGetFacturasCliente() {
         gestionFacturas.emitirFacturaCliente("12345678A");
-        assertThat(gestionFacturas.getFacturasCliente("12345678A").get(gestionFacturas.getCodigoFactura()-1).getTarifa(), is(15.0));
+        assertThat(Double.parseDouble(gestionFacturas.getFacturasCliente("12345678A").get(gestionFacturas.getCodigoFactura()-1).getTarifa().toString()), is(15.0));
     }
     @Test
     public void testGetLlamadasCliente() {
@@ -64,7 +64,7 @@ public class GestionTest {
     }
 
     @Test
-    public void testIntervaloClientes() throws TarifaException{
+    public void testIntervaloClientes() {
         gestionClientes.addClienteParticular("93456872D", "marcos", 12345, "Valencia", "Valencia", "marcosprueba@correo.com", "Apelli2");
         gestionClientes.addClienteParticular("48567392B", "broh", 12345, "Alicante", "Marte", "broh@correo.com", "quepasa brohh");
         LocalDateTime fechaInicio = LocalDateTime.parse("2018-11-03T10:15:30");
@@ -108,7 +108,7 @@ public class GestionTest {
         assertThat(listaLlamadas.get(1).getNumero(), is(235642245));
     }
     @Test
-    public void testIntervaloFacturasCliente() throws TarifaException{
+    public void testIntervaloFacturasCliente() {
         gestionLlamadas.añadirLlamada("12345678A",235642245,12);
         gestionLlamadas.añadirLlamada("12345678A",123456789,23);
         gestionFacturas.emitirFacturaCliente("12345678A");
@@ -134,4 +134,5 @@ public class GestionTest {
         assertThat(listaCodigos.get(0), is(0));
         assertThat(listaCodigos.get(1), is(1));
     }
+
 }

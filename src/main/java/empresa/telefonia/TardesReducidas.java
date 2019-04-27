@@ -1,8 +1,5 @@
 package empresa.telefonia;
 
-
-import excepciones.TarifaException;
-
 public class TardesReducidas extends TarifaDescuento {
 
     public TardesReducidas(Tarifa tarifa, double nuevaTarifa) {

@@ -1,8 +1,5 @@
 package empresa.telefonia;
 
-
-import excepciones.TarifaException;
-
 public class FabricadoTarifa implements FabricaTarifa {
     private double tarifa;
     private double nuevaTarifa;

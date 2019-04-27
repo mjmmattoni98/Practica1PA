@@ -16,6 +16,10 @@ public class GestionClientes extends BaseDatos implements Serializable {
 //        this.clientes = new HashMap<>();
     }
 
+    public void resetClients(){
+        clientes = new HashMap<>();
+    }
+
     public void addClienteParticular(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, String apellidos) throws IllegalArgumentException{
         checkNotContainsClient(nif);
         TarifaBasica miTarifa = new TarifaBasica(15.0);
@@ -34,6 +38,7 @@ public class GestionClientes extends BaseDatos implements Serializable {
 
     public void addCliente(Cliente cliente){
         String nif = cliente.getNif();
+        checkNotContainsClient(nif);
         clientes.put(nif, cliente);
     }
 
