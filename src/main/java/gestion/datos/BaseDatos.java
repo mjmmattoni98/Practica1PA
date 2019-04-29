@@ -10,20 +10,12 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-//TODO hacer composicion de objetos.
 public class BaseDatos implements Serializable {
     static Map<String, Cliente> clientes = new HashMap<>();
     static Map<Integer, Factura> facturas = new HashMap<>();
-//    GestionLlamadas gestionLlamadas;
-//    GestionClientes gestionClientes;
-//    GestionFacturas gestionFacturas;
-//    static Gestor gestor = new Gestor();
 
     public BaseDatos(){
-//        this.gestionClientes = new GestionClientes();
-//        this.gestionLlamadas = new GestionLlamadas();
-//        this.gestionFacturas = new GestionFacturas();
-//        this.gestor = new Gestor();
+        super();
     }
 
     public static void setClientesBD(Map<String, Cliente> nuevosClientes){

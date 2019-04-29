@@ -24,11 +24,7 @@ public class ClienteTest {
         assertThat(Double.parseDouble(cliente.getTarifa().toString()),is(15.0));
 
     }
-    /*@Test(expected = TarifaException.class)
-    public void testExceptionSetTarifaMenorCero() throws TarifaException {
-        cliente.setTarifa(new TarifaBasica());
-    }
-    */
+
     @Test
     public void testAñadirLlamada(){
         cliente.añadirLlamada(123456789,10);
@@ -37,12 +33,7 @@ public class ClienteTest {
 
     @Test
     public void testCrearCliente() {
-        ClienteParticular clienteprueba = null;
-        //try {
-        clienteprueba = new ClienteParticular("pepe", "03456456Z", new Direccion(12567, "Castellón", "Almazora"), "clienteprueba@correo.com", Tarifa.tarifaBasica, "garcia");
-//        } catch (TarifaException e) {
-//            e.printStackTrace();
-//        }
+        ClienteParticular clienteprueba = new ClienteParticular("pepe", "03456456Z", new Direccion(12567, "Castellón", "Almazora"), "clienteprueba@correo.com", Tarifa.tarifaBasica, "garcia");
 
         assertThat(clienteprueba.getCorreoElectronico(),is("clienteprueba@correo.com"));
         assertThat(clienteprueba.getNif(),is("03456456Z"));
@@ -84,6 +75,5 @@ public class ClienteTest {
         assertThat(tarifa.getTarifa(fecha), is(5.0));
         tarifa = fabrica.getTarifa(TipoTarifa.DOMINGO_GRATIS);
         assertThat(tarifa.getTarifa(fecha), is(0.0));
-
     }
 }

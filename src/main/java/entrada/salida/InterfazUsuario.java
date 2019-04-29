@@ -33,22 +33,6 @@ public class InterfazUsuario {
         FileInputStream fis;
         ObjectInputStream ois;
         try {
-/*
-            fis = new FileInputStream("clientes.bin");
-            ois = new ObjectInputStream(fis);
-            gestionClientes = (GestionClientes) ois.readObject();
-            fis = new FileInputStream("llamadas.bin");
-            ois = new ObjectInputStream(fis);
-            gestionLlamadas = (GestionLlamadas) ois.readObject();
-            fis = new FileInputStream("facturas.bin");
-            ois = new ObjectInputStream(fis);
-            gestionFacturas = (GestionFacturas) ois.readObject();
-            BaseDatos.setClientesBD(gestionLlamadas.getClientes());
-            BaseDatos.setFacturasBD(gestionLlamadas.getFacturas());
-            fis = new FileInputStream("baseDeDatos.bin");
-            ois = new ObjectInputStream(fis);
-            this.baseDeDatos = (BaseDatos) ois.readObject();
-*/
             fis = new FileInputStream("datos.bin");
             ois = new ObjectInputStream(fis);
             datos = (Datos) ois.readObject();
@@ -164,19 +148,6 @@ public class InterfazUsuario {
                 datos.setClientes(BaseDatos.getClientesBD());
                 datos.setFacturas(BaseDatos.getFacturasBD());
                 datos.setCodigoFactura(gestionFacturas.getCodigoFactura());
-                /*fos = new FileOutputStream("clientes.bin");
-                oos = new ObjectOutputStream(fos);
-                oos.writeObject(this.gestionClientes);
-                fos = new FileOutputStream("llamadas.bin");
-                oos = new ObjectOutputStream(fos);
-                oos.writeObject(this.gestionLlamadas);
-                fos = new FileOutputStream("facturas.bin");
-                oos = new ObjectOutputStream(fos);
-                oos.writeObject(this.gestionFacturas);
-                fos = new FileOutputStream("baseDeDatos.bin");
-                oos = new ObjectOutputStream(fos);
-                oos.writeObject(fos);
-                */
                 fos = new FileOutputStream("datos.bin");
                 oos = new ObjectOutputStream(fos);
                 oos.writeObject(this.datos);
@@ -189,8 +160,7 @@ public class InterfazUsuario {
         }
     }
 
-    //TODO rehacer el codigo con el nuevo sistema de tarifas.
-    private void crearCuenta(String nif) /*throws TarifaException*/ {
+    private void crearCuenta(String nif) {
         System.out.println("Qué tipo de cliente desea añadir?");
         System.out.println(TipoCliente.opciones());
         TipoCliente tipo;
@@ -214,10 +184,7 @@ public class InterfazUsuario {
         datoAObtener.withConsulta("Correo electronico: ").withMensajeError("El correo electronico tiene que tener el simbolo '@'.");
         String correoElectronico = datoAObtener.comprobarDato(formatoCorreoElectronico, scannerPalabra);
         //TODO hacer que al crear la cuenta, el cliente decida si decide quedarse con la tarifa básica o desea modificarla.
-        /*ComprobarDato tarifaPositiva = dato -> isNum(dato) && Double.parseDouble(dato) > 0;
-        datoAObtener.withConsulta("Tarifa: ").withMensajeError("La tarifa tiene que ser un numero y no puede ser negativa.");
-        double tarifa = Double.parseDouble(datoAObtener.comprobarDato(tarifaPositiva, scannerPalabra));
-        */try{
+        try{
             FabricadoCliente fabrica = new FabricadoCliente(nif,nombre,cp,provincia,poblacion,correoElectronico, Tarifa.tarifaBasica, apellidos);
             Cliente cliente = fabrica.getCliente(tipo);
             gestionClientes.addCliente(cliente);
@@ -244,14 +211,13 @@ public class InterfazUsuario {
         }
     }
 
-    private void cambiarTarifa(String nif) /*throws TarifaException */{
+    private void cambiarTarifa(String nif) {
         double nuevaTarifa = 0;
         System.out.println("Qué tipo de tarifa desea aplicar?");
         System.out.println(TipoTarifa.opciones());
         TipoTarifa tipo;
         int opcion = scannerPalabra.nextInt();
         tipo = TipoTarifa.getOpcion(opcion);
-//        ComprobarDato tarifaPositiva = dato -> isNum(dato) && Double.parseDouble(dato) > 0;
         if (tipo == TipoTarifa.TARDES_REDUCIDAS){
             nuevaTarifa = 5;
         }
@@ -268,7 +234,6 @@ public class InterfazUsuario {
         }
     }
 
-    //TODO no funciona correctamente el emitir factura.
     private void emitirFactura(String nif){
         Factura factura;
         try{
@@ -390,7 +355,6 @@ public class InterfazUsuario {
         Set<Cliente> setClientes = new HashSet<>();
         setClientes.addAll(gestionClientes.getClientes().values());
 
-//        Set<Cliente> setClientesIntervalo = gestionClientes.filtrarEntreFechas(setClientes,intervaloFechas[0],intervaloFechas[1]);
         Set<Cliente> setClientesIntervalo = gestionClientes.filterClientsByDate(setClientes, periodo);
 
         int i = 0;
@@ -413,7 +377,6 @@ public class InterfazUsuario {
                 setLlamadas.addAll(listaLlamadas);
             }
 
-//            Set<Llamada> setLlamadasIntervalo = gestionLlamadas.filtrarEntreFechas(setLlamadas, intervaloFechas[0], intervaloFechas[1]);
             Set<Llamada> setLlamadasIntervalo = gestionLlamadas.filterCallsByDate(setLlamadas, periodo);
 
             int i = 0;
@@ -438,7 +401,6 @@ public class InterfazUsuario {
         Set<Factura> setFacturas = new HashSet<>();
         try {
             setFacturas.addAll(gestionFacturas.getFacturasCliente(nif).values());
-//            Set<Factura> setFacturasIntervalo = gestionFacturas.filtrarEntreFechas(setFacturas, intervaloFechas[0], intervaloFechas[1]);
             Set<Factura> setFacturasIntervalo = gestionFacturas.filterBillsByDate(setFacturas, periodo);
 
             int i = 0;

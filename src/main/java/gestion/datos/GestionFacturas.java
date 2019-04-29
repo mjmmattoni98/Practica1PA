@@ -1,10 +1,8 @@
 package gestion.datos;
 
-
 import empresa.telefonia.Cliente;
 import empresa.telefonia.Factura;
 import empresa.telefonia.Periodo;
-import empresa.telefonia.TarifaBasica;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -14,13 +12,11 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class GestionFacturas extends BaseDatos implements Serializable {
-//    Map<Integer, Factura> facturas;
     int codigoFactura;
 
     public GestionFacturas(){
         super();
         this.codigoFactura = 0;
-//        this.facturas = new HashMap<>();
     }
 
     public Map<Integer, Factura> getFacturas(){

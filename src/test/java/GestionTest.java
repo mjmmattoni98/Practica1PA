@@ -27,7 +27,6 @@ public class GestionTest {
 
     @After
     public void afterTest() {
-//        gestionClientes.getClientes().remove("12345678A");
         gestionClientes.resetClients();
     }
 
@@ -72,7 +71,6 @@ public class GestionTest {
         Periodo periodo = new Periodo(fechaInicio, fechaFinal);
         Set<Cliente> setClientes = new HashSet<>();
         setClientes.addAll(gestionClientes.getClientes().values());
-//        Iterator<Cliente> iter= gestionClientes.filtrarEntreFechas(setClientes,fechaInicio,fechaFinal).iterator();
         Iterator<Cliente> iter= gestionClientes.filterClientsByDate(setClientes, periodo).iterator();
 
         ArrayList<String> listaNifs= new ArrayList<>();
@@ -98,7 +96,6 @@ public class GestionTest {
         for ( List<Llamada> listaLlamadas : gestionLlamadas.getLlamadasCliente("12345678A").values()){
             setLlamadas.addAll(listaLlamadas);
         }
-//        setLlamadas = gestionClientes.filtrarEntreFechas(setLlamadas,fechaInicio,fechaFinal);
         setLlamadas = gestionLlamadas.filterCallsByDate(setLlamadas,periodo);
 
         List <Llamada> listaLlamadas= new ArrayList<>();
@@ -120,7 +117,6 @@ public class GestionTest {
         Set<Factura> setFacturas = new HashSet<>();
         setFacturas.addAll(gestionFacturas.getFacturasCliente("12345678A").values());
 
-//        Iterator<Factura> iter = gestionClientes.filtrarEntreFechas(setFacturas,fechaInicio,fechaFinal).iterator();
         Iterator<Factura> iter = gestionFacturas.filterBillsByDate(setFacturas,periodo).iterator();
 
         List<Integer> listaCodigos= new ArrayList<>();

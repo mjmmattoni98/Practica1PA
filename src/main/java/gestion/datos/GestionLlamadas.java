@@ -1,8 +1,5 @@
 package gestion.datos;
 
-
-import empresa.telefonia.Cliente;
-import empresa.telefonia.Factura;
 import empresa.telefonia.Llamada;
 import empresa.telefonia.Periodo;
 
@@ -11,30 +8,11 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class GestionLlamadas extends BaseDatos implements Serializable {
-//    private Map<String, Cliente> clientes;
-//    private Map<Integer, Factura> facturas;
-//    private Map<String, List> llamadas;
 
     public GestionLlamadas(){
         super();
     }
 
-    /*public Map<String, Cliente> getClientes() {
-        return clientes;
-    }
-
-    public Map<Integer, Factura> getFacturas() {
-        return facturas;
-    }
-
-    public void setClientes(Map<String, Cliente> clientes) {
-        this.clientes = clientes;
-    }
-
-    public void setFacturas(Map<Integer, Factura> facturas) {
-        this.facturas = facturas;
-    }
-*/
     public Llamada añadirLlamada(String nif, int numero, double duracion) throws IllegalArgumentException {
         checkContainsClient(nif);
         Llamada llamada = clientes.get(nif).añadirLlamada(numero, duracion);

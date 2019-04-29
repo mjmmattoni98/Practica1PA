@@ -1,8 +1,6 @@
 import empresa.telefonia.DomingoGratis;
 import empresa.telefonia.TardesReducidas;
 import empresa.telefonia.Tarifa;
-import empresa.telefonia.TarifaBasica;
-import excepciones.TarifaException;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -71,8 +69,4 @@ public class TarifasTest {
         tarifa = new TardesReducidas(tarifa, 15.0);
         assertThat(tarifa.getTarifa(fecha), is(15.0));
     }
-
-
-
-
 }

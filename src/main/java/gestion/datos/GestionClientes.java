@@ -9,11 +9,9 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class GestionClientes extends BaseDatos implements Serializable {
-    //Map<String, Cliente> clientes;
 
     public GestionClientes(){
         super();
-//        this.clientes = new HashMap<>();
     }
 
     public void resetClients(){
@@ -57,10 +55,8 @@ public class GestionClientes extends BaseDatos implements Serializable {
         Map<Integer, Factura> facturasMiCliente = miCliente.getFacturas();
         for (Integer codigoFactura : facturasMiCliente.keySet())
               facturas.remove(codigoFactura);
-//            BaseDatos.gestor.gestionFacturas.removeBill(codigoFactura);
         return clientes;
     }
-//      facturas.remove(codigoFactura);
 
     public void cambiarTarifaCliente(String nif, Tarifa tarifa) throws IllegalArgumentException{
         checkContainsClient(nif);
