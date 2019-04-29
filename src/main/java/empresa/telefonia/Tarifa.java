@@ -1,16 +1,14 @@
 package empresa.telefonia;
 
-
-import excepciones.TarifaException;
 import utilities.SerializablePredicate;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.function.Predicate;
 
 public abstract class Tarifa implements Serializable {
     private double tarifa; //Céntimos por minuto.
     private SerializablePredicate<LocalDateTime> aplicarDescuento;
+    public static final Tarifa tarifaBasica = new TarifaBasica(15);
 
     public Tarifa(){
         super();

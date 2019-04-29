@@ -1,8 +1,5 @@
 package empresa.telefonia;
 
-
-import excepciones.TarifaException;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -54,7 +51,7 @@ public class Factura implements Serializable, Fecha {
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
-        sb.append("\t-Tarifa aplicada: " + tarifa + "\n");
+        sb.append("\t-Tarifa aplicada: " + tarifa.description() + "\n");
         sb.append("\t-El código de la factura es: " + codigo + "\n");
         sb.append("\t-Fecha de emisión: " + fechaEmision + "\n");
         sb.append("\t-Periodo de facturación: " + periodoFacturacion + "\n");

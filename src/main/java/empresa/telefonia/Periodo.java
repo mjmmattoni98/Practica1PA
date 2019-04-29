@@ -1,7 +1,5 @@
 package empresa.telefonia;
 
-
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 

@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 
+import java.time.LocalDateTime;
+
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.core.Is.*;
 
@@ -13,12 +15,12 @@ public class ClienteTest {
 
     @Before
     public void beforeTest() {
-        cliente = new ClienteParticular("pepe","57440683Q", new Direccion(11111,"Castellón","Castellón"),"peperamirez@correo.es",new TarifaBasica(15.0),"garcia");
+        cliente = new ClienteParticular("pepe", "57440683Q", new Direccion(11111, "Castellón", "Castellón"), "peperamirez@correo.es", Tarifa.tarifaBasica, "garcia");
     }
 
     @Test
     public void testSetTarifa() {
-        cliente.setTarifa(new TarifaBasica(15.0));
+        cliente.setTarifa(Tarifa.tarifaBasica);
         assertThat(Double.parseDouble(cliente.getTarifa().toString()),is(15.0));
 
     }
@@ -37,7 +39,7 @@ public class ClienteTest {
     public void testCrearCliente() {
         ClienteParticular clienteprueba = null;
         //try {
-        clienteprueba = new ClienteParticular("pepe", "03456456Z", new Direccion(12567, "Castellón", "Almazora"), "clienteprueba@correo.com", new TarifaBasica(15.0), "garcia");
+        clienteprueba = new ClienteParticular("pepe", "03456456Z", new Direccion(12567, "Castellón", "Almazora"), "clienteprueba@correo.com", Tarifa.tarifaBasica, "garcia");
 //        } catch (TarifaException e) {
 //            e.printStackTrace();
 //        }
@@ -53,7 +55,7 @@ public class ClienteTest {
     }
     @Test
     public void testFabricaClienteParticular() {
-        FabricadoCliente fabrica = new FabricadoCliente("03456456Z", "pepe", 12530 , "Albacete","Reus","alkdkm@pep.com",12.3,"Sapee");
+        FabricadoCliente fabrica = new FabricadoCliente("03456456Z", "pepe", 12530 , "Albacete", "Reus", "alkdkm@pep.com", Tarifa.tarifaBasica, "Sapee");
         TipoCliente tipo = TipoCliente.PARTICULAR;
         Cliente cliente = fabrica.getCliente(tipo);
         GestionClientes gestionClientes = new GestionClientes();
@@ -64,7 +66,7 @@ public class ClienteTest {
 
     @Test
     public void testFabricaClienteEmpresa() {
-        FabricadoCliente fabrica = new FabricadoCliente("03456756Z", "Ibai", 12530 , "Albacete","Reus","alkdkm@pep.com",12.3,"Sapee");
+        FabricadoCliente fabrica = new FabricadoCliente("03456756Z", "Ibai", 12530 , "Albacete","Reus","alkdkm@pep.com", Tarifa.tarifaBasica,"Sapee");
         TipoCliente tipo = TipoCliente.getOpcion(1);
         Cliente cliente = fabrica.getCliente(tipo);
         GestionClientes gestionClientes = new GestionClientes();
@@ -75,9 +77,13 @@ public class ClienteTest {
 
     @Test
     public void testFabricaTarifa(){
-        FabricadoTarifa fabrica = new FabricadoTarifa(10,5.0);
+        LocalDateTime fecha = LocalDateTime.parse("2019-04-07T16:00:00");
+        FabricadoTarifa fabrica = new FabricadoTarifa(Tarifa.tarifaBasica,5.0);
         TipoTarifa tipo = TipoTarifa.TARDES_REDUCIDAS;
         Tarifa tarifa = fabrica.getTarifa(tipo);
-        assertThat(Double.parseDouble(tarifa.toString()),is(5.0));
+        assertThat(tarifa.getTarifa(fecha), is(5.0));
+        tarifa = fabrica.getTarifa(TipoTarifa.DOMINGO_GRATIS);
+        assertThat(tarifa.getTarifa(fecha), is(0.0));
+
     }
 }

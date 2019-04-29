@@ -13,7 +13,7 @@ public class ClienteParticular extends  Cliente {
         super();
     }
 
-    public ClienteParticular(String nombre, String nif, Direccion direccion, String correoElectronico, TarifaBasica tarifa, String apellidos){
+    public ClienteParticular(String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa, String apellidos){
         super(nombre, nif, direccion, correoElectronico, tarifa);
         this.apellidos = apellidos;
     }

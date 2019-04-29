@@ -1,8 +1,5 @@
 package empresa.telefonia;
 
-
-import excepciones.TarifaException;
-
 import java.time.DayOfWeek;
 
 public class DomingoGratis extends TarifaDescuento {

@@ -7,10 +7,10 @@ public class FabricadoCliente implements FabricaCliente {
     private String provincia;
     private String poblacion;
     private String correoElectronico;
-    private double tarifa;
+    private Tarifa tarifa;
     private String apellidos;
 
-    public FabricadoCliente(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, double tarifa, String apellidos){
+    public FabricadoCliente(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, Tarifa tarifa, String apellidos){
         this.nif = nif;
         this.nombre = nombre;
         this.cp = cp;
@@ -22,14 +22,14 @@ public class FabricadoCliente implements FabricaCliente {
     }
 
     public Cliente getCliente(TipoCliente tipo) {
-        Cliente cliente= Cliente.NULL_CLIENT;
+        Cliente cliente = Cliente.NULL_CLIENT;
         switch (tipo) {
             case PARTICULAR:
-                cliente = new ClienteParticular(nombre,nif, new Direccion(cp,provincia,poblacion), correoElectronico, new TarifaBasica(tarifa), apellidos);
+                cliente = new ClienteParticular(nombre, nif, new Direccion(cp, provincia, poblacion), correoElectronico, tarifa, apellidos);
                 break;
 
             case EMPRESA:
-                cliente = new ClienteEmpresa(nombre,nif,new Direccion(cp,provincia,poblacion), correoElectronico, new TarifaBasica(tarifa));
+                cliente = new ClienteEmpresa(nombre, nif, new Direccion(cp, provincia, poblacion), correoElectronico, tarifa);
                 break;
         }
         return cliente;

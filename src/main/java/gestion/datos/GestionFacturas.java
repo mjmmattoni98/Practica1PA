@@ -40,7 +40,7 @@ public class GestionFacturas extends BaseDatos implements Serializable {
     public Factura emitirFacturaCliente(String nif) throws IllegalArgumentException {
         checkContainsClient(nif);
         Cliente miCliente = clientes.get(nif);
-        Factura factura = new Factura(new TarifaBasica(15.0), codigoFactura, miCliente.getActualPeriodoFacturacion());
+        Factura factura = new Factura(miCliente.getTarifa(), codigoFactura, miCliente.getActualPeriodoFacturacion());
         factura.calcularImporte(miCliente.getLlamadas().get(miCliente.getActualPeriodoFacturacion()));
         miCliente.añadirFactura(codigoFactura, factura);
         facturas.put(codigoFactura, factura);

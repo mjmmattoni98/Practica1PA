@@ -1,7 +1,5 @@
 package empresa.telefonia;
 
-
-
 import java.io.Serializable;
 
 public class TarifaBasica extends Tarifa implements Serializable {
@@ -12,7 +10,7 @@ public class TarifaBasica extends Tarifa implements Serializable {
 
     @Override
     public String description(){
-        return "\nTarifa básica: " + super.toString() + " céntimos.";
+        return "\nTarifa básica a " + super.toString() + " céntimos.";
     }
 
     @Override

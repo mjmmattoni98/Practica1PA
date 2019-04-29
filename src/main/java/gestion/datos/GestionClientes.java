@@ -22,7 +22,7 @@ public class GestionClientes extends BaseDatos implements Serializable {
 
     public void addClienteParticular(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, String apellidos) throws IllegalArgumentException{
         checkNotContainsClient(nif);
-        TarifaBasica miTarifa = new TarifaBasica(15.0);
+        Tarifa miTarifa = Tarifa.tarifaBasica;
         Direccion direccion = new Direccion(cp, provincia, poblacion);
         Cliente cliente = new ClienteParticular(nombre, nif, direccion, correoElectronico,miTarifa, apellidos);
         clientes.put(nif, cliente);
@@ -30,7 +30,7 @@ public class GestionClientes extends BaseDatos implements Serializable {
 
     public void addClienteEmpresa(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico) throws IllegalArgumentException{
         checkNotContainsClient(nif);
-        TarifaBasica miTarifa = new TarifaBasica(15.0);
+        Tarifa miTarifa = Tarifa.tarifaBasica;
         Direccion direccion = new Direccion(cp, provincia, poblacion);
         Cliente cliente = new ClienteEmpresa(nombre, nif, direccion, correoElectronico, miTarifa);
         clientes.put(nif, cliente);

@@ -1,10 +1,8 @@
 package empresa.telefonia;
 
-import excepciones.TarifaException;
 import utilities.SerializablePredicate;
 
 import java.time.LocalDateTime;
-import java.util.function.Predicate;
 
 public abstract class TarifaDescuento extends Tarifa{
     private Tarifa tarifa; //Céntimos por minuto.

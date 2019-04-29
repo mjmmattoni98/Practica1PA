@@ -1,10 +1,9 @@
 package entrada.salida;
 
-
 import empresa.telefonia.*;
 import excepciones.NIFException;
 import excepciones.PeriodoException;
-import excepciones.TarifaException;
+
 import gestion.datos.*;
 
 import java.io.*;
@@ -21,7 +20,6 @@ public class InterfazUsuario {
     private GestionLlamadas gestionLlamadas;
     private GestionFacturas gestionFacturas;
     private GestionClientes gestionClientes;
-//    private BaseDatos baseDeDatos;
     private Datos datos;
 
     public InterfazUsuario(){
@@ -32,7 +30,6 @@ public class InterfazUsuario {
         this.gestionFacturas = new GestionFacturas();
         this.gestionLlamadas = new GestionLlamadas();
         this.datos = new Datos();
-//        this.baseDeDatos = new BaseDatos();
         FileInputStream fis;
         ObjectInputStream ois;
         try {
@@ -154,6 +151,7 @@ public class InterfazUsuario {
         }
     }
 
+    //TODO hacer mas seguro que dice si o no.
     private void repeatMenu(){
         System.out.println("Desea realizar alguna otra acción? (SI/NO)");
         String siNo = scannerPalabra.next();
@@ -193,34 +191,34 @@ public class InterfazUsuario {
 
     //TODO rehacer el codigo con el nuevo sistema de tarifas.
     private void crearCuenta(String nif) /*throws TarifaException*/ {
-        System.out.println("Qué tipo de cliente desea añadir?\n");
+        System.out.println("Qué tipo de cliente desea añadir?");
         System.out.println(TipoCliente.opciones());
         TipoCliente tipo;
         int opcion = scannerPalabra.nextInt();
         tipo = TipoCliente.getOpcion(opcion);
-
         System.out.println("Nombre: ");
-        String nombre = scannerLinea.nextLine();
+        String nombre = WordUtils.capitalizeFully(scannerLinea.nextLine());
         String apellidos = "";
         if (tipo == TipoCliente.PARTICULAR){
             System.out.println("Apellidos: ");
-            apellidos = scannerLinea.nextLine();
+            apellidos = WordUtils.capitalizeFully(scannerLinea.nextLine());
         }
         ComprobarDato cpLongitud = dato -> dato.length() == 5 && isNum(dato);
         datoAObtener.withConsulta("CP: ").withMensajeError("El código postal tiene que estar compuesto por 5 números y ser numerico.");
         int cp = Integer.parseInt(datoAObtener.comprobarDato(cpLongitud, scannerPalabra));
         System.out.println("Provincia: ");
-        String provincia = scannerLinea.nextLine();
+        String provincia = WordUtils.capitalizeFully(scannerLinea.nextLine());
         System.out.println("Población: ");
-        String poblacion = scannerLinea.nextLine();
+        String poblacion = WordUtils.capitalizeFully(scannerLinea.nextLine());
         ComprobarDato formatoCorreoElectronico = dato -> dato.contains("@");
         datoAObtener.withConsulta("Correo electronico: ").withMensajeError("El correo electronico tiene que tener el simbolo '@'.");
         String correoElectronico = datoAObtener.comprobarDato(formatoCorreoElectronico, scannerPalabra);
-        ComprobarDato tarifaPositiva = dato -> isNum(dato) && Double.parseDouble(dato) > 0;
+        //TODO hacer que al crear la cuenta, el cliente decida si decide quedarse con la tarifa básica o desea modificarla.
+        /*ComprobarDato tarifaPositiva = dato -> isNum(dato) && Double.parseDouble(dato) > 0;
         datoAObtener.withConsulta("Tarifa: ").withMensajeError("La tarifa tiene que ser un numero y no puede ser negativa.");
         double tarifa = Double.parseDouble(datoAObtener.comprobarDato(tarifaPositiva, scannerPalabra));
-        try{
-            FabricadoCliente fabrica = new FabricadoCliente(nif,nombre,cp,provincia,poblacion,correoElectronico,tarifa,apellidos);
+        */try{
+            FabricadoCliente fabrica = new FabricadoCliente(nif,nombre,cp,provincia,poblacion,correoElectronico, Tarifa.tarifaBasica, apellidos);
             Cliente cliente = fabrica.getCliente(tipo);
             gestionClientes.addCliente(cliente);
             System.out.println("El cliente se ha añadido correctamente.");
@@ -248,20 +246,17 @@ public class InterfazUsuario {
 
     private void cambiarTarifa(String nif) /*throws TarifaException */{
         double nuevaTarifa = 0;
-        System.out.println("Qué tipo de tarifa desea aplicar?\n");
+        System.out.println("Qué tipo de tarifa desea aplicar?");
         System.out.println(TipoTarifa.opciones());
         TipoTarifa tipo;
         int opcion = scannerPalabra.nextInt();
         tipo = TipoTarifa.getOpcion(opcion);
 //        ComprobarDato tarifaPositiva = dato -> isNum(dato) && Double.parseDouble(dato) > 0;
-
         if (tipo == TipoTarifa.TARDES_REDUCIDAS){
-            System.out.println("Introduce decuento aplicado en: "+ tipo.name());
-            nuevaTarifa = scannerPalabra.nextDouble();
+            nuevaTarifa = 5;
         }
-
         try{
-            FabricadoTarifa fabrica = new FabricadoTarifa(GestionClientes.getClientesBD().get(nif).getTarifa().getTarifa(LocalDateTime.now()),nuevaTarifa);
+            FabricadoTarifa fabrica = new FabricadoTarifa(GestionClientes.getClientesBD().get(nif).getTarifa(),nuevaTarifa);
             Tarifa tarifa = fabrica.getTarifa(tipo);
             gestionClientes.cambiarTarifaCliente(nif, tarifa);
             System.out.println("La tarifa ha sido modificada con éxito.");
@@ -273,6 +268,7 @@ public class InterfazUsuario {
         }
     }
 
+    //TODO no funciona correctamente el emitir factura.
     private void emitirFactura(String nif){
         Factura factura;
         try{
@@ -291,7 +287,7 @@ public class InterfazUsuario {
 
     private void guardarLlamada(String nif){
         ComprobarDato numeroLongitud = dato -> dato.length() == 9 && isNum(dato);
-        datoAObtener.withConsulta("Numero al que ha llamado: ").withMensajeError("El numero tiene que estar compuesto por 5 números y ser numerico.");
+        datoAObtener.withConsulta("Numero al que ha llamado: ").withMensajeError("El numero tiene que estar compuesto por 9 números y ser numerico.");
         int numero = Integer.parseInt(datoAObtener.comprobarDato(numeroLongitud, scannerPalabra));
         ComprobarDato duracionNumerica = dato -> isNum(dato) && Double.parseDouble(dato) > 0;
         datoAObtener.withConsulta("Duracion de la llamada (en minutos): ").withMensajeError("La duracion tiene que ser numerica.");
@@ -497,7 +493,7 @@ public class InterfazUsuario {
                 System.out.println(e);
                 System.out.println("Por favor, vuelva a introducir las fechas.");
             } catch (DateTimeParseException e){
-                System.out.println("Lo siento, no le he entendido bn. Vuelva a introducir las fechas otra vez.");
+                System.out.println("Lo siento, no le he entendido bien. Vuelva a introducir las fechas otra vez.");
             }
         } while (!fechasCorrectas);
         return new Periodo(fechaInicio, fechaFin);
