@@ -10,6 +10,7 @@ public class FabricadoCliente implements FabricaCliente {
     private Tarifa tarifa;
     private String apellidos;
 
+    //TODO pasar objetos en vez de tantas variables.
     public FabricadoCliente(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, Tarifa tarifa, String apellidos){
         this.nif = nif;
         this.nombre = nombre;

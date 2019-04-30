@@ -20,17 +20,15 @@ public class GestionClientes extends BaseDatos implements Serializable {
 
     public void addClienteParticular(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, String apellidos) throws IllegalArgumentException{
         checkNotContainsClient(nif);
-        Tarifa miTarifa = Tarifa.tarifaBasica;
-        Direccion direccion = new Direccion(cp, provincia, poblacion);
-        Cliente cliente = new ClienteParticular(nombre, nif, direccion, correoElectronico,miTarifa, apellidos);
+        FabricadoCliente fabricaCliente = new FabricadoCliente(nif,nombre, cp,provincia,poblacion, correoElectronico,Tarifa.tarifaBasica, apellidos);
+        ClienteParticular cliente = (ClienteParticular) fabricaCliente.getCliente(TipoCliente.PARTICULAR);
         clientes.put(nif, cliente);
     }
 
     public void addClienteEmpresa(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico) throws IllegalArgumentException{
         checkNotContainsClient(nif);
-        Tarifa miTarifa = Tarifa.tarifaBasica;
-        Direccion direccion = new Direccion(cp, provincia, poblacion);
-        Cliente cliente = new ClienteEmpresa(nombre, nif, direccion, correoElectronico, miTarifa);
+        FabricadoCliente fabricaCliente = new FabricadoCliente(nombre,nif,cp,provincia,poblacion, correoElectronico,Tarifa.tarifaBasica,"");
+        ClienteEmpresa cliente = (ClienteEmpresa) fabricaCliente.getCliente(TipoCliente.EMPRESA);
         clientes.put(nif, cliente);
     }
 
