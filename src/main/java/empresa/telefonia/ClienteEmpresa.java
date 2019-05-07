@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class ClienteEmpresa extends Cliente {
 
-    public ClienteEmpresa(String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa){
-        super(nombre, nif, direccion, correoElectronico, tarifa);
+    public ClienteEmpresa(Usuario usuario, Direccion direccion, Tarifa tarifa){
+        super(usuario, direccion, tarifa);
     }
 
     @Override

@@ -25,7 +25,6 @@ public class Factura implements Serializable, Fecha {
         return fechaEmision;
     }
 
-    //TODO pensar como mejorar este método ya que el objeto está "decorado".
     public Tarifa getTarifa(){
         return tarifa;
     }

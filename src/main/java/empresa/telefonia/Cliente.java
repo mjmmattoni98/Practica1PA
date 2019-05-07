@@ -5,10 +5,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public abstract class Cliente implements Serializable, Fecha {
-    private String nombre;
-    private String nif;
+    private Usuario usuario;
     private Direccion direccion;
-    private String correoElectronico;
     private LocalDateTime fechaDeAlta;
     private Tarifa tarifa;
     private Map<Periodo, List<Llamada>> llamadas;
@@ -20,11 +18,9 @@ public abstract class Cliente implements Serializable, Fecha {
         super();
     }
 
-    public Cliente (String nombre, String nif, Direccion direccion, String correoElectronico, Tarifa tarifa){
-        this.nombre = nombre;
-        this.nif = nif;
+    public Cliente (Usuario usuario, Direccion direccion, Tarifa tarifa){
+        this.usuario = usuario;
         this.direccion = direccion;
-        this.correoElectronico = correoElectronico;
         this.fechaDeAlta = LocalDateTime.now();
         this.tarifa = tarifa;
         this.llamadas = new HashMap<>();
@@ -37,17 +33,16 @@ public abstract class Cliente implements Serializable, Fecha {
         this.tarifa = nuevaTarifa;
     }
 
-    //TODO ver como mejorar el método.
     public Tarifa getTarifa(){
         return tarifa;
     }
 
     public String getNombre(){
-        return nombre;
+        return usuario.getNombre();
     }
 
     public String getCorreoElectronico(){
-        return correoElectronico;
+        return usuario.getCorreoElectronico();
     }
 
     public Direccion getDireccion(){
@@ -68,7 +63,7 @@ public abstract class Cliente implements Serializable, Fecha {
     }
 
     public String getNif(){
-        return nif;
+        return usuario.getNif();
     }
 
     public Periodo getActualPeriodoFacturacion(){

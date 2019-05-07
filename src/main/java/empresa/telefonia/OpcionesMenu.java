@@ -13,7 +13,8 @@ public enum OpcionesMenu {
     MOSTRAR_FACTURAS_CLIENTE("Mostrar las facturas de un cliente."),
     MOSTRAR_CLIENTES_ENTRE_FECHAS("Mostrar clientes en un intervalo de tiempo."),
     MOSTRAR_LLAMADAS_ENTRE_FECHAS("Mostrar llamadas de un cliente en un intervalo de tiempo."),
-    MOSTRAR_FACTURAS_ENTRE_FECHAS("Mostrar fecturas de un cliente en un intervalo de tiempo.");
+    MOSTRAR_FACTURAS_ENTRE_FECHAS("Mostrar fecturas de un cliente en un intervalo de tiempo."),
+    SALIR("Salir de la aplicación.");
 
     private String descripcion;
 
@@ -32,11 +33,9 @@ public enum OpcionesMenu {
     public static String getMenu() {
         StringBuilder sb = new StringBuilder();
         for(OpcionesMenu opcion: OpcionesMenu.values()) {
-            sb.append(opcion.ordinal());
-            sb.append(".- ");
-            sb.append(opcion.getDescripcion());
-            sb.append("\n");
+            sb.append(opcion.ordinal() + ".- " + opcion.getDescripcion() + "\n");
         }
         return sb.toString();
     }
+
 }

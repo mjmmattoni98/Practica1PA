@@ -18,18 +18,20 @@ public class GestionClientes extends BaseDatos implements Serializable {
         clientes = new HashMap<>();
     }
 
-    public void addClienteParticular(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico, String apellidos) throws IllegalArgumentException{
-        checkNotContainsClient(nif);
-        FabricadoCliente fabricaCliente = new FabricadoCliente(nif,nombre, cp,provincia,poblacion, correoElectronico,Tarifa.tarifaBasica, apellidos);
-        ClienteParticular cliente = (ClienteParticular) fabricaCliente.getCliente(TipoCliente.PARTICULAR);
-        clientes.put(nif, cliente);
+    public void addClienteParticular(Usuario usuario, Direccion direccion, String apellidos) throws IllegalArgumentException{
+        checkNotContainsClient(usuario.getNif());
+        FabricadoTarifa fabricadoTarifa = new FabricadoTarifa();
+        FabricadoCliente fabricaCliente = new FabricadoCliente();
+        ClienteParticular cliente = fabricaCliente.getClienteParticular(usuario, direccion, fabricadoTarifa.getTarifaBasica(), apellidos);
+        clientes.put(usuario.getNif(), cliente);
     }
 
-    public void addClienteEmpresa(String nif, String nombre, int cp, String provincia, String poblacion, String correoElectronico) throws IllegalArgumentException{
-        checkNotContainsClient(nif);
-        FabricadoCliente fabricaCliente = new FabricadoCliente(nombre,nif,cp,provincia,poblacion, correoElectronico,Tarifa.tarifaBasica,"");
-        ClienteEmpresa cliente = (ClienteEmpresa) fabricaCliente.getCliente(TipoCliente.EMPRESA);
-        clientes.put(nif, cliente);
+    public void addClienteEmpresa(Usuario usuario, Direccion direccion) throws IllegalArgumentException{
+        checkNotContainsClient(usuario.getNif());
+        FabricadoTarifa fabricadoTarifa = new FabricadoTarifa();
+        FabricadoCliente fabricaCliente = new FabricadoCliente();
+        ClienteEmpresa cliente = fabricaCliente.getClienteEmpresa(usuario, direccion, fabricadoTarifa.getTarifaBasica());
+        clientes.put(usuario.getNif(), cliente);
     }
 
     public void addCliente(Cliente cliente){

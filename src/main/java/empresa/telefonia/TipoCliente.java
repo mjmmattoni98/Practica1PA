@@ -3,6 +3,7 @@ package empresa.telefonia;
 public enum TipoCliente {
     PARTICULAR("Cliente particular."),
     EMPRESA("Cliente empresa.");
+
     private String descripcion;
 
     TipoCliente(String descripcion) {
@@ -11,10 +12,11 @@ public enum TipoCliente {
 
     public static String opciones() {
         StringBuilder sb = new StringBuilder();
-        for(TipoCliente tipo: values())
+        for(TipoCliente tipo : values())
             sb.append(tipo.ordinal() + ".- " + tipo.descripcion + "\n");
         return sb.toString();
     }
+
     public static TipoCliente getOpcion(int posicion) {
         return values()[posicion];
     }

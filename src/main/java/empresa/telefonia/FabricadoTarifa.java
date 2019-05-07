@@ -1,23 +1,19 @@
 package empresa.telefonia;
 
 public class FabricadoTarifa implements FabricaTarifa {
-    private Tarifa tarifa;
-    private double nuevaTarifa;
 
-    public FabricadoTarifa(Tarifa tarifa, double nuevaTarifa) {
-        this.tarifa = tarifa;
-        this.nuevaTarifa = nuevaTarifa;
+    @Override
+    public Tarifa getTarifaTardesReducidas(Tarifa tarifa, double nuevaTarifa) {
+        return new TardesReducidas(tarifa, nuevaTarifa);
     }
 
-    public Tarifa getTarifa(TipoTarifa tipo) {
-        switch (tipo) {
-            case TARDES_REDUCIDAS:
-                tarifa = new TardesReducidas(tarifa, nuevaTarifa);
-                break;
-            case DOMINGO_GRATIS:
-                tarifa = new DomingoGratis(tarifa);
-                break;
-        }
-        return tarifa;
+    @Override
+    public Tarifa getTarifaDomingoGratis(Tarifa tarifa) {
+        return new DomingoGratis(tarifa);
+    }
+
+    @Override
+    public Tarifa getTarifaBasica(){
+        return new TarifaBasica(15);
     }
 }

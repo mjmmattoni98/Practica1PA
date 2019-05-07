@@ -1,5 +1,6 @@
 package entrada.salida;
 
+import com.sun.security.ntlm.Client;
 import empresa.telefonia.*;
 import excepciones.NIFException;
 import excepciones.PeriodoException;
@@ -10,9 +11,9 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+
 import org.apache.commons.lang3.text.WordUtils;
 
-//TODO ver como no hacer superposicion de metodos.
 public class InterfazUsuario {
     private Scanner scannerLinea;
     private Scanner scannerPalabra;
@@ -22,7 +23,7 @@ public class InterfazUsuario {
     private GestionClientes gestionClientes;
     private Datos datos;
 
-    public InterfazUsuario(){
+    public InterfazUsuario() {
         this.datoAObtener = new ObtencionDato();
         this.scannerLinea = new Scanner(System.in);
         this.scannerPalabra = new Scanner(System.in);
@@ -41,18 +42,69 @@ public class InterfazUsuario {
             gestionFacturas.setCodigoFactura(datos.getCodigoFactura());
             fis.close();
             ois.close();
-        } catch (ClassNotFoundException | IOException e){
+        } catch (ClassNotFoundException | IOException e) {
             System.out.println("No hay clientes aun.");
             e.printStackTrace();
         }
     }
 
-    //TODO eliminar switch.
-    public void menu(){
-        System.out.println(OpcionesMenu.getMenu());
-        System.out.println("Elija una opción: ");
-        int opcion = scannerPalabra.nextInt();
-        ejecutarAccion(opcion);
+    public void menu() {
+        OpcionesMenu opcionMenu;
+        do {
+            System.out.println(OpcionesMenu.getMenu());
+            ComprobarDato opcionCorrecta = opcion -> Integer.parseInt(opcion) >= 0 && Integer.parseInt(opcion) < OpcionesMenu.values().length;
+            datoAObtener.withConsulta("Elija una opción: ").withMensajeError("Opción incorrecta. Asegurese de elegir una opción entre 0 y " + (OpcionesMenu.values().length - 1));
+            int opcion = Integer.parseInt(datoAObtener.comprobarDato(opcionCorrecta, scannerPalabra));
+            opcionMenu = OpcionesMenu.getOpcion(opcion);
+            ejecutarAccion(opcionMenu);
+        } while (opcionMenu != OpcionesMenu.SALIR);
+        escribirDatos();
+        System.out.println("Gracias y hasta pronto!!");
+    }
+
+    //TODO tener varios ENUM para las diferentes acciones.
+    private void ejecutarAccion(OpcionesMenu opcionMenu) {
+        switch (opcionMenu) {
+            case MOSTRAR_CLIENTES:
+                mostrarClientes();
+                break;
+            case MOSTRAR_DATOS_FACTURA:
+                mostrarDatosFactura();
+                break;
+            case CREAR_CUENTA:
+                crearCuenta(pedirNIF());
+                break;
+            case BORRAR_CUENTA:
+                borrarCuenta(pedirNIF());
+                break;
+            case CAMBIAR_TARIFA:
+                cambiarTarifa(pedirNIF());
+                break;
+            case EMITIR_FACTURA:
+                emitirFactura(pedirNIF());
+                break;
+            case DAR_ALTA_LLAMADA:
+                guardarLlamada(pedirNIF());
+                break;
+            case MOSTRAR_FACTURAS_CLIENTE:
+                mostrarFacturasCliente(pedirNIF());
+                break;
+            case MOSTRAR_LLAMADAS_CLIENTE:
+                mostrarLlamadasCliente(pedirNIF());
+                break;
+            case MOSTRAR_DATOS_CLIENTE:
+                mostrarDatosCliente(pedirNIF());
+                break;
+            case MOSTRAR_CLIENTES_ENTRE_FECHAS:
+                mostrarClientesEntreFechas();
+                break;
+            case MOSTRAR_LLAMADAS_ENTRE_FECHAS:
+                mostrarLlamadasEntreFechas(pedirNIF());
+                break;
+            case MOSTRAR_FACTURAS_ENTRE_FECHAS:
+                mostrarFacturasEntreFechas(pedirNIF());
+                break;
+        }
     }
 
     private boolean comprobarNif(String nif) throws NIFException {
@@ -70,94 +122,38 @@ public class InterfazUsuario {
         return nifCorrecto;
     }
 
-    private void ejecutarAccion(int opcion){
-        if(opcion < 0 || opcion > OpcionesMenu.values().length){
-            System.out.println("Opción incorrecta. Asegurese de elegir una opción entre 0 y " + (OpcionesMenu.values().length - 1));
-            menu();
-        }
-        else {
-            String nif;
-            OpcionesMenu opcionMenu = OpcionesMenu.getOpcion(opcion);
-            boolean nifCorrecto = false;
-            do {
-                System.out.println("Introduzca un NIF válido: ");
-                nif = scannerPalabra.next().toUpperCase();
-                try {
-                    nifCorrecto = comprobarNif(nif);
-                }
-                catch (NIFException e){
-                    System.out.println(e);
-                    System.out.println("Vuelva a introducir el NIF.");
-                }
-            }while (!nifCorrecto);
-
-            switch (opcionMenu) {
-                case MOSTRAR_CLIENTES:
-                    mostrarClientes();
-                    break;
-                case MOSTRAR_DATOS_FACTURA:
-                    mostrarDatosFactura();
-                    break;
-                case CREAR_CUENTA:
-                    crearCuenta(nif);
-                    break;
-                case BORRAR_CUENTA:
-                    borrarCuenta(nif);
-                    break;
-                case CAMBIAR_TARIFA:
-                    cambiarTarifa(nif);
-                    break;
-                case EMITIR_FACTURA:
-                    emitirFactura(nif);
-                    break;
-                case DAR_ALTA_LLAMADA:
-                    guardarLlamada(nif);
-                    break;
-                case MOSTRAR_FACTURAS_CLIENTE:
-                    mostrarFacturasCliente(nif);
-                    break;
-                case MOSTRAR_LLAMADAS_CLIENTE:
-                    mostrarLlamadasCliente(nif);
-                    break;
-                case MOSTRAR_DATOS_CLIENTE:
-                    mostrarDatosCliente(nif);
-                    break;
-                case MOSTRAR_CLIENTES_ENTRE_FECHAS:
-                    mostrarClientesEntreFechas();
-                    break;
-                case MOSTRAR_LLAMADAS_ENTRE_FECHAS:
-                    mostrarLlamadasEntreFechas(nif);
-                    break;
-                case MOSTRAR_FACTURAS_ENTRE_FECHAS:
-                    mostrarFacturasEntreFechas(nif);
-                    break;
+    private String pedirNIF() {
+        String nif;
+        boolean nifCorrecto = false;
+        do {
+            System.out.println("Introduzca un NIF válido: ");
+            nif = scannerPalabra.next().toUpperCase();
+            try {
+                nifCorrecto = comprobarNif(nif);
+            } catch (NIFException e) {
+                System.out.println(e);
+                System.out.println("Vuelva a introducir el NIF.");
             }
-        }
+        } while (!nifCorrecto);
+        return nif;
     }
 
-    //TODO hacer mas seguro que dice si o no.
-    private void repeatMenu(){
-        System.out.println("Desea realizar alguna otra acción? (SI/NO)");
-        String siNo = scannerPalabra.next();
-        if (siNo.equalsIgnoreCase("si"))
-            menu();
-        else {
-            FileOutputStream fos;
-            ObjectOutputStream oos;
-            try {
-                datos.setClientes(BaseDatos.getClientesBD());
-                datos.setFacturas(BaseDatos.getFacturasBD());
-                datos.setCodigoFactura(gestionFacturas.getCodigoFactura());
-                fos = new FileOutputStream("datos.bin");
-                oos = new ObjectOutputStream(fos);
-                oos.writeObject(this.datos);
-                fos.close();
-                oos.close();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-            System.out.println("Gracias y hasta pronto!!!");
+    private void escribirDatos() {
+        FileOutputStream fos;
+        ObjectOutputStream oos;
+        try {
+            datos.setClientes(BaseDatos.getClientesBD());
+            datos.setFacturas(BaseDatos.getFacturasBD());
+            datos.setCodigoFactura(gestionFacturas.getCodigoFactura());
+            fos = new FileOutputStream("datos.bin");
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(this.datos);
+            fos.close();
+            oos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        System.out.println("Gracias y hasta pronto!!!");
     }
 
     private void crearCuenta(String nif) {
@@ -169,7 +165,7 @@ public class InterfazUsuario {
         System.out.println("Nombre: ");
         String nombre = WordUtils.capitalizeFully(scannerLinea.nextLine());
         String apellidos = "";
-        if (tipo == TipoCliente.PARTICULAR){
+        if (tipo == TipoCliente.PARTICULAR) {
             System.out.println("Apellidos: ");
             apellidos = WordUtils.capitalizeFully(scannerLinea.nextLine());
         }
@@ -184,30 +180,29 @@ public class InterfazUsuario {
         datoAObtener.withConsulta("Correo electronico: ").withMensajeError("El correo electronico tiene que tener el simbolo '@'.");
         String correoElectronico = datoAObtener.comprobarDato(formatoCorreoElectronico, scannerPalabra);
         //TODO hacer que al crear la cuenta, el cliente decida si decide quedarse con la tarifa básica o desea modificarla.
-        try{
-            FabricadoCliente fabrica = new FabricadoCliente(nif,nombre,cp,provincia,poblacion,correoElectronico, Tarifa.tarifaBasica, apellidos);
-            Cliente cliente = fabrica.getCliente(tipo);
+        try {
+            Direccion direccion = new Direccion(cp, provincia, poblacion);
+            Usuario usuario = new Usuario(nombre, nif, correoElectronico);
+            FabricadoCliente fabricadoCliente = new FabricadoCliente();
+            FabricadoTarifa fabricadoTarifa = new FabricadoTarifa();
+            Cliente cliente;
+            if (tipo == TipoCliente.PARTICULAR)
+                cliente = fabricadoCliente.getClienteParticular(usuario, direccion, fabricadoTarifa.getTarifaBasica(), apellidos);
+            else
+                cliente = fabricadoCliente.getClienteEmpresa(usuario, direccion, fabricadoTarifa.getTarifaBasica());
             gestionClientes.addCliente(cliente);
             System.out.println("El cliente se ha añadido correctamente.");
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-        }
-        finally {
-            repeatMenu();
         }
     }
 
-    private void borrarCuenta(String nif){
+    private void borrarCuenta(String nif) {
         try {
             gestionClientes.borrarCliente(nif);
             System.out.println("Cliente borrado con éxito.");
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-        }
-        finally {
-            repeatMenu();
         }
     }
 
@@ -218,39 +213,44 @@ public class InterfazUsuario {
         TipoTarifa tipo;
         int opcion = scannerPalabra.nextInt();
         tipo = TipoTarifa.getOpcion(opcion);
-        if (tipo == TipoTarifa.TARDES_REDUCIDAS){
+        if (tipo == TipoTarifa.TARDES_REDUCIDAS) {
             nuevaTarifa = 5;
         }
-        try{
-            FabricadoTarifa fabrica = new FabricadoTarifa(GestionClientes.getClientesBD().get(nif).getTarifa(),nuevaTarifa);
-            Tarifa tarifa = fabrica.getTarifa(tipo);
+        Cliente cliente = gestionClientes.getCliente(nif);
+        try {
+            FabricadoTarifa fabrica = new FabricadoTarifa();
+            Tarifa tarifa = cliente.getTarifa();
+            switch (tipo){
+                case TARDES_REDUCIDAS:
+                    tarifa = fabrica.getTarifaTardesReducidas(tarifa, nuevaTarifa);
+                    break;
+                case DOMINGO_GRATIS:
+                    tarifa = fabrica.getTarifaDomingoGratis(tarifa);
+                    break;
+                case TARIFA_BASICA:
+                    tarifa = fabrica.getTarifaBasica();
+                    break;
+            }
             gestionClientes.cambiarTarifaCliente(nif, tarifa);
             System.out.println("La tarifa ha sido modificada con éxito.");
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-        } finally {
-            repeatMenu();
         }
     }
 
-    private void emitirFactura(String nif){
+    private void emitirFactura(String nif) {
         Factura factura;
-        try{
+        try {
             factura = gestionFacturas.emitirFacturaCliente(nif);
             System.out.println("Hecho");
             System.out.println("Desea ver la factura? (SI/NO)");
             mostrarInformacion(factura);
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-        }
-        finally {
-            repeatMenu();
         }
     }
 
-    private void guardarLlamada(String nif){
+    private void guardarLlamada(String nif) {
         ComprobarDato numeroLongitud = dato -> dato.length() == 9 && isNum(dato);
         datoAObtener.withConsulta("Numero al que ha llamado: ").withMensajeError("El numero tiene que estar compuesto por 9 números y ser numerico.");
         int numero = Integer.parseInt(datoAObtener.comprobarDato(numeroLongitud, scannerPalabra));
@@ -261,16 +261,12 @@ public class InterfazUsuario {
             Llamada llamada = gestionLlamadas.añadirLlamada(nif, numero, duracion);
             System.out.println("Desea ver la información de la llamada? (SI/NO)");
             mostrarInformacion(llamada);
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-        }
-        finally {
-            repeatMenu();
         }
     }
 
-    private void mostrarClientes(){
+    private void mostrarClientes() {
         try {
             int i = 1;
             for (String nif : gestionClientes.getClientes().keySet()) {
@@ -279,43 +275,31 @@ public class InterfazUsuario {
             }
             if (i == 1)
                 System.out.println("No hay clientes aún guardados.");
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-        }
-        finally {
-            repeatMenu();
         }
     }
 
-    private void mostrarDatosCliente(String nif){
+    private void mostrarDatosCliente(String nif) {
         try {
             System.out.println(gestionClientes.getCliente(nif));
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-        }
-        finally {
-            repeatMenu();
         }
     }
 
-    private void mostrarDatosFactura(){
+    private void mostrarDatosFactura() {
         ComprobarDato codigoNumerico = dato -> isNum(dato);
         datoAObtener.withConsulta("Codigo de factura: ").withMensajeError("El codigo de la factura tiene que ser numerico.");
         int codigo = Integer.parseInt(datoAObtener.comprobarDato(codigoNumerico, scannerPalabra));
         try {
             System.out.println(gestionFacturas.getFactura(codigo));
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-        }
-        finally {
-            repeatMenu();
         }
     }
 
-    private void mostrarFacturasCliente(String nif){
+    private void mostrarFacturasCliente(String nif) {
         try {
             int i = 1;
             for (Integer codigo : gestionFacturas.getFacturasCliente(nif).keySet()) {
@@ -324,16 +308,12 @@ public class InterfazUsuario {
             }
             if (i == 1)
                 System.out.println("No hay facturas asociadas aún al cliente " + gestionClientes.getCliente(nif) + ".");
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-        }
-        finally {
-            repeatMenu();
         }
     }
 
-    private void mostrarLlamadasCliente(String nif){
+    private void mostrarLlamadasCliente(String nif) {
         try {
             Map<Periodo, List<Llamada>> llamadas = gestionLlamadas.getLlamadasCliente(nif);
             for (Periodo periodo : llamadas.keySet()) {
@@ -341,12 +321,8 @@ public class InterfazUsuario {
                 for (Llamada llamada : llamadas.get(periodo))
                     System.out.println(llamada);
             }
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-        }
-        finally {
-            repeatMenu();
         }
     }
 
@@ -365,8 +341,6 @@ public class InterfazUsuario {
 
         if (i == 0)
             System.out.println("No se agregaron clientes en ese periodo.");
-
-        repeatMenu();
     }
 
     private void mostrarLlamadasEntreFechas(String nif) {
@@ -387,12 +361,8 @@ public class InterfazUsuario {
 
             if (i == 0)
                 System.out.println("No se agregaron clientes en ese periodo.");
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-        }
-        finally {
-            repeatMenu();
         }
     }
 
@@ -411,27 +381,23 @@ public class InterfazUsuario {
 
             if (i == 0)
                 System.out.println("No se agregaron clientes en ese periodo.");
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-        }
-        finally {
-            repeatMenu();
         }
     }
 
-    private <T> void mostrarInformacion(T o){
+    private <T> void mostrarInformacion(T o) {
         String opcion = scannerPalabra.next();
         if ("si".equalsIgnoreCase(opcion))
             System.out.println(o);
     }
 
-    private boolean isNum(String number){
+    //TODO mover este método a una clase de utilidad.
+    private boolean isNum(String number) {
         boolean isNumber = true;
-        try{
+        try {
             Double.parseDouble(number);
-        }
-        catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             isNumber = false;
         }
         return isNumber;
@@ -454,7 +420,7 @@ public class InterfazUsuario {
             } catch (PeriodoException e) {
                 System.out.println(e);
                 System.out.println("Por favor, vuelva a introducir las fechas.");
-            } catch (DateTimeParseException e){
+            } catch (DateTimeParseException e) {
                 System.out.println("Lo siento, no le he entendido bien. Vuelva a introducir las fechas otra vez.");
             }
         } while (!fechasCorrectas);

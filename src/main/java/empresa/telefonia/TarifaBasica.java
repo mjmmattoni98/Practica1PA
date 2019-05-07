@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 public class TarifaBasica extends Tarifa implements Serializable {
 
+    public TarifaBasica(){
+        super();
+    }
+
     public TarifaBasica(double tarifa) {
         super(fecha -> true, tarifa);
     }

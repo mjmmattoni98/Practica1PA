@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public abstract class Tarifa implements Serializable {
     private double tarifa; //Céntimos por minuto.
     private SerializablePredicate<LocalDateTime> aplicarDescuento;
-    public static final Tarifa tarifaBasica = new TarifaBasica(15);
+    public static final Tarifa NULL_TARIFA = new TarifaBasica();
 
     public Tarifa(){
         super();

@@ -2,7 +2,8 @@ package empresa.telefonia;
 
 public enum TipoTarifa {
     TARDES_REDUCIDAS("Tardes reducidas."),
-    DOMINGO_GRATIS("Domingo gratis.");
+    DOMINGO_GRATIS("Domingo gratis."),
+    TARIFA_BASICA("Tarifa básica.\nSi elige está opción, se reseteará a esta tarifa y se perderán todas las tarifas que tenía contratado.");
 
     private String descripcion;
 
