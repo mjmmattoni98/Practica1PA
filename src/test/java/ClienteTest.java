@@ -1,4 +1,5 @@
 import empresa.telefonia.*;
+import gestion.datos.BaseDatos;
 import gestion.datos.GestionClientes;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,18 +12,21 @@ import static org.hamcrest.core.Is.*;
 
 public class ClienteTest {
 
-    private FabricadoCliente fabricadoCliente = null;
+    private FabricadoCliente fabricadoCliente = new FabricadoCliente();
+    FabricadoTarifa fabricadoTarifa = new FabricadoTarifa();
     ClienteParticular cliente = null;
 
     @Before
     public void beforeTest() {
-        fabricadoCliente = new FabricadoCliente("57440683Q", "pepe",11111, "Castellón", "Castellón", "peperamirez@correo.es", Tarifa.tarifaBasica, "garcia");
-        cliente = (ClienteParticular) fabricadoCliente.getCliente(TipoCliente.PARTICULAR);
+        GestionClientes.resetClients();
+        Usuario usuario = new Usuario("pepe", "57440683Q", "peperamirez@correo.es");
+        Direccion direccion = new Direccion(11111, "Castellón", "Castellón");
+        cliente = fabricadoCliente.getClienteParticular(usuario, direccion, fabricadoTarifa.getTarifaBasica(), "garcia");
     }
 
     @Test
     public void testSetTarifa() {
-        cliente.setTarifa(Tarifa.tarifaBasica);
+        cliente.setTarifa(fabricadoTarifa.getTarifaBasica());
         assertThat(Double.parseDouble(cliente.getTarifa().toString()),is(15.0));
 
     }
@@ -35,8 +39,10 @@ public class ClienteTest {
 
     @Test
     public void testCrearCliente() {
-        fabricadoCliente = new FabricadoCliente("03456456Z", "pepe",12567, "Castellón", "Almazora", "clienteprueba@correo.com", Tarifa.tarifaBasica, "garcia");
-        ClienteParticular clienteprueba = (ClienteParticular) fabricadoCliente.getCliente(TipoCliente.PARTICULAR);
+        fabricadoCliente = new FabricadoCliente();
+        Usuario usuario = new Usuario("pepe", "03456456Z", "clienteprueba@correo.com");
+        Direccion direccion = new Direccion(12567, "Castellón", "Almazora");
+        ClienteParticular clienteprueba = fabricadoCliente.getClienteParticular(usuario, direccion, fabricadoTarifa.getTarifaBasica(), "garcia");
         assertThat(clienteprueba.getCorreoElectronico(),is("clienteprueba@correo.com"));
         assertThat(clienteprueba.getNif(),is("03456456Z"));
         assertThat(clienteprueba.getNombre(),is("pepe"));
@@ -48,8 +54,10 @@ public class ClienteTest {
     }
     @Test
     public void testFabricaClienteParticular() {
-        fabricadoCliente = new FabricadoCliente("03456456Z", "pepe", 12530 , "Albacete", "Reus", "alkdkm@pep.com", Tarifa.tarifaBasica, "Sapee");
-        Cliente cliente = fabricadoCliente.getCliente(TipoCliente.PARTICULAR);
+        fabricadoCliente = new FabricadoCliente();
+        Usuario usuario = new Usuario("pepe", "03456456Z", "alkdkm@pep.com");
+        Direccion direccion = new Direccion(12530 , "Albacete", "Reus");
+        Cliente cliente = fabricadoCliente.getClienteParticular(usuario, direccion, fabricadoTarifa.getTarifaBasica(), "Sapee");
         GestionClientes gestionClientes = new GestionClientes();
         gestionClientes.addCliente(cliente);
         assertThat(cliente.getNif(),is("03456456Z"));
@@ -58,8 +66,10 @@ public class ClienteTest {
 
     @Test
     public void testFabricaClienteEmpresa() {
-        fabricadoCliente = new FabricadoCliente("03456756Z", "Ibai", 12530 , "Albacete","Reus","alkdkm@pep.com", Tarifa.tarifaBasica,"Sapee");
-        Cliente cliente = fabricadoCliente.getCliente(TipoCliente.PARTICULAR);
+        fabricadoCliente = new FabricadoCliente();
+        Usuario usuario = new Usuario("Ibai", "03456456Z", "alkdkm@pep.com");
+        Direccion direccion = new Direccion(12530 , "Albacete", "Reus");
+        Cliente cliente = fabricadoCliente.getClienteEmpresa(usuario, direccion, fabricadoTarifa.getTarifaBasica());
         GestionClientes gestionClientes = new GestionClientes();
         gestionClientes.addCliente(cliente);
         assertThat(cliente.getNombre(),is("Ibai"));
@@ -68,12 +78,11 @@ public class ClienteTest {
 
     @Test
     public void testFabricaTarifa(){
+        Tarifa tarifa = fabricadoTarifa.getTarifaBasica();
         LocalDateTime fecha = LocalDateTime.parse("2019-04-07T16:00:00");
-        FabricadoTarifa fabrica = new FabricadoTarifa(Tarifa.tarifaBasica,5.0);
-        TipoTarifa tipo = TipoTarifa.TARDES_REDUCIDAS;
-        Tarifa tarifa = fabrica.getTarifa(tipo);
+        tarifa = fabricadoTarifa.getTarifaTardesReducidas(tarifa, 5.0);
         assertThat(tarifa.getTarifa(fecha), is(5.0));
-        tarifa = fabrica.getTarifa(TipoTarifa.DOMINGO_GRATIS);
+        tarifa = fabricadoTarifa.getTarifaDomingoGratis(tarifa);
         assertThat(tarifa.getTarifa(fecha), is(0.0));
     }
 }

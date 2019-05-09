@@ -1,6 +1,8 @@
 package empresa.telefonia;
 
-public class Usuario {
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
     private String nombre;
     private String nif;
     private String correoElectronico;

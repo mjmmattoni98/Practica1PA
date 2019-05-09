@@ -14,7 +14,7 @@ public class GestionClientes extends BaseDatos implements Serializable {
         super();
     }
 
-    public void resetClients(){
+    public static void resetClients(){
         clientes = new HashMap<>();
     }
 

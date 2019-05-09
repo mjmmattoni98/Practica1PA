@@ -1,7 +1,4 @@
-import empresa.telefonia.Cliente;
-import empresa.telefonia.Factura;
-import empresa.telefonia.Llamada;
-import empresa.telefonia.Periodo;
+import empresa.telefonia.*;
 import gestion.datos.GestionClientes;
 import gestion.datos.GestionFacturas;
 import gestion.datos.GestionLlamadas;
@@ -22,7 +19,9 @@ public class GestionTest {
 
     @Before
     public void beforeTest(){
-        gestionClientes.addClienteParticular("12345678A", "ana", 12345, "Valencia", "Valencia", "anaprueba@correo.com", "Bachueca Gimenez");
+        Usuario usuario =  new Usuario("ana", "12345678A", "anaprueba@correo.com");
+        Direccion direccion = new Direccion(12345, "Valencia", "Valencia");
+        gestionClientes.addClienteParticular(usuario, direccion, "Bachueca Gimenez");
     }
 
     @After
@@ -64,8 +63,12 @@ public class GestionTest {
 
     @Test
     public void testIntervaloClientes() {
-        gestionClientes.addClienteParticular("93456872D", "marcos", 12345, "Valencia", "Valencia", "marcosprueba@correo.com", "Apelli2");
-        gestionClientes.addClienteParticular("48567392B", "broh", 12345, "Alicante", "Marte", "broh@correo.com", "quepasa brohh");
+        Usuario usuario1 =  new Usuario("marcos", "93456872D", "marcosprueba@correo.com");
+        Direccion direccion1 = new Direccion(12345, "Valencia", "Valencia");
+        Usuario usuario2 =  new Usuario("broh", "48567392B", "broh@correo.com");
+        Direccion direccion2 = new Direccion(12345, "Alicante", "Marte");
+        gestionClientes.addClienteParticular(usuario1, direccion1, "Apelli2");
+        gestionClientes.addClienteParticular(usuario2, direccion2, "quepasa brohh");
         LocalDateTime fechaInicio = LocalDateTime.parse("2018-11-03T10:15:30");
         LocalDateTime fechaFinal = LocalDateTime.parse("2019-12-03T10:15:30");
         Periodo periodo = new Periodo(fechaInicio, fechaFinal);

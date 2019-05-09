@@ -1,14 +1,14 @@
 package empresa.telefonia;
 
-public enum OpcionesMenu {
-    ACCIONES_CLIENTE("Realizar acciones con clientes."),
-    ACCIONES_FACTURAS("Realizar acciones con facturas."),
-    ACCIONES_LLAMADAS("Realizar acciones con llamadas."),
+public enum OpcionesLlamadas {
+    DAR_ALTA_LLAMADA("Agregar una llamada realizada."),
+    MOSTRAR_LLAMADAS_CLIENTE("Mostrar las llamadas realizadas por un cliente."),
+    MOSTRAR_LLAMADAS_ENTRE_FECHAS("Mostrar llamadas de un cliente en un intervalo de tiempo."),
     SALIR("Salir de la aplicación.");
 
     private String descripcion;
 
-    OpcionesMenu(String descripcion){
+    OpcionesLlamadas(String descripcion){
         this.descripcion = descripcion;
     }
 
@@ -16,13 +16,13 @@ public enum OpcionesMenu {
         return descripcion;
     }
 
-    public static OpcionesMenu getOpcion(int posicion) {
+    public static OpcionesLlamadas getOpcion(int posicion) {
         return values()[posicion];
     }
 
     public static String getMenu() {
         StringBuilder sb = new StringBuilder();
-        for(OpcionesMenu opcion: OpcionesMenu.values()) {
+        for(OpcionesLlamadas opcion: OpcionesLlamadas.values()) {
             sb.append(opcion.ordinal() + ".- " + opcion.getDescripcion() + "\n");
         }
         return sb.toString();

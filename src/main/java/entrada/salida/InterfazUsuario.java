@@ -62,14 +62,54 @@ public class InterfazUsuario {
         System.out.println("Gracias y hasta pronto!!");
     }
 
-    //TODO tener varios ENUM para las diferentes acciones.
+    public void menuClientes(){
+        OpcionesCliente opcionCliente;
+        System.out.println(OpcionesCliente.getMenu());
+        ComprobarDato opcionCorrecta = opcion -> Integer.parseInt(opcion) >= 0 && Integer.parseInt(opcion) < OpcionesCliente.values().length;
+        datoAObtener.withConsulta("Elija una opción: ").withMensajeError("Opción incorrecta. Asegurese de elegir una opción entre 0 y " + (OpcionesCliente.values().length - 1));
+        int opcion = Integer.parseInt(datoAObtener.comprobarDato(opcionCorrecta, scannerPalabra));
+        opcionCliente = OpcionesCliente.getOpcion(opcion);
+        ejecutarAccionClientes(opcionCliente);
+    }
+
+    public void menuFacturas(){
+        OpcionesFacturas opcionFactura;
+        System.out.println(OpcionesFacturas.getMenu());
+        ComprobarDato opcionCorrecta = opcion -> Integer.parseInt(opcion) >= 0 && Integer.parseInt(opcion) < OpcionesFacturas.values().length;
+        datoAObtener.withConsulta("Elija una opción: ").withMensajeError("Opción incorrecta. Asegurese de elegir una opción entre 0 y " + (OpcionesFacturas.values().length - 1));
+        int opcion = Integer.parseInt(datoAObtener.comprobarDato(opcionCorrecta, scannerPalabra));
+        opcionFactura = OpcionesFacturas.getOpcion(opcion);
+        ejecutarAccionFacturas(opcionFactura);
+    }
+
+    public void menuLlamadas(){
+        OpcionesLlamadas opcionLlamada;
+        System.out.println(OpcionesLlamadas.getMenu());
+        ComprobarDato opcionCorrecta = opcion -> Integer.parseInt(opcion) >= 0 && Integer.parseInt(opcion) < OpcionesLlamadas.values().length;
+        datoAObtener.withConsulta("Elija una opción: ").withMensajeError("Opción incorrecta. Asegurese de elegir una opción entre 0 y " + (OpcionesLlamadas.values().length - 1));
+        int opcion = Integer.parseInt(datoAObtener.comprobarDato(opcionCorrecta, scannerPalabra));
+        opcionLlamada = OpcionesLlamadas.getOpcion(opcion);
+        ejecutarAccionLlamadas(opcionLlamada);
+    }
+
     private void ejecutarAccion(OpcionesMenu opcionMenu) {
         switch (opcionMenu) {
+            case ACCIONES_CLIENTE:
+                menuClientes();
+                break;
+            case ACCIONES_FACTURAS:
+                menuFacturas();
+                break;
+            case ACCIONES_LLAMADAS:
+                menuLlamadas();
+                break;
+        }
+    }
+
+    private void ejecutarAccionClientes(OpcionesCliente opcionCliente) {
+        switch (opcionCliente) {
             case MOSTRAR_CLIENTES:
                 mostrarClientes();
-                break;
-            case MOSTRAR_DATOS_FACTURA:
-                mostrarDatosFactura();
                 break;
             case CREAR_CUENTA:
                 crearCuenta(pedirNIF());
@@ -80,29 +120,42 @@ public class InterfazUsuario {
             case CAMBIAR_TARIFA:
                 cambiarTarifa(pedirNIF());
                 break;
-            case EMITIR_FACTURA:
-                emitirFactura(pedirNIF());
-                break;
-            case DAR_ALTA_LLAMADA:
-                guardarLlamada(pedirNIF());
-                break;
-            case MOSTRAR_FACTURAS_CLIENTE:
-                mostrarFacturasCliente(pedirNIF());
-                break;
-            case MOSTRAR_LLAMADAS_CLIENTE:
-                mostrarLlamadasCliente(pedirNIF());
-                break;
             case MOSTRAR_DATOS_CLIENTE:
                 mostrarDatosCliente(pedirNIF());
                 break;
             case MOSTRAR_CLIENTES_ENTRE_FECHAS:
                 mostrarClientesEntreFechas();
                 break;
-            case MOSTRAR_LLAMADAS_ENTRE_FECHAS:
-                mostrarLlamadasEntreFechas(pedirNIF());
+        }
+    }
+
+    private void ejecutarAccionFacturas(OpcionesFacturas opcionFactura) {
+        switch (opcionFactura) {
+            case MOSTRAR_DATOS_FACTURA:
+                mostrarDatosFactura();
+                break;
+            case EMITIR_FACTURA:
+                emitirFactura(pedirNIF());
+                break;
+            case MOSTRAR_FACTURAS_CLIENTE:
+                mostrarFacturasCliente(pedirNIF());
                 break;
             case MOSTRAR_FACTURAS_ENTRE_FECHAS:
                 mostrarFacturasEntreFechas(pedirNIF());
+                break;
+        }
+    }
+
+    private void ejecutarAccionLlamadas(OpcionesLlamadas opcionLlamada) {
+        switch (opcionLlamada) {
+            case DAR_ALTA_LLAMADA:
+                guardarLlamada(pedirNIF());
+                break;
+            case MOSTRAR_LLAMADAS_CLIENTE:
+                mostrarLlamadasCliente(pedirNIF());
+                break;
+            case MOSTRAR_LLAMADAS_ENTRE_FECHAS:
+                mostrarLlamadasEntreFechas(pedirNIF());
                 break;
         }
     }
@@ -153,15 +206,13 @@ public class InterfazUsuario {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Gracias y hasta pronto!!!");
     }
 
     private void crearCuenta(String nif) {
         System.out.println("Qué tipo de cliente desea añadir?");
         System.out.println(TipoCliente.opciones());
-        TipoCliente tipo;
         int opcion = scannerPalabra.nextInt();
-        tipo = TipoCliente.getOpcion(opcion);
+        TipoCliente tipo = TipoCliente.getOpcion(opcion);
         System.out.println("Nombre: ");
         String nombre = WordUtils.capitalizeFully(scannerLinea.nextLine());
         String apellidos = "";
@@ -179,7 +230,6 @@ public class InterfazUsuario {
         ComprobarDato formatoCorreoElectronico = dato -> dato.contains("@");
         datoAObtener.withConsulta("Correo electronico: ").withMensajeError("El correo electronico tiene que tener el simbolo '@'.");
         String correoElectronico = datoAObtener.comprobarDato(formatoCorreoElectronico, scannerPalabra);
-        //TODO hacer que al crear la cuenta, el cliente decida si decide quedarse con la tarifa básica o desea modificarla.
         try {
             Direccion direccion = new Direccion(cp, provincia, poblacion);
             Usuario usuario = new Usuario(nombre, nif, correoElectronico);
