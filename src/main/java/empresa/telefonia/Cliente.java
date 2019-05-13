@@ -12,6 +12,7 @@ public abstract class Cliente implements Serializable, Fecha {
     private Map<Periodo, List<Llamada>> llamadas;
     private Periodo actualPeriodoFacturacion;
     private Map<Integer, Factura> facturas; //Key -> código de la factura.
+    private String apellidos;
     public static final Cliente NULL_CLIENT = new ClienteParticular();
 
     public Cliente () {
@@ -27,10 +28,19 @@ public abstract class Cliente implements Serializable, Fecha {
         this.actualPeriodoFacturacion = new Periodo(LocalDateTime.now(), LocalDateTime.now().plusDays(30));
         this.llamadas.put(actualPeriodoFacturacion, new LinkedList<>());
         this.facturas = new HashMap<>();
+        this.apellidos = "";
+    }
+
+    public void setApellidos(String apellidos){
+        this.apellidos = apellidos;
     }
 
     public void setTarifa(Tarifa nuevaTarifa) {
         this.tarifa = nuevaTarifa;
+    }
+
+    public String getApellidos() {
+        return apellidos;
     }
 
     public Tarifa getTarifa(){
@@ -87,5 +97,23 @@ public abstract class Cliente implements Serializable, Fecha {
         facturas.put(codigo, factura);
     }
 
-    public abstract String toString();
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("-Nombre: " + usuario.getNombre() + "\n");
+        sb.append("-NIF: " + usuario.getNif() + "\n");
+        sb.append("-Direción:\n" + direccion + "\n");
+        sb.append("-Correo electrónico: " + usuario.getCorreoElectronico() + "\n");
+        sb.append("-Fecha de alta: " + fechaDeAlta + "\n");
+        sb.append("-Tarifas aplicadas: " + tarifa.description() + "\n");
+        sb.append("-Listado de llamadas:\n");
+        Iterator<Periodo> iterLlamadas = llamadas.keySet().iterator();
+        while (iterLlamadas.hasNext())
+            for (Llamada llamada : llamadas.get(iterLlamadas.next()))
+                sb.append("\t-" + llamada);
+        sb.append("-Listado de facturas:\n");
+        Collection<Factura> colFacturas = facturas.values();
+        for(Factura factura : colFacturas)
+            sb.append(factura);
+        return sb.toString();
+    }
 }

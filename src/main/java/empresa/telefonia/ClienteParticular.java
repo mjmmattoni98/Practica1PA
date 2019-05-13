@@ -6,8 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class ClienteParticular extends  Cliente {
-    private String apellidos;
+public class ClienteParticular extends Cliente {
 
     public ClienteParticular(){
         super();
@@ -15,19 +14,14 @@ public class ClienteParticular extends  Cliente {
 
     public ClienteParticular(Usuario usuario, Direccion direccion, Tarifa tarifa, String apellidos){
         super(usuario, direccion, tarifa);
-        this.apellidos = apellidos;
+        super.setApellidos(apellidos);
     }
 
-    public String getApellidos(){
-        return apellidos;
-    }
-
-    //TODO rehacer el metodo toString.
-    @Override
+    /*@Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
         sb.append("-Nombre: " + super.getNombre() + "\n");
-        sb.append("-Apellidos: " + apellidos + "\n");
+        sb.append("-Apellidos: " + super.apellidos + "\n");
         sb.append("-NIF: " + super.getNif() + "\n");
         sb.append("-Direción:\n" + super.getDireccion() + "\n");
         sb.append("-Correo electrónico: " + super.getCorreoElectronico() + "\n");
@@ -44,5 +38,9 @@ public class ClienteParticular extends  Cliente {
         for(Factura factura : colFacturas)
             sb.append(factura);
         return sb.toString();
+    }*/
+
+    public String toString(){
+        return super.toString() + "-Apellidos: " + super.getApellidos();
     }
 }

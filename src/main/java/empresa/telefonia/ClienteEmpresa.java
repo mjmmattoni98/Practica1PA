@@ -11,7 +11,7 @@ public class ClienteEmpresa extends Cliente {
         super(usuario, direccion, tarifa);
     }
 
-    @Override
+    /*@Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
         sb.append("-Nombre: " + super.getNombre() + "\n");
@@ -31,5 +31,5 @@ public class ClienteEmpresa extends Cliente {
         for(Factura factura : colFacturas)
             sb.append(factura);
         return sb.toString();
-    }
+    }*/
 }
