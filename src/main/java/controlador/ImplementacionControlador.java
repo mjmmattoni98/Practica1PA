@@ -4,22 +4,29 @@ import modelo.CambioModelo;
 import vista.InterrogaVista;
 
 public class ImplementacionControlador implements Controlador {
-    private CambioModelo modelo; //Modelo es un interface
-    private InterrogaVista vista; //Vista es un interface
+    private InterrogaVista vista;
+    private CambioModelo modelo;
 
-    @Override
+    public ImplementacionControlador() {}
+
     public void anyadeEntrada() {
-//        String entrada = vista.getEntrada();
-//        modelo.anyadeEntrada(entrada);
+        String entrada = vista.getEntrada();
+        modelo.anyadeEntrada(entrada);
     }
 
-    @Override
-    public void adelante(){
-
+    public void adelante() {
+        modelo.incrementaPosicionActual();
     }
 
-    @Override
-    public void atras(){
+    public void atras() {
+        modelo.decrementaPosicionActual();
+    }
 
+    public void setModelo(CambioModelo modelo) {
+        this.modelo = modelo;
+    }
+
+    public void setVista(InterrogaVista vista) {
+        this.vista = vista;
     }
 }

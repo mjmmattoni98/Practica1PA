@@ -9,33 +9,50 @@ import java.awt.event.WindowEvent;
 
 public class VistaMenuGeneral {
 
-    public void ejecuta(){
+    public void ejecutaGUI() {
+        SwingUtilities.invokeLater(() -> ejecuta());
+    }
+
+    private void ejecuta(){
         JFrame ventana = new JFrame("Primera prueba.");
 
         Container container = ventana.getContentPane();
 
-        container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
-        container.add(new JButton("Uno")/*.add(new ActionListener(){
-            @Override
-            public void actionPerfomed(ActionEvent e){
-                System.out.println("Me pulsaste");
-            }
-        })*/);
+//        container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
 
-        JButton jButton = new JButton("Prueba a menu cliente.");
-        jButton.addActionListener(new ActionListener() {
+        JPanel jPanel = new JPanel();
+        JButton jbClientes = new JButton("Prueba a menu cliente.");
+        jbClientes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Yendo al menu del cliente.");
                 new VistaMenuCliente().ejecuta();
             }
         });
-        container.add(jButton);
-        container.add(new JButton("Dos"));
-        container.add(new JButton("Tres"));
-        container.add(new JButton("Cuatro"));
-        container.add(new JButton("Cinco"));
 
+        JButton jbFacturas = new JButton("Prueba a menu facturas.");
+        jbFacturas.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Yendo al menu del facturas.");
+                new VistaMenuFacturas().ejecuta();
+            }
+        });
+
+        JButton jbLlamadas = new JButton("Prueba a menu llamadas.");
+        jbLlamadas.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Yendo al menu del llamadas.");
+                new VistaMenuLlamadas().ejecuta();
+            }
+        });
+
+        jPanel.add(jbClientes);
+        jPanel.add(jbFacturas);
+        jPanel.add(jbLlamadas);
+
+        container.add(jPanel);
 //        ventana.setSize(200, 200);
         ventana.pack();
         ventana.setVisible(true);
