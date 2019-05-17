@@ -1,8 +1,20 @@
 package modelo;
 
-public interface InterrogaModelo{
-    // Y estos son los métodos que necesita concer la Vista.
-    int getNumeroEntradas();
-    String getEntradaActual();
-    int getPoscionEntradaActual();
+public interface InterrogaModelo {
+
+    //Clientes
+    void mostrarClientes();
+    void mostrarDatosCliente(String nif);
+    void mostrarClientesEntreFechas();
+
+
+    //Facturas
+    void mostrarDatosFactura();
+    void mostrarFacturasCliente(String nif);
+    void mostrarFacturasEntreFechas(String nif);
+
+    //Llamadas
+    void mostrarLlamadasCliente(String nif);
+    void mostrarLlamadasEntreFechas(String nif);
+
 }

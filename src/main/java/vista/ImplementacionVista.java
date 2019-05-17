@@ -15,10 +15,10 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ImplementacionVista implements InterrogaVista, InformaVista {
+public class ImplementacionVista /*implements InterrogaVista, InformaVista */{
     private Controlador controlador;
     private InterrogaModelo modelo;
-    private JTextField jtfNombre;
+    /*private JTextField jtfNombre;
     private JLabel jlContador;
 
     public ImplementacionVista() {}
@@ -103,5 +103,5 @@ public class ImplementacionVista implements InterrogaVista, InformaVista {
         return "Numero de entradas: " +
                 modelo.getPoscionEntradaActual() + " de " +
                 modelo.getNumeroEntradas();
-    }
+    }*/
 }

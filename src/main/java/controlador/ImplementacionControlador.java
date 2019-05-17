@@ -1,5 +1,7 @@
 package controlador;
 
+import empresa.telefonia.*;
+import gestion.datos.GestionClientes;
 import modelo.CambioModelo;
 import vista.InterrogaVista;
 
@@ -9,17 +11,45 @@ public class ImplementacionControlador implements Controlador {
 
     public ImplementacionControlador() {}
 
-    public void anyadeEntrada() {
-        String entrada = vista.getEntrada();
-        modelo.anyadeEntrada(entrada);
+    /*@Override
+    public void addCuenta() {
+        modelo.addCuenta();
+    }*/
+
+//    @Override
+    public void addClienteParticular(Usuario usuario, Direccion direccion, String apellidos) {
+        modelo.addClienteParticular(usuario, direccion, apellidos);
+
     }
 
-    public void adelante() {
-        modelo.incrementaPosicionActual();
+//    @Override
+    public void addClienteEmpresa(Usuario usuario, Direccion direccion) {
+        modelo.addClienteEmpresa(usuario, direccion);
     }
 
-    public void atras() {
-        modelo.decrementaPosicionActual();
+    @Override
+    public void delCuenta(String nif) {
+        modelo.delCuenta(nif);
+    }
+
+    @Override
+    public void addLlamada(String nif, int numero, double duracion) {
+        modelo.addLlamada(nif,numero,duracion);
+    }
+
+    @Override
+    public void modificarTarifa(String nif, Tarifa tarifa){
+        modelo.modificarTarifa(nif, tarifa);
+    }
+/*
+    @Override
+    public void modTarifaTardesReducidas(String nif){
+        modelo.modTarifaTardesReducidas(nif);
+    }
+*/
+    @Override
+    public void emitirFactura(String nif){
+        modelo.emitirFactura(nif);
     }
 
     public void setModelo(CambioModelo modelo) {

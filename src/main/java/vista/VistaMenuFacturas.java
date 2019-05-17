@@ -2,6 +2,8 @@ package vista;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -12,20 +14,112 @@ public class VistaMenuFacturas {
 
         Container container = ventana.getContentPane();
 
-        container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+        container.setLayout(new FlowLayout());
 
-        container.add(new JButton("Boton de facturas"));
+        JTabbedPane pestanyas = new JTabbedPane();
+        pestanyas.add("Crear cliente", new EmitirFactura());
+        pestanyas.add("Borrar Cliente", new MostrarDatosFactura());
+        pestanyas.add("Cambiar tarifa", new MostrarFacturasCliente());
+        pestanyas.add("Mostrar clientes", new MostrarFacturasEntreFechas());
 
-//        ventana.setSize(200, 200);
+        container.add(pestanyas);
+
         ventana.pack();
         ventana.setVisible(true);
-//        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 System.out.println("Hasta luego desde facturas!!!!");
-//                System.exit(0);
             }
         });
     }
+
+    private class EmitirFactura extends JPanel {
+        public EmitirFactura() {
+            this.ejecuta();
+        }
+
+        private void ejecuta(){
+            JTextField jtfNif = new JTextField(20);
+            JLabel nifLabel = new JLabel("NIF: ");
+            JButton jbCrearCliente = new JButton("Nuevo cliente");
+            jbCrearCliente.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String nif = jtfNif.getText();
+                    System.out.println("NIF: " + nif);
+                }
+            });
+            this.add(nifLabel);
+            this.add(jtfNif);
+            this.add(jbCrearCliente);
+        }
+    }
+
+    private class MostrarDatosFactura extends JPanel {
+        public MostrarDatosFactura() {
+            this.ejecuta();
+        }
+
+        private void ejecuta(){
+            JTextField jtfNif = new JTextField(20);
+            JLabel nifLabel = new JLabel("NIF: ");
+            JButton jbBorrarCliente = new JButton("Borrar cliente");
+            jbBorrarCliente.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String nif = jtfNif.getText();
+                    System.out.println("Cliente " + nif + " borrado.");
+                }
+            });
+            this.add(nifLabel);
+            this.add(jtfNif);
+            this.add(jbBorrarCliente);
+        }
+    }
+
+    private class MostrarFacturasCliente extends JPanel {
+        public MostrarFacturasCliente() {
+            this.ejecuta();
+        }
+
+        private void ejecuta(){
+            JTextField jtfNif = new JTextField(20);
+            JLabel nifLabel = new JLabel("NIF: ");
+            JButton jbBorrarCliente = new JButton("Borrar cliente");
+            jbBorrarCliente.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String nif = jtfNif.getText();
+                    System.out.println("Cliente " + nif + " borrado.");
+                }
+            });
+            this.add(nifLabel);
+            this.add(jtfNif);
+            this.add(jbBorrarCliente);
+        }
+    }
+
+    private class MostrarFacturasEntreFechas extends JPanel {
+        public MostrarFacturasEntreFechas() {
+            this.ejecuta();
+        }
+
+        private void ejecuta(){
+            JTextField jtfNif = new JTextField(20);
+            JLabel nifLabel = new JLabel("NIF: ");
+            JButton jbBorrarCliente = new JButton("Borrar cliente");
+            jbBorrarCliente.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String nif = jtfNif.getText();
+                    System.out.println("Cliente " + nif + " borrado.");
+                }
+            });
+            this.add(nifLabel);
+            this.add(jtfNif);
+            this.add(jbBorrarCliente);
+        }
+    }
+
 }
