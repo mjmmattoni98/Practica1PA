@@ -1,5 +1,5 @@
 package vista;
 
-public interface InterrogaVista{
+public interface InterrogaVistaCliente {
     String getEntrada();
 }

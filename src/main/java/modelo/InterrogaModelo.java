@@ -1,20 +1,22 @@
 package modelo;
 
+import java.time.LocalDateTime;
+
 public interface InterrogaModelo {
 
     //Clientes
-    void mostrarClientes();
-    void mostrarDatosCliente(String nif);
-    void mostrarClientesEntreFechas();
+    String mostrarClientes();
+    String mostrarDatosCliente(String nif);
+    String mostrarClientesEntreFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin);
 
 
     //Facturas
-    void mostrarDatosFactura();
-    void mostrarFacturasCliente(String nif);
-    void mostrarFacturasEntreFechas(String nif);
+    String mostrarDatosFactura(int codFac);
+    String mostrarFacturasCliente(String nif);
+    String mostrarFacturasEntreFechas(String nif, LocalDateTime fechaInicio, LocalDateTime fechaFin);
 
     //Llamadas
-    void mostrarLlamadasCliente(String nif);
-    void mostrarLlamadasEntreFechas(String nif);
+    String mostrarLlamadasCliente(String nif);
+    String mostrarLlamadasEntreFechas(String nif, LocalDateTime fechaInicio, LocalDateTime fechaFin);
 
 }

@@ -1,7 +1,9 @@
 package modelo;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import empresa.telefonia.*;
+import entrada.salida.ComprobarDato;
 import gestion.datos.GestionClientes;
 import gestion.datos.GestionFacturas;
 import gestion.datos.GestionLlamadas;
@@ -13,7 +15,7 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
     private GestionClientes gestionClientes = new GestionClientes();
     private GestionLlamadas gestionLlamadas = new GestionLlamadas();
     private GestionFacturas gestionFacturas = new GestionFacturas();
-
+    private FabricadoTarifa fabricadoTarifa = new FabricadoTarifa();
 
     public ImplementacionModelo(){}
 
@@ -21,10 +23,11 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
         this.vista = vista;
     }
 
-	/*@Override
+/*@Override
 	public void addCuenta(Cliente cliente) {
 		gestionClientes.addCliente(cliente);
 	}*/
+
 
     @Override
     public void addClienteParticular(Usuario usuario, Direccion direccion, String apellidos) {
@@ -53,15 +56,19 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
     }
 
     @Override
-    public void modificarTarifa(String nif, Tarifa tarifa){
+    public void modTarifaDomingosGratis(String nif){
+        Tarifa tarifa = gestionClientes.getCliente(nif).getTarifa();
+        tarifa = fabricadoTarifa.getTarifaDomingoGratis(tarifa);
         gestionClientes.cambiarTarifaCliente(nif, tarifa);
     }
 
-    /*@Override
+    @Override
     public void modTarifaTardesReducidas(String nif){
-        gestionClientes.cambiarTarifaTardesReducidas(nif);
+        Tarifa tarifa = gestionClientes.getCliente(nif).getTarifa();
+        tarifa = fabricadoTarifa.getTarifaTardesReducidas(tarifa, 5);
+        gestionClientes.cambiarTarifaCliente(nif, tarifa);
     }
-    */
+
     @Override
     public void emitirFactura(String nif){
         gestionFacturas.emitirFacturaCliente(nif);
@@ -70,91 +77,111 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
     //InterrogaModelo
 
     @Override
-    public void mostrarClientes(){
+    public String mostrarClientes(){
+        StringBuilder clientes = new StringBuilder();
+        clientes.append("<html><body><H1>Mostrar Clientes</H1>");
         try {
             int i = 1;
             for (String nif : gestionClientes.getClientes().keySet()) {
-                System.out.println("Cliente " + i++ + ":");
-                System.out.println(gestionClientes.getCliente(nif));
+                clientes.append("<H3>Cliente " + i++ + ": </H3>");
+                clientes.append(gestionClientes.getCliente(nif).toStringHtml());
             }
+            clientes.append("</body></html>");
             if (i == 1)
-                System.out.println("No hay clientes aún guardados.");
+                return "No hay clientes aún guardados.";
         }
         catch (IllegalArgumentException e){
             e.printStackTrace();
         }
+        return clientes.toString();
     }
-
-    public void mostrarDatosCliente(String nif){
+    @Override
+    public String mostrarDatosCliente(String nif){
+        StringBuilder cliente = new StringBuilder();
+        cliente.append("<html><body><H1>Mostrar Datos Cliente</H1>");
         try {
-            System.out.println(gestionClientes.getCliente(nif));
+            cliente.append(gestionClientes.getCliente(nif).toStringHtml());
+            cliente.append("</html></body>");
         }
         catch (IllegalArgumentException e){
             e.printStackTrace();
         }
+        return cliente.toString();
     }
+    @Override
+    public String mostrarDatosFactura(int codFac){
+        StringBuilder factura= new StringBuilder();
+        factura.append("<html><body><H1>Mostrar datos factura</H1>");
 
-    public void mostrarDatosFactura(){
-//        ComprobarDato codigoNumerico = dato -> isNum(dato);
-//        datoAObtener.withConsulta("Codigo de factura: ").withMensajeError("El codigo de la factura tiene que ser numerico.");
-//        int codigo = Integer.parseInt(datoAObtener.comprobarDato(codigoNumerico, scannerPalabra));
-        int codigo = 1;
         try {
-            System.out.println(gestionFacturas.getFactura(codigo));
+            factura.append(gestionFacturas.getFactura(codFac).toStringHtml());
+            factura.append("</html></body>");
         }
         catch (IllegalArgumentException e){
             e.printStackTrace();
         }
+        return factura.toString();
     }
-
-    public void mostrarFacturasCliente(String nif){
+    @Override
+    public String mostrarFacturasCliente(String nif){
+        StringBuilder facturas = new StringBuilder();
         try {
             int i = 1;
+            facturas.append("<html><body><H1>Mostrar facturas cliente</H1>");
             for (Integer codigo : gestionFacturas.getFacturasCliente(nif).keySet()) {
-                System.out.println("Factura " + i++ + ":");
-                System.out.println(gestionFacturas.getFactura(codigo));
+                facturas.append("<H3>Factura " + i++ + ":</H3>");
+                facturas.append(gestionFacturas.getFactura(codigo).toStringHtml());
             }
+            facturas.append("</html></body>");
             if (i == 1)
-                System.out.println("No hay facturas asociadas aún al cliente " + gestionClientes.getCliente(nif) + ".");
+                return ("No hay facturas asociadas aún al cliente " + gestionClientes.getCliente(nif) + ".");
         }
         catch (IllegalArgumentException e){
             e.printStackTrace();
         }
+        return facturas.toString();
     }
-
-    public void mostrarLlamadasCliente(String nif){
+    @Override
+    public String mostrarLlamadasCliente(String nif){
+        StringBuilder mostrarLlamadas = new StringBuilder();
         try {
             Map<Periodo, List<Llamada>> llamadas = gestionLlamadas.getLlamadasCliente(nif);
+            mostrarLlamadas.append("<html><body><H1>Mostrar Llamadas Cliente</H1>");
             for (Periodo periodo : llamadas.keySet()) {
-                System.out.println("Llamadas hechas en el periodo " + periodo + ":");
+                mostrarLlamadas.append("Llamadas hechas en el periodo " + periodo + ":<br>");
                 for (Llamada llamada : llamadas.get(periodo))
-                    System.out.println(llamada);
+                    mostrarLlamadas.append(llamada+"<br>");
             }
+            mostrarLlamadas.append("</html></body>");
         }
         catch (IllegalArgumentException e){
             e.printStackTrace();
         }
+        return mostrarLlamadas.toString();
     }
-
-    public void mostrarClientesEntreFechas() {
-        //        Periodo periodo = getPeriod();
-        Periodo periodo = null;
+    @Override
+    public String mostrarClientesEntreFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+        StringBuilder mostrarClientes = new StringBuilder();
         Set<Cliente> setClientes = new HashSet<>();
         setClientes.addAll(gestionClientes.getClientes().values());
-
+        Periodo periodo = new Periodo(fechaInicio,fechaFin);
         Set<Cliente> setClientesIntervalo = gestionClientes.filterClientsByDate(setClientes, periodo);
 
         int i = 0;
+        mostrarClientes.append("<html><h1>mostrarClientesEntreFechas</h1><body>");
         for (Cliente cliente : setClientesIntervalo) {
-            System.out.println(cliente);
+            mostrarClientes.append("<h3>"+cliente+"</h3>");
             i++;
         }
-        if (i == 0) System.out.println("No se agregaron clientes en ese periodo.");
+        mostrarClientes.append("</html></body>");
+        if (i == 0) return "No se agregaron clientes en ese periodo.";
+        return mostrarClientes.toString();
     }
 
-    public void mostrarLlamadasEntreFechas(String nif) {
-//        Periodo periodo = getPeriod();
-        Periodo periodo = null;
+    @Override
+    public String mostrarLlamadasEntreFechas(String nif, LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+        Periodo periodo = new Periodo(fechaInicio,fechaFin);
+        StringBuilder llamadas = new StringBuilder();
         Set<Llamada> setLlamadas = new HashSet<>();
         try {
             for (List<Llamada> listaLlamadas : gestionLlamadas.getLlamadasCliente(nif).values()) {
@@ -164,36 +191,43 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
             Set<Llamada> setLlamadasIntervalo = gestionLlamadas.filterCallsByDate(setLlamadas, periodo);
 
             int i = 0;
+            llamadas.append("<html><h1>mostrarLlamadasEntreFechas</h1><body>");
             for (Llamada llamada : setLlamadasIntervalo) {
-                System.out.println(llamada);
+                llamadas.append("<h3>"+llamada+"</h3>");
                 i++;
             }
+            llamadas.append("</html></body>");
 
-            if (i == 0) System.out.println("No se agregaron clientes en ese periodo.");
+
+            if (i == 0) return "No se agregaron clientes en ese periodo.";
         }
         catch (IllegalArgumentException e){
             e.printStackTrace();
         }
+        return llamadas.toString();
     }
-
-    public void mostrarFacturasEntreFechas(String nif) {
-//        Periodo periodo = getPeriod();
-        Periodo periodo = null;
+    @Override
+    public String mostrarFacturasEntreFechas(String nif, LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+        Periodo periodo = new Periodo(fechaInicio,fechaFin);
+        StringBuilder facturas=new StringBuilder();
         Set<Factura> setFacturas = new HashSet<>();
         try {
             setFacturas.addAll(gestionFacturas.getFacturasCliente(nif).values());
             Set<Factura> setFacturasIntervalo = gestionFacturas.filterBillsByDate(setFacturas, periodo);
 
             int i = 0;
+            facturas.append("<html>mostrar Facturas Entre Fechas<body>");
             for (Factura factura : setFacturasIntervalo) {
-                System.out.println(factura);
+                facturas.append("<h3>"+factura+"</h3>");
                 i++;
             }
+            facturas.append("</html></body>");
 
-            if (i == 0) System.out.println("No se agregaron clientes en ese periodo.");
+            if (i == 0) return "No se agregaron clientes en ese periodo.";
         }
         catch (IllegalArgumentException e){
             e.printStackTrace();
         }
+        return facturas.toString();
     }
 }

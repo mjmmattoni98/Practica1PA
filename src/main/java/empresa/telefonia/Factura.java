@@ -58,4 +58,14 @@ public class Factura implements Serializable, Fecha {
         return sb.toString();
     }
 
+    public String toStringHtml(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("\t<br>-Tarifa aplicada: " + tarifa.description() + "<br>");
+        sb.append("\t-El código de la factura es: " + codigo + "<br>");
+        sb.append("\t-Fecha de emisión: " + fechaEmision + "<br>");
+        sb.append("\t-Periodo de facturación: " + periodoFacturacion + "<br>");
+        sb.append("\t-El importe final de la factura sería: " + importe/100 + " euros.<br>");
+        return sb.toString();
+    }
+
 }

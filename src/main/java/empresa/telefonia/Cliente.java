@@ -116,4 +116,6 @@ public abstract class Cliente implements Serializable, Fecha {
             sb.append(factura);
         return sb.toString();
     }
+
+    public abstract String toStringHtml();
 }

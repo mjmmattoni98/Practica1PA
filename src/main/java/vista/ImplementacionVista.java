@@ -15,7 +15,7 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ImplementacionVista /*implements InterrogaVista, InformaVista */{
+public class ImplementacionVista /*implements InterrogaVistaCliente, InformaVistaCliente */{
     private Controlador controlador;
     private InterrogaModelo modelo;
     /*private JTextField jtfNombre;

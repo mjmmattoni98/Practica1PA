@@ -32,4 +32,25 @@ public class ClienteEmpresa extends Cliente {
             sb.append(factura);
         return sb.toString();
     }*/
+
+    public String toStringHtml(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("-Nombre: " + super.getNombre() + "<br>");
+        sb.append("-NIF: " + super.getNif() + "<br>");
+        sb.append("-Dirección:<br>" + super.getDireccion() + "<br>");
+        sb.append("-Correo electrónico: " + super.getCorreoElectronico() + "<br>");
+        sb.append("-Fecha de alta: " + super.getFecha() + "<br>");
+        sb.append("-Tarifas aplicadas: " + super.getTarifa().description() + "<br>");
+        sb.append("-Listado de llamadas:<br>");
+        Map<Periodo, List<Llamada>> misLlamadas = super.getLlamadas();
+        Iterator<Periodo> iterLlamadas = misLlamadas.keySet().iterator();
+        while (iterLlamadas.hasNext())
+            for (Llamada llamada : misLlamadas.get(iterLlamadas.next()))
+                sb.append("\t-" + llamada);
+        sb.append("-Listado de facturas: ");
+        Collection<Factura> colFacturas = super.getFacturas().values();
+        for(Factura factura : colFacturas)
+            sb.append(factura);
+        return sb.toString();
+    }
 }

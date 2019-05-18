@@ -1,6 +1,6 @@
 package vista;
 
-public interface InformaVista {
+public interface InformaVistaCliente {
     void entradaActualCambiada();
     void nuevaEntrada();
 }
