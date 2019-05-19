@@ -50,7 +50,7 @@ public class ClienteEmpresa extends Cliente {
         sb.append("-Listado de facturas: ");
         Collection<Factura> colFacturas = super.getFacturas().values();
         for(Factura factura : colFacturas)
-            sb.append(factura);
+            sb.append(factura.toStringHtml());
         return sb.toString();
     }
 }

@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 
 public interface InterrogaModelo {
 
+    //Datos
+    void escribirDatos();
+
     //Clientes
     String mostrarClientes();
     String mostrarDatosCliente(String nif);

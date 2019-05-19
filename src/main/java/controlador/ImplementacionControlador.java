@@ -1,24 +1,15 @@
 package controlador;
 
 import empresa.telefonia.Direccion;
-import empresa.telefonia.FabricaCliente;
-import empresa.telefonia.FabricadoCliente;
 import empresa.telefonia.Usuario;
-import gestion.datos.GestionClientes;
 import modelo.CambioModelo;
 import modelo.ImplementacionModelo;
-//import vista.InterrogaVista;
 
 public class ImplementacionControlador implements Controlador {
-//    private InterrogaVista vista;
     private CambioModelo modelo = new ImplementacionModelo();
 
     public ImplementacionControlador() {}
 
-    /*@Override
-    public void addCuenta() {
-        modelo.addCuenta();
-    }*/
     @Override
     public void addClienteParticular(Usuario usuario, Direccion direccion, String apellidos) {
         modelo.addClienteParticular(usuario, direccion, apellidos);
@@ -56,7 +47,4 @@ public class ImplementacionControlador implements Controlador {
         this.modelo = modelo;
     }
 
-    /*public void setVista(InterrogaVista vista) {
-        this.vista = vista;
-    }*/
 }

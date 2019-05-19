@@ -1,11 +1,7 @@
 package vista;
 
-import controlador.Controlador;
-import controlador.ImplementacionControlador;
 import empresa.telefonia.Direccion;
 import empresa.telefonia.Usuario;
-import modelo.ImplementacionModelo;
-import modelo.InterrogaModelo;
 import org.apache.commons.lang3.text.WordUtils;
 
 import javax.swing.*;
@@ -13,12 +9,15 @@ import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDateTime;
 
-public class VistaMenuCliente {
-    private InterrogaModelo modelo = new ImplementacionModelo();
-    private Controlador controlador = new ImplementacionControlador();
+public class VistaMenuCliente extends VistaMenuGeneral{
 
     public void ejecutaGUI() {
-        SwingUtilities.invokeLater(this::ejecuta);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                ejecuta();
+            }
+        });
     }
 
     private void ejecuta() {
@@ -26,42 +25,25 @@ public class VistaMenuCliente {
 
         Container container = ventana.getContentPane();
 
-//        container.setLayout(new GridLayout(17, 1));
-
-//        container.add(new JButton("Boton de cliente"));
-//        JLabel opcionLabel = new JLabel("Que acción desea realizar?");
-
         JTabbedPane pestanyas = new JTabbedPane();
-        JPanel clasesPestanyas = new CrearCliente();
-        pestanyas.add("Crear cliente", clasesPestanyas);
-        clasesPestanyas = new BorrarCliente();
-        pestanyas.add("Borrar Cliente", clasesPestanyas);
-        clasesPestanyas = new CambiarTarifa();
-        pestanyas.add("Cambiar tarifa", clasesPestanyas);
-        clasesPestanyas = new MostrarClientes();
-//        JScrollPane jspMostrarClientes = new JScrollPane(clasesPestanyas);
-//        jspMostrarClientes.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        pestanyas.add("Mostrar clientes", clasesPestanyas);
-        clasesPestanyas = new MostrarDatosCliente();
-        pestanyas.add("Mostrar datos clientes", clasesPestanyas);
-        clasesPestanyas = new MostrarClientesEntreFechas();
-        pestanyas.add("Mostrar clientes entre fechas", clasesPestanyas);
+        pestanyas.add("Crear cliente", new CrearCliente());
+        pestanyas.add("Borrar Cliente", new BorrarCliente());
+        pestanyas.add("Cambiar tarifa", new CambiarTarifa());
+        pestanyas.add("Mostrar clientes", new MostrarClientes());
+        pestanyas.add("Mostrar datos clientes", new MostrarDatosCliente());
+        pestanyas.add("Mostrar clientes entre fechas", new MostrarClientesEntreFechas());
 
-//        JScrollPane jScrollPane = new JScrollPane(pestanyas);
-//        jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-//        container.add(jScrollPane);
-//        container.add(jspMostrarClientes);
         container.add(pestanyas);
-//        ventana.setSize(500, 500);
+
         ventana.pack();
         ventana.setVisible(true);
-
         ventana.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         ventana.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 // Se pide una confirmación antes de finalizar el programa
-                VistaMenuGeneral vista= new VistaMenuGeneral();
+                modelo.escribirDatos();
+                VistaMenuGeneral vista = new VistaMenuGeneral();
                 vista.ejecutaGUI();
                 ventana.dispose();
             }
@@ -86,16 +68,12 @@ public class VistaMenuCliente {
                     String comando = boton.getActionCommand();
                     switch (comando) {
                         case "particular":
-                            if (ItemEvent.SELECTED == e.getStateChange()) {
+                            if (ItemEvent.SELECTED == e.getStateChange())
                                 particular[0] = true;
-//                                System.out.println("Agregar cliente particular");
-                            }
                             break;
                         case "empresa":
-                            if (ItemEvent.SELECTED == e.getStateChange()) {
+                            if (ItemEvent.SELECTED == e.getStateChange())
                                 particular[0] = false;
-//                                System.out.println("Agregar cliente empresa");
-                            }
                             break;
                     }
                 }
@@ -110,19 +88,12 @@ public class VistaMenuCliente {
 
             //JLabel
             JLabel nifLabel = new JLabel("NIF: ");
-//            nifLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             JLabel nombreLabel = new JLabel("Nombre: ");
-//            nombreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             JLabel apellidosLabel = new JLabel("Apellidos: ");
-//            apellidosLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             JLabel cpLabel = new JLabel("CP: ");
-//            cpLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             JLabel provinciaLabel = new JLabel("Provincia: ");
-//            provinciaLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             JLabel poblacionLabel = new JLabel("Población: ");
-//            poblacionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             JLabel emailLabel = new JLabel("Correo electrónico: ");
-//            emailLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             //JTextField
             JTextField jtfNif = new JTextField(20);
@@ -139,11 +110,11 @@ public class VistaMenuCliente {
             jtfPoblacion.setAlignmentX(Component.CENTER_ALIGNMENT);
             JTextField jtfEmail = new JTextField(20);
             jtfEmail.setAlignmentX(Component.CENTER_ALIGNMENT);
+
             JButton jbCrearCuenta = new JButton("Crear cuenta");
             jbCrearCuenta.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    //Strings
                     String nombre = WordUtils.capitalizeFully(jtfNombre.getText());
                     String apellidos = WordUtils.capitalizeFully(jtfApellidos.getText());
                     String nif = jtfNif.getText().toUpperCase();
@@ -175,8 +146,6 @@ public class VistaMenuCliente {
                     controlador.addClienteParticular(usuario, direccion, "Pojo");
                 }
             });
-
-//            JScrollPane scroll = new JScrollPane(this);
 
             this.add(clienteParticular);
             this.add(clienteEmpresa);

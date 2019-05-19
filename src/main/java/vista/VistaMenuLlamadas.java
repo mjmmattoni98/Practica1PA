@@ -1,10 +1,5 @@
 package vista;
 
-import controlador.Controlador;
-import controlador.ImplementacionControlador;
-import modelo.ImplementacionModelo;
-import modelo.InterrogaModelo;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,9 +8,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDateTime;
 
-public class VistaMenuLlamadas {
-    private InterrogaModelo modelo = new ImplementacionModelo();
-    private Controlador controlador = new ImplementacionControlador();
+public class VistaMenuLlamadas extends VistaMenuGeneral{
 
     public void ejecutaGUI() {
         SwingUtilities.invokeLater(this::ejecuta);
@@ -39,6 +32,7 @@ public class VistaMenuLlamadas {
             @Override
             public void windowClosing(WindowEvent e) {
                 // Se pide una confirmación antes de finalizar el programa
+                modelo.escribirDatos();
                 VistaMenuGeneral vista= new VistaMenuGeneral();
                 vista.ejecutaGUI();
                 ventana.dispose();

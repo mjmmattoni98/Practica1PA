@@ -5,7 +5,6 @@ import empresa.telefonia.Usuario;
 
 public interface Controlador {
     //Cuentas
-    /*void addCuenta();*/
     void addClienteParticular(Usuario usuario, Direccion direccion, String apellidos);
     void addClienteEmpresa(Usuario usuario, Direccion direccion);
     void delCuenta(String nif);

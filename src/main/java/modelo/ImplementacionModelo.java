@@ -4,14 +4,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import empresa.telefonia.*;
-import entrada.salida.ComprobarDato;
-import entrada.salida.ObtencionDato;
 import gestion.datos.*;
-//import vista.InformaVista;
 
 
 public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
-//    private InformaVista vista;
     private GestionClientes gestionClientes;
     private GestionLlamadas gestionLlamadas;
     private GestionFacturas gestionFacturas;
@@ -40,11 +36,6 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
             e.printStackTrace();
         }
     }
-
-    /*public void setVista(InformaVista vista) {
-        this.vista = vista;
-    }
-*/
 
     @Override
     public void addClienteParticular(Usuario usuario, Direccion direccion, String apellidos) {
@@ -112,6 +103,7 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
         }
         return clientes.toString();
     }
+
     @Override
     public String mostrarDatosCliente(String nif){
         StringBuilder cliente = new StringBuilder();
@@ -125,6 +117,7 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
         }
         return cliente.toString();
     }
+
     @Override
     public String mostrarDatosFactura(int codFac){
         StringBuilder factura= new StringBuilder();
@@ -139,6 +132,7 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
         }
         return factura.toString();
     }
+
     @Override
     public String mostrarFacturasCliente(String nif){
         StringBuilder facturas = new StringBuilder();
@@ -158,6 +152,7 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
         }
         return facturas.toString();
     }
+
     @Override
     public String mostrarLlamadasCliente(String nif){
         StringBuilder mostrarLlamadas = new StringBuilder();
@@ -176,6 +171,7 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
         }
         return mostrarLlamadas.toString();
     }
+
     @Override
     public String mostrarClientesEntreFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
         StringBuilder mostrarClientes = new StringBuilder();
@@ -249,6 +245,7 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
         return facturas.toString();
     }
 
+    @Override
     public void escribirDatos() {
         FileOutputStream fos;
         ObjectOutputStream oos;
