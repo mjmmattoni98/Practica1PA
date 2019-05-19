@@ -49,7 +49,7 @@ public class ClienteParticular extends Cliente {
         sb.append("-Nombre: " + super.getNombre() + "<br>");
         sb.append("-Apellidos: " + super.getApellidos() + "<br>");
         sb.append("-NIF: " + super.getNif() + "<br>");
-        sb.append("-Dirección:<br>" + super.getDireccion() + "<br>");
+        sb.append("-Dirección:<br>" + super.getDireccion().toStringHtml() + "<br>");
         sb.append("-Correo electrónico: " + super.getCorreoElectronico() + "<br>");
         sb.append("-Fecha de alta: " + super.getFecha() + "<br>");
         sb.append("-Tarifas aplicadas: " + super.getTarifa().description() + "<br>");
@@ -58,7 +58,7 @@ public class ClienteParticular extends Cliente {
         Iterator<Periodo> iterLlamadas = misLlamadas.keySet().iterator();
         while (iterLlamadas.hasNext())
             for (Llamada llamada : misLlamadas.get(iterLlamadas.next()))
-                sb.append("\t-" + llamada);
+                sb.append("\t-" + llamada.toStringHTML());
         sb.append("-Listado de facturas: ");
         Collection<Factura> colFacturas = super.getFacturas().values();
         for(Factura factura : colFacturas)

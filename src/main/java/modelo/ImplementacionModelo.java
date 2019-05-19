@@ -1,33 +1,50 @@
 package modelo;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
 import empresa.telefonia.*;
 import entrada.salida.ComprobarDato;
-import gestion.datos.GestionClientes;
-import gestion.datos.GestionFacturas;
-import gestion.datos.GestionLlamadas;
-import vista.InformaVista;
+import entrada.salida.ObtencionDato;
+import gestion.datos.*;
+//import vista.InformaVista;
 
 
 public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
-    private InformaVista vista;
-    private GestionClientes gestionClientes = new GestionClientes();
-    private GestionLlamadas gestionLlamadas = new GestionLlamadas();
-    private GestionFacturas gestionFacturas = new GestionFacturas();
-    private FabricadoTarifa fabricadoTarifa = new FabricadoTarifa();
+//    private InformaVista vista;
+    private GestionClientes gestionClientes;
+    private GestionLlamadas gestionLlamadas;
+    private GestionFacturas gestionFacturas;
+    private FabricadoTarifa fabricadoTarifa;
+    private Datos datos;
 
-    public ImplementacionModelo(){}
-
-    public void setVista(InformaVista vista) {
-        this.vista = vista;
+    public ImplementacionModelo(){
+        this.gestionClientes = new GestionClientes();
+        this.gestionFacturas = new GestionFacturas();
+        this.gestionLlamadas = new GestionLlamadas();
+        this.datos = new Datos();
+        this.fabricadoTarifa = new FabricadoTarifa();
+        FileInputStream fis;
+        ObjectInputStream ois;
+        try {
+            fis = new FileInputStream("datos.bin");
+            ois = new ObjectInputStream(fis);
+            datos = (Datos) ois.readObject();
+            BaseDatos.setClientesBD(datos.getClientes());
+            BaseDatos.setFacturasBD(datos.getFacturas());
+            gestionFacturas.setCodigoFactura(datos.getCodigoFactura());
+            fis.close();
+            ois.close();
+        } catch (ClassNotFoundException | IOException e) {
+            System.out.println("No hay clientes aun.");
+            e.printStackTrace();
+        }
     }
 
-/*@Override
-	public void addCuenta(Cliente cliente) {
-		gestionClientes.addCliente(cliente);
-	}*/
-
+    /*public void setVista(InformaVista vista) {
+        this.vista = vista;
+    }
+*/
 
     @Override
     public void addClienteParticular(Usuario usuario, Direccion direccion, String apellidos) {
@@ -134,7 +151,7 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
             }
             facturas.append("</html></body>");
             if (i == 1)
-                return ("No hay facturas asociadas aún al cliente " + gestionClientes.getCliente(nif) + ".");
+                return ("No hay facturas asociadas aún al cliente " + nif + ".");
         }
         catch (IllegalArgumentException e){
             e.printStackTrace();
@@ -168,7 +185,7 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
         Set<Cliente> setClientesIntervalo = gestionClientes.filterClientsByDate(setClientes, periodo);
 
         int i = 0;
-        mostrarClientes.append("<html><h1>mostrarClientesEntreFechas</h1><body>");
+        mostrarClientes.append("<html><h1>Mostrar Clientes Entre Fechas</h1><body>");
         for (Cliente cliente : setClientesIntervalo) {
             mostrarClientes.append("<h3>"+cliente+"</h3>");
             i++;
@@ -191,7 +208,7 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
             Set<Llamada> setLlamadasIntervalo = gestionLlamadas.filterCallsByDate(setLlamadas, periodo);
 
             int i = 0;
-            llamadas.append("<html><h1>mostrarLlamadasEntreFechas</h1><body>");
+            llamadas.append("<html><h1>Mostrar Llamadas Entre Fechas</h1><body>");
             for (Llamada llamada : setLlamadasIntervalo) {
                 llamadas.append("<h3>"+llamada+"</h3>");
                 i++;
@@ -206,6 +223,7 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
         }
         return llamadas.toString();
     }
+
     @Override
     public String mostrarFacturasEntreFechas(String nif, LocalDateTime fechaInicio, LocalDateTime fechaFin) {
         Periodo periodo = new Periodo(fechaInicio,fechaFin);
@@ -216,7 +234,7 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
             Set<Factura> setFacturasIntervalo = gestionFacturas.filterBillsByDate(setFacturas, periodo);
 
             int i = 0;
-            facturas.append("<html>mostrar Facturas Entre Fechas<body>");
+            facturas.append("<html><h1>Mostrar Facturas Entre Fechas</h1><body>");
             for (Factura factura : setFacturasIntervalo) {
                 facturas.append("<h3>"+factura+"</h3>");
                 i++;
@@ -230,4 +248,22 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
         }
         return facturas.toString();
     }
+
+    public void escribirDatos() {
+        FileOutputStream fos;
+        ObjectOutputStream oos;
+        try {
+            datos.setClientes(BaseDatos.getClientesBD());
+            datos.setFacturas(BaseDatos.getFacturasBD());
+            datos.setCodigoFactura(gestionFacturas.getCodigoFactura());
+            fos = new FileOutputStream("datos.bin");
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(this.datos);
+            fos.close();
+            oos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

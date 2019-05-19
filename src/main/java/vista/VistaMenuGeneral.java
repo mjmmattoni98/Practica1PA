@@ -26,7 +26,8 @@ public class VistaMenuGeneral {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Yendo al menu del cliente.");
-                new VistaMenuCliente().ejecuta();
+                new VistaMenuCliente().ejecutaGUI();
+                ventana.dispose();
             }
         });
 
@@ -35,7 +36,8 @@ public class VistaMenuGeneral {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Yendo al menu del facturas.");
-                new VistaMenuFacturas().ejecuta();
+                new VistaMenuFacturas().ejecutaGUI();
+                ventana.dispose();
             }
         });
 
@@ -44,7 +46,8 @@ public class VistaMenuGeneral {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Yendo al menu del llamadas.");
-                new VistaMenuLlamadas().ejecuta();
+                new VistaMenuLlamadas().ejecutaGUI();
+                ventana.dispose();
             }
         });
 
@@ -60,8 +63,16 @@ public class VistaMenuGeneral {
         ventana.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                System.out.println("Hasta luego desde general!!!!");
-                System.exit(0);
+                int option = JOptionPane.showConfirmDialog(
+                        ventana,
+                        "¿Estás seguro de que quieres cerrar la aplicación?",
+                        "Confirmación de cierre",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                if (option == JOptionPane.YES_OPTION) {
+                    System.out.println("Hasta luego desde general!!!!");
+                    System.exit(0);
+                }
             }
         });
     }

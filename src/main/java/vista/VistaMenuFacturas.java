@@ -1,8 +1,9 @@
 package vista;
 
+import controlador.Controlador;
 import controlador.ImplementacionControlador;
-import modelo.CambioModelo;
 import modelo.ImplementacionModelo;
+import modelo.InterrogaModelo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,10 +14,14 @@ import java.awt.event.WindowEvent;
 import java.time.LocalDateTime;
 
 public class VistaMenuFacturas {
-    ImplementacionModelo modelo = new ImplementacionModelo();
-    ImplementacionControlador controlador = new ImplementacionControlador();
+    private InterrogaModelo modelo = new ImplementacionModelo();
+    private Controlador controlador = new ImplementacionControlador();
 
-    public void ejecuta() {
+    public void ejecutaGUI() {
+        SwingUtilities.invokeLater(this::ejecuta);
+    }
+
+    private void ejecuta() {
         JFrame ventana = new JFrame("Vista facturas.");
 
         Container container = ventana.getContentPane();
@@ -33,10 +38,14 @@ public class VistaMenuFacturas {
 
         ventana.pack();
         ventana.setVisible(true);
+        ventana.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         ventana.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                System.out.println("Hasta luego desde facturas!!!!");
+                // Se pide una confirmación antes de finalizar el programa
+                VistaMenuGeneral vista= new VistaMenuGeneral();
+                vista.ejecutaGUI();
+                ventana.dispose();
             }
         });
     }
@@ -53,8 +62,7 @@ public class VistaMenuFacturas {
             jbCrearCliente.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    controlador.emitirFactura(jtfNif.getText());
-                    System.out.println("Factura emitida con exito.");
+                    controlador.emitirFactura(jtfNif.getText().toUpperCase());
                 }
             });
             this.add(nifLabel);
@@ -70,17 +78,19 @@ public class VistaMenuFacturas {
 
         private void ejecuta(){
             JTextField jtfFactura = new JTextField(20);
-            JLabel facturaLabel = new JLabel("Factura: ");
+            JLabel facturaLabel = new JLabel("Código factura: ");
             JButton jbBorrarCliente = new JButton("Mostrar datos");
             jbBorrarCliente.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JLabel facturas= new JLabel(modelo.mostrarDatosFactura(Integer.parseInt(jtfFactura.getText())));
+                    JLabel factura = new JLabel(modelo.mostrarDatosFactura(Integer.parseInt(jtfFactura.getText())));
+                    JScrollPane jspFactura = new JScrollPane(factura);
                     JFrame mostrarFactura= new JFrame("Mostrar datos factura");
-                    mostrarFactura.add(facturas);
+                    mostrarFactura.add(jspFactura);
+                    mostrarFactura.add(factura);
                     mostrarFactura.pack();
                     mostrarFactura.setVisible(true);
-                    System.out.println("Mostrando datos de la factura"+jtfFactura.getText());
+                    System.out.println("Mostrando datos de la factura" + jtfFactura.getText());
                 }
             });
             this.add(facturaLabel);
@@ -95,22 +105,25 @@ public class VistaMenuFacturas {
         }
 
         private void ejecuta(){
-            JTextField jtfNif1 = new JTextField(20);
-            JLabel nif1Label = new JLabel("NIF: ");
+            JTextField jtfNif = new JTextField(20);
+            JLabel nifLabel = new JLabel("NIF: ");
             JButton jbMostrarFacturasCliente = new JButton("Mostrar facturas");
             jbMostrarFacturasCliente.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JLabel mostrarFacturas = new JLabel(modelo.mostrarFacturasCliente(jtfNif1.getText()));
+                    String nif = jtfNif.getText().toUpperCase();
+                    JLabel mostrarFacturas = new JLabel(modelo.mostrarFacturasCliente(nif));
+                    JScrollPane jspFacturas = new JScrollPane(mostrarFacturas);
                     JFrame ventana = new JFrame("Mostrar facturas cliente");
+                    ventana.add(jspFacturas);
                     ventana.add(mostrarFacturas);
                     ventana.pack();
                     ventana.setVisible(true);
-                    System.out.println("Mostrando facturas del cliente con Nif "+ jtfNif1.getText());
+                    System.out.println("Mostrando facturas del cliente con Nif "+ nif);
                 }
             });
-            this.add(nif1Label);
-            this.add(jtfNif1);
+            this.add(nifLabel);
+            this.add(jtfNif);
             this.add(jbMostrarFacturasCliente);
         }
     }
@@ -121,6 +134,8 @@ public class VistaMenuFacturas {
         }
 
         private void ejecuta(){
+            JTextField jtfNif = new JTextField(20);
+            JLabel nifLabel = new JLabel("NIF: ");
             JTextField jtfFecha1 = new JTextField(20);
             JLabel Fecha1Label = new JLabel("Fecha Inicio (yyyy-mm-ddThh:mm:ss): ");
             JTextField jtfFecha2 = new JTextField(20);
@@ -129,14 +144,19 @@ public class VistaMenuFacturas {
             jbMostrarFacturas.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JLabel facturas= new JLabel(modelo.mostrarClientesEntreFechas(LocalDateTime.parse(jtfFecha1.getText()),LocalDateTime.parse(jtfFecha2.getText())));
-                    JFrame mostrarFactura= new JFrame("Mostrar facturas entre fecha");
+                    String nif = jtfNif.getText().toUpperCase();
+                    JLabel facturas = new JLabel(modelo.mostrarFacturasEntreFechas(nif, LocalDateTime.parse(jtfFecha1.getText()), LocalDateTime.parse(jtfFecha2.getText())));
+                    JScrollPane jspFacturas = new JScrollPane(facturas);
+                    JFrame mostrarFactura = new JFrame("Mostrar facturas entre fecha");
+                    mostrarFactura.add(jspFacturas);
                     mostrarFactura.add(facturas);
                     mostrarFactura.pack();
                     mostrarFactura.setVisible(true);
-                    System.out.println("Mostrando facturas entre "+jtfFecha1.getText()+" y "+jtfFecha2.getText());
+                    System.out.println("Mostrando facturas para el cliente " + nif + " entre " + jtfFecha1.getText() + " y " + jtfFecha2.getText());
                 }
             });
+            this.add(nifLabel);
+            this.add(jtfNif);
             this.add(Fecha1Label);
             this.add(jtfFecha1);
             this.add(Fecha2Label);

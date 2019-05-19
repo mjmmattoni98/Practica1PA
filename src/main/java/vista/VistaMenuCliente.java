@@ -3,11 +3,10 @@ package vista;
 import controlador.Controlador;
 import controlador.ImplementacionControlador;
 import empresa.telefonia.Direccion;
-import empresa.telefonia.Periodo;
 import empresa.telefonia.Usuario;
-import modelo.CambioModelo;
 import modelo.ImplementacionModelo;
 import modelo.InterrogaModelo;
+import org.apache.commons.lang3.text.WordUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +17,11 @@ public class VistaMenuCliente {
     private InterrogaModelo modelo = new ImplementacionModelo();
     private Controlador controlador = new ImplementacionControlador();
 
-    public void ejecuta() {
+    public void ejecutaGUI() {
+        SwingUtilities.invokeLater(this::ejecuta);
+    }
+
+    private void ejecuta() {
         JFrame ventana = new JFrame("Vista cliente.");
 
         Container container = ventana.getContentPane();
@@ -29,26 +32,38 @@ public class VistaMenuCliente {
 //        JLabel opcionLabel = new JLabel("Que acción desea realizar?");
 
         JTabbedPane pestanyas = new JTabbedPane();
-        pestanyas.add("Crear cliente", new CrearCliente());
-        pestanyas.add("Borrar Cliente", new BorrarCliente());
-        pestanyas.add("Cambiar tarifa", new CambiarTarifa());
-        pestanyas.add("Mostrar clientes", new MostrarClientes());
-        pestanyas.add("Mostrar datos clientes", new MostrarDatosCliente());
-        pestanyas.add("Mostrar clientes entre fechas", new MostrarClientesEntreFechas());
+        JPanel clasesPestanyas = new CrearCliente();
+        pestanyas.add("Crear cliente", clasesPestanyas);
+        clasesPestanyas = new BorrarCliente();
+        pestanyas.add("Borrar Cliente", clasesPestanyas);
+        clasesPestanyas = new CambiarTarifa();
+        pestanyas.add("Cambiar tarifa", clasesPestanyas);
+        clasesPestanyas = new MostrarClientes();
+//        JScrollPane jspMostrarClientes = new JScrollPane(clasesPestanyas);
+//        jspMostrarClientes.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        pestanyas.add("Mostrar clientes", clasesPestanyas);
+        clasesPestanyas = new MostrarDatosCliente();
+        pestanyas.add("Mostrar datos clientes", clasesPestanyas);
+        clasesPestanyas = new MostrarClientesEntreFechas();
+        pestanyas.add("Mostrar clientes entre fechas", clasesPestanyas);
 
 //        JScrollPane jScrollPane = new JScrollPane(pestanyas);
 //        jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 //        container.add(jScrollPane);
+//        container.add(jspMostrarClientes);
         container.add(pestanyas);
 //        ventana.setSize(500, 500);
         ventana.pack();
         ventana.setVisible(true);
 
-        ventana.addWindowListener(new WindowAdapter(){
+        ventana.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        ventana.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                System.out.println("Hasta luego desde cliente!!!!");
-//                System.exit(0);
+                // Se pide una confirmación antes de finalizar el programa
+                VistaMenuGeneral vista= new VistaMenuGeneral();
+                vista.ejecutaGUI();
+                ventana.dispose();
             }
         });
     }
@@ -73,13 +88,13 @@ public class VistaMenuCliente {
                         case "particular":
                             if (ItemEvent.SELECTED == e.getStateChange()) {
                                 particular[0] = true;
-                                System.out.println("Agregar cliente particular");
+//                                System.out.println("Agregar cliente particular");
                             }
                             break;
                         case "empresa":
                             if (ItemEvent.SELECTED == e.getStateChange()) {
                                 particular[0] = false;
-                                System.out.println("Agregar cliente empresa");
+//                                System.out.println("Agregar cliente empresa");
                             }
                             break;
                     }
@@ -129,12 +144,12 @@ public class VistaMenuCliente {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     //Strings
-                    String nombre = jtfNombre.getText();
-                    String apellidos = jtfApellidos.getText();
-                    String nif = jtfNif.getText();
+                    String nombre = WordUtils.capitalizeFully(jtfNombre.getText());
+                    String apellidos = WordUtils.capitalizeFully(jtfApellidos.getText());
+                    String nif = jtfNif.getText().toUpperCase();
                     int cp = Integer.parseInt(jtfCp.getText());
-                    String provincia = jtfProvincia.getText();
-                    String poblacion = jtfPoblacion.getText();
+                    String provincia = WordUtils.capitalizeFully(jtfProvincia.getText());
+                    String poblacion = WordUtils.capitalizeFully(jtfPoblacion.getText());
                     String email = jtfEmail.getText();
                     Usuario usuario = new Usuario(nombre, nif, email);
                     Direccion direccion = new Direccion(cp, provincia, poblacion);
@@ -142,26 +157,26 @@ public class VistaMenuCliente {
                         controlador.addClienteParticular(usuario, direccion, apellidos);
                     else
                         controlador.addClienteEmpresa(usuario, direccion);
-                    System.out.println("Cliente "+nombre+" "+apellidos+" "+"añadido con exito.");
+                    System.out.println("Cliente " + nombre + " " + apellidos + " añadido con exito.");
                 }
             });
             JButton jbClientesEjemplo = new JButton("Clientes de ejemplo");
             jbClientesEjemplo.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Usuario usuario = new Usuario("pepe", "08312348z", "adoio@gmail.com");
+                    Usuario usuario = new Usuario("Pepe", "08312348Z", "adoio@gmail.com");
                     Direccion direccion = new Direccion(12345, "Toledo", "Torrijos");
-                    controlador.addClienteParticular(usuario, direccion, "iojo");
-                    usuario = new Usuario("pepito", "02772348G", "adoil@gmil.com");
+                    controlador.addClienteParticular(usuario, direccion, "Iojo");
+                    usuario = new Usuario("Pepito", "02772348G", "adoil@gmil.com");
                     direccion = new Direccion(87975, "Albacete", "Albacete");
                     controlador.addClienteEmpresa(usuario, direccion);
-                    usuario = new Usuario("pepe", "89712348Z", "adiii@gmil.com");
+                    usuario = new Usuario("Pepe", "89712348Z", "adiii@gmil.com");
                     direccion = new Direccion(56445, "Valencia","Orxata");
-                    controlador.addClienteParticular(usuario, direccion, "pojo");
+                    controlador.addClienteParticular(usuario, direccion, "Pojo");
                 }
             });
 
-            JScrollPane scroll = new JScrollPane(this);
+//            JScrollPane scroll = new JScrollPane(this);
 
             this.add(clienteParticular);
             this.add(clienteEmpresa);
@@ -196,7 +211,7 @@ public class VistaMenuCliente {
             jbBorrarCliente.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    controlador.delCuenta(jtfNif.getText());
+                    controlador.delCuenta(jtfNif.getText().toUpperCase());
                     System.out.println("Cliente con nif "+ jtfNif.getText()+ " ha sido borrado con exito.");
                 }
             });
@@ -240,9 +255,11 @@ public class VistaMenuCliente {
             JCheckBox tarifaDomingoGratis = new JCheckBox("DomingosGratis");
             tarifaDomingoGratis.setActionCommand("DomingosGratis");
             tarifaDomingoGratis.addItemListener(escuchador);
+
             ButtonGroup grupoCliente = new ButtonGroup();
             grupoCliente.add(tarifaDomingoGratis);
             grupoCliente.add(tardesReducidas);
+
             JTextField jtfNif = new JTextField(20);
             JLabel nifLabel = new JLabel("NIF: ");
             JButton jbCambiarTarifa = new JButton("Cambiar Tarifa");
@@ -250,11 +267,11 @@ public class VistaMenuCliente {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if ( tarifa[0]==1){
-                        controlador.modTarifaDomingosGratis(jtfNif.getText());
+                        controlador.modTarifaDomingosGratis(jtfNif.getText().toUpperCase());
                         System.out.println("Tarifa Domingos gratis aplicada.");
                     }
                     else{
-                        controlador.modTarifaTardesReducidas(jtfNif.getText());
+                        controlador.modTarifaTardesReducidas(jtfNif.getText().toUpperCase());
                         System.out.println("Tarifa Tardes Reducidas aplicada.");
                     }
                 }
@@ -277,13 +294,13 @@ public class VistaMenuCliente {
             jbMostrarClientes.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JLabel clientes= new JLabel(modelo.mostrarClientes());
+                    JLabel clientes = new JLabel(modelo.mostrarClientes());
+                    JScrollPane jspClientes = new JScrollPane(clientes);
                     JFrame mostrarClientes = new JFrame("Mostrar clientes");
-                    mostrarClientes.add(clientes);
+                    mostrarClientes.add(jspClientes);
                     mostrarClientes.pack();
                     mostrarClientes.setVisible(true);
                     System.out.println("Mostrando clientes.");
-                    modelo.mostrarClientes();
                 }
             });
             this.add(jbMostrarClientes);
@@ -302,12 +319,15 @@ public class VistaMenuCliente {
             jbMostrarDatosCliente.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JLabel clientes= new JLabel(modelo.mostrarDatosCliente(jtfNif.getText()));
-                    JFrame mostrarClientes = new JFrame("Mostrar datos cliente");
-                    mostrarClientes.add(clientes);
-                    mostrarClientes.pack();
-                    mostrarClientes.setVisible(true);
-                    System.out.println("Mostrar datos cliente con nif "+jtfNif.getText());
+                    String nif = jtfNif.getText().toUpperCase();
+                    JLabel cliente = new JLabel(modelo.mostrarDatosCliente(nif));
+                    JScrollPane jspCliente = new JScrollPane(cliente);
+                    JFrame mostrarCliente = new JFrame("Mostrar datos cliente");
+                    mostrarCliente.add(jspCliente);
+                    mostrarCliente.add(cliente);
+                    mostrarCliente.pack();
+                    mostrarCliente.setVisible(true);
+                    System.out.println("Mostrar datos cliente con nif " + nif);
                     modelo.mostrarClientes();
                 }
             });
@@ -331,12 +351,14 @@ public class VistaMenuCliente {
             jbMostrarClientes.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JLabel llamadas= new JLabel(modelo.mostrarClientesEntreFechas( LocalDateTime.parse(jtfFecha1.getText()),LocalDateTime.parse(jtfFecha2.getText())));
-                    JFrame mostrarLlamadas= new JFrame("Mostrar clientes entre fechas");
+                    JLabel llamadas = new JLabel(modelo.mostrarClientesEntreFechas( LocalDateTime.parse(jtfFecha1.getText()),LocalDateTime.parse(jtfFecha2.getText())));
+                    JScrollPane jspLlamadas = new JScrollPane(llamadas);
+                    JFrame mostrarLlamadas = new JFrame("Mostrar clientes entre fechas");
+                    mostrarLlamadas.add(jspLlamadas);
                     mostrarLlamadas.add(llamadas);
                     mostrarLlamadas.pack();
                     mostrarLlamadas.setVisible(true);
-                    System.out.println("Mostrando clientes entre "+jtfFecha1.getText()+" y "+jtfFecha2.getText());
+                    System.out.println("Mostrando clientes entre " + jtfFecha1.getText() + " y " + jtfFecha2.getText());
                 }
             });
             this.add(Fecha1Label);
@@ -346,6 +368,5 @@ public class VistaMenuCliente {
             this.add(jbMostrarClientes);
         }
     }
-
 
 }

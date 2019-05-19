@@ -7,11 +7,11 @@ import empresa.telefonia.Usuario;
 import gestion.datos.GestionClientes;
 import modelo.CambioModelo;
 import modelo.ImplementacionModelo;
-import vista.InterrogaVista;
+//import vista.InterrogaVista;
 
 public class ImplementacionControlador implements Controlador {
-    private InterrogaVista vista;
-    private CambioModelo modelo= new ImplementacionModelo();
+//    private InterrogaVista vista;
+    private CambioModelo modelo = new ImplementacionModelo();
 
     public ImplementacionControlador() {}
 
@@ -37,14 +37,17 @@ public class ImplementacionControlador implements Controlador {
     public void addLlamada(String nif, int numero, double duracion) {
         modelo.addLlamada(nif,numero,duracion);
     }
+
     @Override
     public void modTarifaDomingosGratis(String nif){
         modelo.modTarifaDomingosGratis(nif);
     }
+
     @Override
     public void modTarifaTardesReducidas(String nif){
         modelo.modTarifaTardesReducidas(nif);
     }
+
     @Override
     public void emitirFactura(String nif){ modelo.emitirFactura(nif);
     }
@@ -53,7 +56,7 @@ public class ImplementacionControlador implements Controlador {
         this.modelo = modelo;
     }
 
-    public void setVista(InterrogaVista vista) {
+    /*public void setVista(InterrogaVista vista) {
         this.vista = vista;
-    }
+    }*/
 }

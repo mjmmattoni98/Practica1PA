@@ -31,4 +31,9 @@ public class Direccion implements Serializable {
     public String toString(){
         return "\t-Código postal: " + cp + "\n\t-Provincia: " + provincia + "\n\t-Población: " + poblacion ;
     }
+
+    public String toStringHtml(){
+        return "\t-Código postal: " + cp + "<br>\t-Provincia: " + provincia + "<br>\t-Población: " + poblacion ;
+    }
+
 }

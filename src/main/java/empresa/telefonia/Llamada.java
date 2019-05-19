@@ -39,5 +39,8 @@ public class Llamada implements Comparable<Llamada>, Serializable, Fecha{
         return "Llamada al número: " + numero + " con fecha: " + fechaYHora + " y duración: " + duración + " minutos.\n";
     }
 
+    public String toStringHTML(){
+        return "Llamada al número: " + numero + " con fecha: " + fechaYHora + " y duración: " + duración + " minutos.<br>";
+    }
 
 }

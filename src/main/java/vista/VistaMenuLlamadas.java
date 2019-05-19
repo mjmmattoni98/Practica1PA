@@ -1,9 +1,9 @@
 package vista;
 
+import controlador.Controlador;
 import controlador.ImplementacionControlador;
-import modelo.CambioModelo;
 import modelo.ImplementacionModelo;
-//import modelo.ImplementacionModelo;
+import modelo.InterrogaModelo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,10 +14,14 @@ import java.awt.event.WindowEvent;
 import java.time.LocalDateTime;
 
 public class VistaMenuLlamadas {
-    private ImplementacionModelo modelo = new ImplementacionModelo();
-    private ImplementacionControlador controlador = new ImplementacionControlador();
+    private InterrogaModelo modelo = new ImplementacionModelo();
+    private Controlador controlador = new ImplementacionControlador();
 
-    public void ejecuta() {
+    public void ejecutaGUI() {
+        SwingUtilities.invokeLater(this::ejecuta);
+    }
+
+    private void ejecuta() {
         JFrame ventana = new JFrame("Vista llamadas.");
         Container container = ventana.getContentPane();
         container.setLayout(new FlowLayout());
@@ -30,10 +34,14 @@ public class VistaMenuLlamadas {
 
         ventana.pack();
         ventana.setVisible(true);
+        ventana.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         ventana.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                System.out.println("Hasta luego desde llamadas!!!!");
+                // Se pide una confirmación antes de finalizar el programa
+                VistaMenuGeneral vista= new VistaMenuGeneral();
+                vista.ejecutaGUI();
+                ventana.dispose();
             }
         });
     }
@@ -54,7 +62,7 @@ public class VistaMenuLlamadas {
             jbAddLlamada.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    controlador.addLlamada(jtfNif.getText(),Integer.parseInt(jtfNumero.getText()),Double.parseDouble(jtfDuracion.getText()));
+                    controlador.addLlamada(jtfNif.getText().toUpperCase(),Integer.parseInt(jtfNumero.getText()),Double.parseDouble(jtfDuracion.getText()));
                 }
             });
             this.add(nifLabel);
@@ -80,12 +88,15 @@ public class VistaMenuLlamadas {
             jbMostrarLlamadas.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JLabel llamadas= new JLabel(modelo.mostrarLlamadasCliente(jtfNif.getText()));
+                    String nif = jtfNif.getText().toUpperCase();
+                    JLabel llamadas = new JLabel(modelo.mostrarLlamadasCliente(nif));
+                    JScrollPane jspLlamadas = new JScrollPane(llamadas);
                     JFrame mostrarLlamadas = new JFrame("Mostrar llamadas cliente");
+                    mostrarLlamadas.add(jspLlamadas);
                     mostrarLlamadas.add(llamadas);
                     mostrarLlamadas.pack();
                     mostrarLlamadas.setVisible(true);
-                    System.out.println("Mostrando llamadas del cliente con NIF "+jtfNif.getText());
+                    System.out.println("Mostrando llamadas del cliente con NIF " + nif);
                 }
             });
             this.add(nifLabel);
@@ -110,12 +121,15 @@ public class VistaMenuLlamadas {
             jbMostrarFacturas.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JLabel llamadas= new JLabel(modelo.mostrarLlamadasEntreFechas(jtfNif.getText(),LocalDateTime.parse(jtfFecha1.getText()),LocalDateTime.parse(jtfFecha2.getText())));
+                    String nif = jtfNif.getText().toUpperCase();
+                    JLabel llamadas = new JLabel(modelo.mostrarLlamadasEntreFechas(nif, LocalDateTime.parse(jtfFecha1.getText()), LocalDateTime.parse(jtfFecha2.getText())));
+                    JScrollPane jspLlamadas = new JScrollPane(llamadas);
                     JFrame mostrarLlamadas= new JFrame("Mostrar facturas entre fecha");
+                    mostrarLlamadas.add(jspLlamadas);
                     mostrarLlamadas.add(llamadas);
                     mostrarLlamadas.pack();
                     mostrarLlamadas.setVisible(true);
-                    System.out.println("Mostrando llamadas entre "+jtfFecha1.getText()+" y "+jtfFecha2.getText());
+                    System.out.println("Mostrando llamadas para el cliente " + nif + " entre " + jtfFecha1.getText() + " y " + jtfFecha2.getText());
                 }
             });
             this.add(nifLabel);
