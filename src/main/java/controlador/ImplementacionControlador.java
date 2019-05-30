@@ -6,7 +6,7 @@ import modelo.CambioModelo;
 import modelo.ImplementacionModelo;
 
 public class ImplementacionControlador implements Controlador {
-    private CambioModelo modelo = new ImplementacionModelo();
+    private CambioModelo modelo;
 
     public ImplementacionControlador() {}
 

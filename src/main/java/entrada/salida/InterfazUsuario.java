@@ -442,7 +442,6 @@ public class InterfazUsuario {
             System.out.println(o);
     }
 
-    //TODO mover este método a una clase de utilidad.
     private boolean isNum(String number) {
         boolean isNumber = true;
         try {

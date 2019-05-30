@@ -12,9 +12,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+// todo La vista debe implementar una interfaz, o varias, con los métodos que necesita el controlador y el modelo
 public class VistaMenuGeneral {
-    InterrogaModelo modelo = new ImplementacionModelo();
-    Controlador controlador = new ImplementacionControlador();
+    InterrogaModelo modelo;
+    Controlador controlador;
+
+    public  VistaMenuGeneral(){
+        super();
+    }
+
+    public VistaMenuGeneral(InterrogaModelo modelo, Controlador controlador){
+        this.modelo = modelo;
+        this.controlador = controlador;
+    }
 
     public void ejecutaGUI() {
         SwingUtilities.invokeLater(this::ejecuta);
@@ -31,7 +41,7 @@ public class VistaMenuGeneral {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Yendo al menu del cliente.");
-                new VistaMenuCliente().ejecutaGUI();
+                new VistaMenuCliente(modelo, controlador).ejecutaGUI();
                 ventana.dispose();
             }
         });
@@ -39,7 +49,7 @@ public class VistaMenuGeneral {
         JButton jbFacturas = new JButton("Prueba a menu facturas.");
         jbFacturas.addActionListener(e -> {
             System.out.println("Yendo al menu del facturas.");
-            new VistaMenuFacturas().ejecutaGUI();
+            new VistaMenuFacturas(modelo, controlador).ejecutaGUI();
             ventana.dispose();
         });
 
@@ -48,7 +58,7 @@ public class VistaMenuGeneral {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Yendo al menu del llamadas.");
-                new VistaMenuLlamadas().ejecutaGUI();
+                new VistaMenuLlamadas(modelo, controlador).ejecutaGUI();
                 ventana.dispose();
             }
         });
@@ -78,5 +88,13 @@ public class VistaMenuGeneral {
                 }
             }
         });
+    }
+
+    public void setControlador(Controlador controlador) {
+        this.controlador = controlador;
+    }
+
+    public void setModelo(InterrogaModelo modelo) {
+        this.modelo = modelo;
     }
 }

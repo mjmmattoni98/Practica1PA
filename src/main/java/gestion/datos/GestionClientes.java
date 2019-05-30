@@ -24,6 +24,7 @@ public class GestionClientes extends BaseDatos implements Serializable {
         FabricadoCliente fabricaCliente = new FabricadoCliente();
         ClienteParticular cliente = fabricaCliente.getClienteParticular(usuario, direccion, fabricadoTarifa.getTarifaBasica(), apellidos);
         clientes.put(usuario.getNif(), cliente);
+        // todo el modelo debe informar a la vista de que ha habido cambios por si se quiere actualizar.
     }
 
     public void addClienteEmpresa(Usuario usuario, Direccion direccion) throws IllegalArgumentException{
@@ -32,6 +33,7 @@ public class GestionClientes extends BaseDatos implements Serializable {
         FabricadoCliente fabricaCliente = new FabricadoCliente();
         ClienteEmpresa cliente = fabricaCliente.getClienteEmpresa(usuario, direccion, fabricadoTarifa.getTarifaBasica());
         clientes.put(usuario.getNif(), cliente);
+        // todo el modelo debe informar a la vista de que ha habido cambios por si se quiere actualizar.
     }
 
     public void addCliente(Cliente cliente){

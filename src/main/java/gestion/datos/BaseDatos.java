@@ -10,7 +10,6 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-//TODO Esta clase desaparecería al crear los la interfaz gráfica. Los check clients irian a gestionCLientes y los filtrar a una clase de utilidad.
 public class BaseDatos implements Serializable {
     static Map<String, Cliente> clientes = new HashMap<>();
     static Map<Integer, Factura> facturas = new HashMap<>();
