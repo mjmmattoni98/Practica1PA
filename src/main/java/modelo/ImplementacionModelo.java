@@ -5,6 +5,8 @@ import java.util.*;
 
 import empresa.telefonia.*;
 import gestion.datos.*;
+import vista.InformaVista;
+import vista.VistaMenuCliente;
 
 
 public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
@@ -13,6 +15,7 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
     private GestionFacturas gestionFacturas;
     private FabricadoTarifa fabricadoTarifa;
     private Datos datos;
+    private InformaVista vista;
 
     public ImplementacionModelo(){
         this.gestionClientes = new GestionClientes();
@@ -37,21 +40,28 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
         }
     }
 
+    public void setVista(InformaVista vista) {
+        this.vista = vista;
+    }
+
+    //Cambio modelo
     @Override
     public void addClienteParticular(Usuario usuario, Direccion direccion, String apellidos) {
         gestionClientes.addClienteParticular(usuario, direccion, apellidos);
+        vista.addedClient(usuario.getNif());
     }
 
     @Override
     public void addClienteEmpresa(Usuario usuario, Direccion direccion) {
         gestionClientes.addClienteEmpresa(usuario, direccion);
+        vista.addedClient(usuario.getNif());
     }
 
     @Override
     public void delCuenta(String nif) {
         try {
             gestionClientes.borrarCliente(nif);
-            System.out.println("Cliente borrado con éxito.");
+            vista.removedClient(nif);
         }
         catch (IllegalArgumentException e){
             e.printStackTrace();
@@ -61,6 +71,7 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
     @Override
     public void addLlamada(String nif, int numero, double duracion) {
         gestionLlamadas.añadirLlamada(nif,numero,duracion);
+        vista.addedCall(nif, numero);
     }
 
     @Override
@@ -68,6 +79,7 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
         Tarifa tarifa = gestionClientes.getCliente(nif).getTarifa();
         tarifa = fabricadoTarifa.getTarifaDomingoGratis(tarifa);
         gestionClientes.cambiarTarifaCliente(nif, tarifa);
+        vista.modifiedFee(nif, "domingos gratis");
     }
 
     @Override
@@ -75,11 +87,13 @@ public class ImplementacionModelo implements CambioModelo, InterrogaModelo {
         Tarifa tarifa = gestionClientes.getCliente(nif).getTarifa();
         tarifa = fabricadoTarifa.getTarifaTardesReducidas(tarifa, 5);
         gestionClientes.cambiarTarifaCliente(nif, tarifa);
+        vista.modifiedFee(nif, "tardes reducidas");
     }
 
     @Override
     public void emitirFactura(String nif){
         gestionFacturas.emitirFacturaCliente(nif);
+        vista.generatedBill(nif);
     }
 
     //InterrogaModelo

@@ -11,14 +11,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDateTime;
 
-public class VistaMenuCliente extends VistaMenuGeneral{
-
-    public VistaMenuCliente(){
-        super();
-    }
+public class VistaMenuCliente {
+    InterrogaModelo modelo;
+    Controlador controlador;
 
     public  VistaMenuCliente(InterrogaModelo modelo, Controlador controlador){
-        super(modelo, controlador);
+        this.modelo = modelo;
+        this.controlador = controlador;
     }
 
     public void ejecutaGUI() {
@@ -135,8 +134,10 @@ public class VistaMenuCliente extends VistaMenuGeneral{
                     Usuario usuario = new Usuario(nombre, nif, email);
                     Direccion direccion = new Direccion(cp, provincia, poblacion);
                     if(particular[0])
+//                        controlador.addClienteParticular();
                         controlador.addClienteParticular(usuario, direccion, apellidos);
                     else
+//                        controlador.addClienteEmpresa();
                         controlador.addClienteEmpresa(usuario, direccion);
                     System.out.println("Cliente " + nombre + " " + apellidos + " añadido con exito.");
                 }
@@ -213,6 +214,7 @@ public class VistaMenuCliente extends VistaMenuGeneral{
             tardesReducidas.addItemListener(escuchador = new ItemListener() {
                 @Override
                 public void itemStateChanged(ItemEvent e) {
+
                     JCheckBox boton = (JCheckBox) e.getItemSelectable();
                     String comando = boton.getActionCommand();
                     switch (comando) {
@@ -224,7 +226,7 @@ public class VistaMenuCliente extends VistaMenuGeneral{
                             break;
                         case "TardesReducidas":
                             if (ItemEvent.SELECTED == e.getStateChange()) {
-                                tarifa[0] = 2;
+                                      tarifa[0] = 2;
                                 System.out.println("Cambiar tarifa a Tardes Reducidas");
                             }
                             break;

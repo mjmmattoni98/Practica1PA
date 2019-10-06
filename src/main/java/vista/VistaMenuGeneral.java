@@ -1,8 +1,6 @@
 package vista;
 
 import controlador.Controlador;
-import controlador.ImplementacionControlador;
-import modelo.ImplementacionModelo;
 import modelo.InterrogaModelo;
 
 import javax.swing.*;
@@ -12,18 +10,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-// todo La vista debe implementar una interfaz, o varias, con los métodos que necesita el controlador y el modelo
-public class VistaMenuGeneral {
+public class VistaMenuGeneral implements InformaVista{
     InterrogaModelo modelo;
     Controlador controlador;
-
-    public  VistaMenuGeneral(){
-        super();
-    }
+    VistaMenuLlamadas vistaMenuLlamadas;
+    VistaMenuFacturas vistaMenuFacturas;
+    VistaMenuCliente vistaMenuCliente;
 
     public VistaMenuGeneral(InterrogaModelo modelo, Controlador controlador){
         this.modelo = modelo;
         this.controlador = controlador;
+        this.vistaMenuCliente = new VistaMenuCliente(modelo, controlador);
+        this.vistaMenuFacturas = new VistaMenuFacturas(modelo, controlador);
+        this.vistaMenuLlamadas = new VistaMenuLlamadas(modelo, controlador);
     }
 
     public void ejecutaGUI() {
@@ -36,29 +35,29 @@ public class VistaMenuGeneral {
         Container container = ventana.getContentPane();
 
         JPanel jPanel = new JPanel();
-        JButton jbClientes = new JButton("Prueba a menu cliente.");
+        JButton jbClientes = new JButton("Acciones con clientes.");
         jbClientes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Yendo al menu del cliente.");
-                new VistaMenuCliente(modelo, controlador).ejecutaGUI();
+                vistaMenuCliente.ejecutaGUI();
                 ventana.dispose();
             }
         });
 
-        JButton jbFacturas = new JButton("Prueba a menu facturas.");
+        JButton jbFacturas = new JButton("Acciones con facturas.");
         jbFacturas.addActionListener(e -> {
             System.out.println("Yendo al menu del facturas.");
-            new VistaMenuFacturas(modelo, controlador).ejecutaGUI();
+            vistaMenuFacturas.ejecutaGUI();
             ventana.dispose();
         });
 
-        JButton jbLlamadas = new JButton("Prueba a menu llamadas.");
+        JButton jbLlamadas = new JButton("Acciones con llamadas.");
         jbLlamadas.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Yendo al menu del llamadas.");
-                new VistaMenuLlamadas(modelo, controlador).ejecutaGUI();
+                vistaMenuLlamadas.ejecutaGUI();
                 ventana.dispose();
             }
         });
@@ -90,6 +89,31 @@ public class VistaMenuGeneral {
         });
     }
 
+    @Override
+    public void addedClient(String nif){
+        System.out.println("Añadido cliente " + nif);
+    }
+
+    @Override
+    public void removedClient(String nif){
+        System.out.println("Cliente " + nif + " borrado.");
+    }
+
+    @Override
+    public void addedCall(String nif, int numero){
+        System.out.println("Agregada la llamada al número " + numero + " para el cliente " + nif);
+    }
+
+    @Override
+    public void modifiedFee(String nif, String tipo){
+        System.out.println("Agregada la tarifa " + tipo + " para el cliente " + nif);
+    }
+
+    @Override
+    public void generatedBill(String nif){
+        System.out.println("Emitida la factura del mes para el cliente " + nif);
+    }
+
     public void setControlador(Controlador controlador) {
         this.controlador = controlador;
     }
@@ -97,4 +121,5 @@ public class VistaMenuGeneral {
     public void setModelo(InterrogaModelo modelo) {
         this.modelo = modelo;
     }
+
 }

@@ -3,17 +3,22 @@ package controlador;
 import empresa.telefonia.Direccion;
 import empresa.telefonia.Usuario;
 import modelo.CambioModelo;
-import modelo.ImplementacionModelo;
+
 
 public class ImplementacionControlador implements Controlador {
     private CambioModelo modelo;
 
     public ImplementacionControlador() {}
 
+    public void setModelo(CambioModelo modelo) {
+        this.modelo = modelo;
+    }
+
     @Override
     public void addClienteParticular(Usuario usuario, Direccion direccion, String apellidos) {
         modelo.addClienteParticular(usuario, direccion, apellidos);
     }
+
     @Override
     public void addClienteEmpresa(Usuario usuario, Direccion direccion) {
         modelo.addClienteEmpresa(usuario, direccion);
@@ -40,11 +45,8 @@ public class ImplementacionControlador implements Controlador {
     }
 
     @Override
-    public void emitirFactura(String nif){ modelo.emitirFactura(nif);
-    }
-
-    public void setModelo(CambioModelo modelo) {
-        this.modelo = modelo;
+    public void emitirFactura(String nif){
+        modelo.emitirFactura(nif);
     }
 
 }

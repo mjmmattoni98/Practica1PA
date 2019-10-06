@@ -11,14 +11,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDateTime;
 
-public class VistaMenuFacturas extends VistaMenuGeneral{
-
-    public VistaMenuFacturas(){
-        super();
-    }
+public class VistaMenuFacturas {
+    InterrogaModelo modelo;
+    Controlador controlador;
 
     public  VistaMenuFacturas(InterrogaModelo modelo, Controlador controlador){
-        super(modelo, controlador);
+        this.modelo = modelo;
+        this.controlador = controlador;
     }
 
     public void ejecutaGUI() {

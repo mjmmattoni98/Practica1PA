@@ -1,6 +1,5 @@
 package entrada.salida;
 
-import com.sun.security.ntlm.Client;
 import empresa.telefonia.*;
 import excepciones.NIFException;
 import excepciones.PeriodoException;

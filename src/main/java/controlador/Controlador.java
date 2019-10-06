@@ -3,6 +3,8 @@ package controlador;
 import empresa.telefonia.Direccion;
 import empresa.telefonia.Usuario;
 
+import java.awt.event.ItemEvent;
+
 public interface Controlador {
     //Cuentas
     void addClienteParticular(Usuario usuario, Direccion direccion, String apellidos);
@@ -18,4 +20,5 @@ public interface Controlador {
 
     //Facturas
     void emitirFactura(String nif);
+
 }
